@@ -10,36 +10,36 @@ The entire SDK is built around an **Everything is a Service** and **Interface-Fi
 
 ```mermaid
 graph TD
-    APP[Host Application e.g., FastAPI/Django] -->|Initializes| INIT(IRYM.py Initializer)
-    APP -->|Requests Service via get()| DI{DI Container}
-    INIT -->|Registers Services| DI
+    APP["Host Application (FastAPI/Django)"] -->|"Initializes"| INIT("IRYM.py Initializer")
+    APP -->|"Requests Service via get()"| DI{"DI Container"}
+    INIT -->|"Registers Services"| DI
     
     subgraph Core
         DI
-        CONF[Config & Settings]
-        LFC[Lifecycle Hooks]
+        CONF["Config & Settings"]
+        LFC["Lifecycle Hooks"]
     end
     
     subgraph General Infrastructure
-        DI -->|Provides| CACHE[Cache Service<br>RedisCache]
-        DI -->|Provides| DB[DB Service<br>SQLAlchemyDB]
-        DI -->|Provides| QUEUE[Queue Service<br>CeleryQueue]
+        DI -->|"Provides"| CACHE["Cache Service (RedisCache)"]
+        DI -->|"Provides"| DB["DB Service (SQLAlchemyDB)"]
+        DI -->|"Provides"| QUEUE["Queue Service (CeleryQueue)"]
     end
     
     subgraph AI & Data Operations
-        DI -->|Provides| LLM[LLM Service<br>OpenAI/Local]
-        DI -->|Provides| VDB[Vector DB<br>QdrantVectorDB]
-        DI -->|Provides| RAG[RAG Pipeline]
+        DI -->|"Provides"| LLM["LLM Service (OpenAI/Local)"]
+        DI -->|"Provides"| VDB["Vector DB (QdrantVectorDB)"]
+        DI -->|"Provides"| RAG["RAG Pipeline"]
         
-        RAG -->|Retrieves context from| VDB
-        RAG -->|Generates answer via| LLM
+        RAG -->|"Retrieves context from"| VDB
+        RAG -->|"Generates answer via"| LLM
     end
     
     subgraph Observability
-        OBS[Logger & Tracer] -.->|Monitors| CACHE
-        OBS -.->|Monitors| DB
-        OBS -.->|Monitors| LLM
-        OBS -.->|Monitors| VDB
+        OBS["Logger & Tracer"] -.->|"Monitors"| CACHE
+        OBS -.->|"Monitors"| DB
+        OBS -.->|"Monitors"| LLM
+        OBS -.->|"Monitors"| VDB
     end
 ```
 
