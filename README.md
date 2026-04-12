@@ -28,6 +28,8 @@ graph TD
     
     subgraph AI & Data Operations
         DI -->|"Provides"| LLM["LLM Service (OpenAI/Local)"]
+        DI -->|"Provides"| VLM["VLM Service (OpenAI/Local)"]
+        DI -->|"Provides"| AUDIO["Audio Service (STT/TTS)"]
         DI -->|"Provides"| VDB["Vector DB (QdrantVectorDB)"]
         DI -->|"Provides"| RAG["RAG Pipeline"]
         DI -->|"Provides"| INSIGHT["Insight Engine"]
@@ -44,6 +46,8 @@ graph TD
         OBS["Logger & Tracer"] -.->|"Monitors"| CACHE
         OBS -.->|"Monitors"| DB
         OBS -.->|"Monitors"| LLM
+        OBS -.->|"Monitors"| VLM
+        OBS -.->|"Monitors"| AUDIO
         OBS -.->|"Monitors"| VDB
     end
 ```
