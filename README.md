@@ -30,9 +30,14 @@ graph TD
         DI -->|"Provides"| LLM["LLM Service (OpenAI/Local)"]
         DI -->|"Provides"| VDB["Vector DB (QdrantVectorDB)"]
         DI -->|"Provides"| RAG["RAG Pipeline"]
+        DI -->|"Provides"| INSIGHT["Insight Engine"]
         
         RAG -->|"Retrieves context from"| VDB
         RAG -->|"Generates answer via"| LLM
+        
+        INSIGHT -->|"Retrieves"| VDB
+        INSIGHT -->|"Generates"| LLM
+        INSIGHT -.->|"Caches"| CACHE
     end
     
     subgraph Observability
@@ -47,8 +52,9 @@ graph TD
 
 1. **Dependency Injection**: Central standard registry. No manual instantiation inside business logic.
 2. **Interface First**: Every module complies with an asynchronous base contract (`BaseCache`, `BaseLLM`, `BaseVectorDB`, etc.).
-3. **Async-first**: Built iteratively to support high-throughput `asyncio` ecosystems.
-4. **Clean AI Architecture**: Combines language models and vector environments effortlessly into `RAGPipeline` implementations.
+3. **Insight Layer**: A core AI orchestration engine (`InsightEngine`) handles prompt building, fast caching, vector reranking, and generation seamlessly.
+4. **Async-first**: Built iteratively to support high-throughput `asyncio` ecosystems.
+5. **Clean AI Architecture**: Combines language models and vector environments effortlessly into `RAGPipeline` implementations.
 
 ## 🛠️ Usage Example
 
