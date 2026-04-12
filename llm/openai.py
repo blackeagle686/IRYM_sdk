@@ -8,12 +8,13 @@ class OpenAILLM(BaseLLM):
 
     async def init(self):
         if not self.api_key:
-            raise ValueError("OPENAI_API_KEY is missing from configuration.")
-        # Minimal mock initialization (as a full openai dependency isn't guaranteed here)
+            print("Warning: OPENAI_API_KEY is missing. Operating in mock mode.")
         self.client = "MockOpenAIClient"
 
     async def generate(self, prompt: str) -> str:
         if not self.client:
             raise RuntimeError("OpenAILLM is not initialized.")
+        if not self.api_key:
+            return f"[Mock OpenAI Response (No API Key) to: {prompt}]"
         # In a real scenario, makes an API call
         return f"[OpenAI Response to: {prompt}]"
