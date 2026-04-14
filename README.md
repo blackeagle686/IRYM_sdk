@@ -56,60 +56,75 @@ graph TD
 
 1. **Dependency Injection**: Central standard registry. No manual instantiation inside business logic.
 2. **Interface First**: Every module complies with an asynchronous base contract (`BaseCache`, `BaseLLM`, `BaseVectorDB`, etc.).
-3. **Insight Layer**: A core AI orchestration engine (`InsightEngine`) handles prompt building, fast caching, vector reranking, and generation seamlessly.
-4. **Async-first**: Built iteratively to support high-throughput `asyncio` ecosystems.
-5. **Clean AI Architecture**: Combines language models and vector environments effortlessly into `RAGPipeline` implementations.
+3. **Flexible Vector DB**: Native support for **ChromaDB** (Default/Persistent) and **Qdrant**.
+4. **Embedded Insights**: Pre-configured with `sentence-transformers` (`all-MiniLM-L6-v2`) for local embedding generation.
+5. **RAG Orchestration**: All-in-one `RAGPipeline` that handles document loading, chunking, storage, and intelligent retrieval.
 
 ## 📦 Installation
 
-Since `IRYM_sdk` is designed as an internal core infrastructure layer for your Python applications:
-
 1. **Clone or Copy** the `IRYM_sdk` folder directly into your project's root.
-2. **Install Dependencies**: Ensure your environment has the foundational integration libraries installed:
+2. **Install Dependencies**:
    ```bash
-   pip install redis redis[asyncio] sqlalchemy celery pydantic qdrant-client openai
+   pip install redis sqlalchemy celery pydantic chromadb sentence-transformers openai
    ```
-3. **Configure Environment Variables** (usually via `.env`):
+3. **Configure Environment Variables**:
    ```env
-   REDIS_URL="redis://localhost:6379"
-   OPENAI_API_KEY="sk-xxxx"
-   QDRANT_URL="http://localhost:6333"
+   VECTOR_DB_TYPE="chroma"             # "chroma" or "qdrant"
+   CHROMA_PERSIST_DIR="./chroma_db"
+   EMBEDDING_MODEL="all-MiniLM-L6-v2"
    ```
 
-## 📖 Quickstart & Basic Usage
+## 📖 Quickstart: RAG Pipeline
 
-Easily invoke and orchestrate `IRYM_sdk` inside any framework like FastAPI or Django:
+The `RAGPipeline` is the highest-level service for handling document-based knowledge.
 
 ```python
-from fastapi import FastAPI
-from IRYM_sdk import init_irym
+import asyncio
+from IRYM_sdk import init_irym, get_rag_pipeline
+
+async def rag_demo():
+    init_irym()
+    rag = get_rag_pipeline()
+
+    # 1. Ingest documents (Supports folders with .txt, .md, .pdf)
+    await rag.ingest("./my_knowledge_base")
+
+    # 2. Query with context
+    answer = await rag.query("What are the system requirements?")
+    print(f"AI Answer: {answer}")
+
+    # 3. Clear data if needed
+    # await rag.clear_data()
+
+if __name__ == "__main__":
+    asyncio.run(rag_demo())
+```
+
+## 📂 Vector DB Service
+
+You can also use the `VectorDB` service directly for granular control:
+
+```python
 from IRYM_sdk.core.container import container
 
-app = FastAPI()
+async def vector_crud_demo():
+    vdb = container.get("vector_db")
+    await vdb.init()
 
-# 1. Initialize and register SDK services into the DI Container
-init_irym()
+    # Add raw text
+    await vdb.add(
+        texts=["IRYM SDK supports multiple vector stores."],
+        metadatas=[{"category": "info"}],
+        ids=["id_001"]
+    )
 
-@app.get("/test")
-async def test():
-    # 2. Retrieve decoupled instances without state management overhead
-    cache = container.get("cache")
-    llm = container.get("llm")
-    
-    # Optional: init async hooks where necessary depending on implementations
-    await cache.init()
-    await llm.init()
-    
-    # 3. Use abstract base methods without worrying about inner details
-    await cache.set("hello", {"msg": "world"}, ttl=60)
-    cached_val = await cache.get("hello")
-    
-    response = await llm.generate("Hello world!")
-    
-    return {
-        "cache_result": cached_val,
-        "llm_response": response
-    }
+    # Search
+    results = await vdb.search("Which vector stores are supported?", limit=2)
+    for doc in results:
+        print(f"Found: {doc['content']} (Score: {doc['distance']})")
+
+    # Delete
+    await vdb.delete(ids=["id_001"])
 ```
 
 ## 🧠 Advanced Usage: Insight Engine
@@ -117,34 +132,13 @@ async def test():
 The `InsightEngine` performs full context retrieval, query rewriting, and LLM generation efficiently.
 
 ```python
-import asyncio
-from IRYM_sdk import init_irym
-from IRYM_sdk.core.container import container
-from IRYM_sdk.insight.engine import InsightEngine
-
+from IRYM_sdk import init_irym, get_insight_engine
 
 async def insight_demo():
-    # Setup Container & Retrieve Services
     init_irym()
-    cache = container.get("cache")
-    llm = container.get("llm")
-    vector_db = container.get("vector_db")
+    insight = get_insight_engine()
 
-    # Start services (e.g., open async pools)
-    await cache.init()
-    await llm.init()
-    await vector_db.init()
-
-    # Mount the Insight Engine
-    # (Caching is optional but drastically improves latency for repeat queries)
-    insight = InsightEngine(vector_db=vector_db, llm=llm, cache=cache)
-
-    question = "Who contributed to the containerization architecture?"
-    
-    # This automatically invokes cache check -> vector retrieval -> prompt building -> generation
-    final_response = await insight.query(question)
+    # This invokes: Clean Query -> Vector Search -> Rerank -> LLM Generation
+    final_response = await insight.query("How do I extend the cache layer?")
     print(final_response)
-
-if __name__ == "__main__":
-    asyncio.run(insight_demo())
 ```
