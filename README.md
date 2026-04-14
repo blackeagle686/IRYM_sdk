@@ -62,11 +62,22 @@ graph TD
 
 ## 📦 Installation
 
-1. **Clone or Copy** the `IRYM_sdk` folder directly into your project's root.
-2. **Install Dependencies**:
-   ```bash
-   pip install redis sqlalchemy celery pydantic chromadb sentence-transformers openai
-   ```
+### 1. Standard Installation (via Pip)
+You can now install **iry-sdk** directly into your environment:
+
+```bash
+# Install core dependencies only
+pip install .
+
+# Install with ALL advanced features (Vector DBs, RAG, Redis, etc.)
+pip install ".[full]"
+```
+
+### 2. Manual Setup (Optional)
+If you prefer not to install the package, you can clone the `IRYM_sdk` folder and install dependencies via requirements:
+```bash
+pip install -r requirements.txt
+```
 3. **Configure Environment Variables**:
    ```env
    VECTOR_DB_TYPE="chroma"             # "chroma" or "qdrant"

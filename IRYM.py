@@ -62,3 +62,16 @@ def get_insight_engine() -> InsightEngine:
     llm = container.get("llm")
     cache = container.get("cache")
     return InsightEngine(vector_db, llm, cache)
+
+async def init_irym_full():
+    """
+    Complete initialization:
+    1. init_irym (Registry)
+    2. startup_irym (Connections)
+    3. lifecycle.startup (Hooks)
+    """
+    from IRYM_sdk.core.lifecycle import lifecycle
+    init_irym()
+    await startup_irym()
+    await lifecycle.startup()
+    print("[+] IRYM SDK initialized and lifecycle hooks executed.")

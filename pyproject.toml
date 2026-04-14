@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "irym-sdk"
+version = "1.0.0"
+description = "A production-ready AI infrastructure SDK for RAG, LLM, Vector DB, and Audio."
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [
+    {name = "IRYM Team", email = "mathematecs1@gmail.com"}
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "python-dotenv>=1.0.0",
+    "requests>=2.28.0",
+    "openai>=1.0.0",
+    "markdown>=3.4.0",
+    "beautifulsoup4>=4.11.0",
+]
+
+[project.optional-dependencies]
+full = [
+    "chromadb>=0.4.0",
+    "sentence-transformers>=2.2.0",
+    "pypdf>=3.10.0",
+    "python-docx>=0.8.11",
+    "qdrant-client>=1.6.0",
+    "redis>=4.5.0",
+    "celery>=5.3.0",
+    "sqlalchemy>=2.0.0",
+]
+vector = [
+    "chromadb>=0.4.0",
+    "qdrant-client>=1.6.0",
+    "sentence-transformers>=2.2.0",
+]
+audio = [
+    "openai>=1.0.0",
+]
+rag = [
+    "pypdf>=3.10.0",
+    "python-docx>=0.8.11",
+    "beautifulsoup4>=4.11.0",
+]
+
+[tool.setuptools]
+packages = ["IRYM_sdk"]
+package-dir = {"IRYM_sdk" = "."}
+
+[tool.setuptools.package-data]
+"IRYM_sdk" = ["*.md", "LICENSE"]
+"IRYM_sdk.web" = ["templates/*", "static/*"]
+
+[tool.setuptools.exclude-package-data]
+"IRYM_sdk" = ["web/db.sqlite3", "chroma_db/*"]
