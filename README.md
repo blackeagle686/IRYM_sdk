@@ -62,21 +62,23 @@ graph TD
 
 ## 📦 Installation
 
-### 1. Standard Installation (via Pip)
-You can now install **iry-sdk** directly into your environment:
+### 1. Clone the Repository
+Clone the repository and install the dependencies:
 
+```bash
+git clone https://github.com/blackeagle686/IRYM_sdk.git
+cd IRYM_sdk
+pip install -r requirements.txt
+```
+
+### 2. Local Pip Installation (Optional)
+If you want to install it as a package in your local environment:
 ```bash
 # Install core dependencies only
 pip install .
 
 # Install with ALL advanced features (Vector DBs, RAG, Redis, etc.)
 pip install ".[full]"
-```
-
-### 2. Manual Setup (Optional)
-If you prefer not to install the package, you can clone the `IRYM_sdk` folder and install dependencies via requirements:
-```bash
-pip install -r requirements.txt
 ```
 3. **Configure Environment Variables**:
    ```env
