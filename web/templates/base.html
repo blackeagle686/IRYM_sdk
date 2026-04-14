@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}IRYM SDK Docs{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --accent: #CF0A0A;
+            --accent-orange: #DC5F00;
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        [data-bs-theme="dark"] {
+            --nav-bg: #0d1117;
+            --code-bg: #161b22;
+            --card-bg: #161b22;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --muted: rgba(255, 255, 255, 0.5);
+        }
+
+        [data-bs-theme="light"] {
+            --nav-bg: #ffffff;
+            --code-bg: #f6f8fa;
+            --card-bg: #f6f8fa;
+            --border-color: rgba(0, 0, 0, 0.09);
+            --muted: rgba(0, 0, 0, 0.5);
+        }
+
+        /* ── Base ─────────────────────────── */
+        body {
+            font-family: var(--font-sans);
+            font-size: 15px;
+            line-height: 1.75;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        /* ── Navbar ───────────────────────── */
+        .irym-nav {
+            background: var(--nav-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.55rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 900;
+            font-size: 1.15rem;
+            letter-spacing: -0.5px;
+            color: var(--accent) !important;
+        }
+
+        .navbar-brand span {
+            opacity: 0.55;
+            font-weight: 400;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            font-size: 0.875rem;
+            padding: 0.38rem 0.75rem !important;
+            border-radius: 6px;
+            transition: background 0.15s;
+        }
+
+        .nav-link:hover {
+            background: rgba(128, 128, 128, 0.1);
+        }
+
+        .nav-link.is-active {
+            color: var(--accent) !important;
+        }
+
+        /* ── Theme Toggle ─────────────────── */
+        .theme-toggle {
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+            background: rgba(128, 128, 128, 0.1);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+        }
+
+        /* ── Buttons ──────────────────────── */
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), var(--accent-orange));
+            color: #fff;
+            border: none;
+            font-weight: 600;
+            transition: opacity 0.2s, transform 0.15s;
+        }
+
+        .btn-accent:hover {
+            color: #fff;
+            opacity: 0.88;
+            transform: translateY(-1px);
+        }
+
+        /* ── Code blocks ──────────────────── */
+        pre {
+            background: var(--code-bg) !important;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.1rem 1.4rem;
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            line-height: 1.7;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        code:not(pre code) {
+            background: rgba(207, 10, 10, 0.1);
+            color: var(--accent);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.85em;
+        }
+
+        /* ── Mermaid ──────────────────────── */
+        pre.mermaid {
+            background: var(--code-bg) !important;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            overflow: auto;
+        }
+
+        pre.mermaid svg {
+            max-width: 100%;
+        }
+
+        /* ── Hero ─────────────────────────── */
+        .hero-section {
+            padding: 88px 0 76px;
+            background: linear-gradient(155deg, rgba(207, 10, 10, 0.055) 0%, rgba(220, 95, 0, 0.04) 100%);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(207, 10, 10, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(207, 10, 10, 0.18);
+            border-radius: 20px;
+            padding: 3px 12px;
+            margin-bottom: 1.1rem;
+        }
+
+        .hero-section h1 {
+            font-size: clamp(1.9rem, 5vw, 3.3rem);
+            font-weight: 900;
+            line-height: 1.15;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ── Feature cards ────────────────── */
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1.5rem;
+            height: 100%;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(207, 10, 10, 0.3);
+        }
+
+        .feature-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(207, 10, 10, 0.1);
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .feature-icon.orange {
+            background: rgba(220, 95, 0, 0.1);
+            color: var(--accent-orange);
+        }
+
+        /* ── Sidebar ──────────────────────── */
+        .docs-sidebar {
+            position: sticky;
+            top: 70px;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+            padding: 0.25rem 0;
+        }
+
+        .docs-sidebar::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .docs-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(128, 128, 128, 0.25);
+            border-radius: 3px;
+        }
+
+        .sidebar-title {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.09em;
+            opacity: 0.4;
+            text-transform: uppercase;
+            padding: 8px 10px 3px;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 5px 10px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            color: var(--muted);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: color 0.15s, background 0.15s;
+        }
+
+        .sidebar-link:hover {
+            color: var(--accent);
+            background: rgba(207, 10, 10, 0.06);
+        }
+
+        .sidebar-link.highlighted {
+            color: var(--accent);
+        }
+
+        /* ── Docs typography (unified scale) ─ */
+        .docs-body {
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        /* Reset all heading margins first */
+        .docs-body h1,
+        .docs-body h2,
+        .docs-body h3,
+        .docs-body h4,
+        .docs-body h5 {
+            margin: 0 0 0.6rem;
+        }
+
+        .docs-body h1 {
+            font-size: 1.85rem;
+            font-weight: 800;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+        }
+
+        .docs-body h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            margin-top: 2.25rem;
+            margin-bottom: 0.7rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .docs-body h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 1.75rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .docs-body h4 {
+            font-size: 0.975rem;
+            font-weight: 600;
+            margin-top: 1.25rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .docs-body p {
+            margin-bottom: 0.85rem;
+        }
+
+        .docs-body ul,
+        .docs-body ol {
+            padding-left: 1.4rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .docs-body li {
+            margin-bottom: 0.2rem;
+        }
+
+        .docs-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.25rem 0;
+            font-size: 0.875rem;
+        }
+
+        .docs-body table th {
+            background: var(--code-bg);
+            font-weight: 600;
+            padding: 9px 12px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .docs-body table td {
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .docs-body blockquote {
+            border-left: 3px solid var(--accent);
+            padding: 0.45rem 1rem;
+            margin: 1rem 0;
+            background: rgba(207, 10, 10, 0.05);
+            border-radius: 0 8px 8px 0;
+        }
+
+        .docs-body hr {
+            border-color: var(--border-color);
+            margin: 1.75rem 0;
+        }
+
+        .docs-body img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        /* ── Footer ───────────────────────── */
+        .irym-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 1.75rem 0;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg sticky-top irym-nav">
+        <div class="container-xl">
+            <a class="navbar-brand" href="{% url 'home' %}">IRYM <span>SDK</span></a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-3 me-auto gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'docs' %}is-active{% endif %}"
+                            href="{% url 'docs' %}">
+                            <i class="bi bi-book me-1"></i>Quickstart
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'docs_named' %}is-active{% endif %}"
+                            href="{% url 'docs_named' 'GUIDE' %}">
+                            <i class="bi bi-journal-code me-1"></i>Developer Guide
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center gap-2">
+                    <button id="themeToggle" class="theme-toggle" title="Toggle theme">
+                        <i id="themeIcon" class="bi bi-moon-stars-fill"></i>
+                    </button>
+                    <a href="https://github.com/blackeagle686/IRYM_sdk" target="_blank"
+                        class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                        <i class="bi bi-github me-1"></i>GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <footer class="irym-footer">
+        <div class="container-xl">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-muted">&copy; 2026 IRYM SDK — Production-ready AI infrastructure.</div>
+                <div class="col-md-6 text-md-end text-muted">Built with Django &amp; Bootstrap 5</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Use a pinned Mermaid version for stability -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+    <script>
+        const html = document.documentElement;
+        const themeIcon = document.getElementById('themeIcon');
+
+        // Store original mermaid source once before first render
+        const cacheMermaidSources = () => {
+            document.querySelectorAll('pre.mermaid').forEach(el => {
+                if (!el.dataset.src) el.dataset.src = el.textContent.trim();
+            });
+        };
+
+        const applyTheme = (theme) => {
+            html.setAttribute('data-bs-theme', theme);
+            localStorage.setItem('irym-theme', theme);
+            themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+
+            // Re-render Mermaid with matching theme
+            const mTheme = theme === 'dark' ? 'dark' : 'default';
+            mermaid.initialize({ startOnLoad: false, theme: mTheme, securityLevel: 'loose' });
+
+            document.querySelectorAll('pre.mermaid').forEach(el => {
+                if (el.dataset.src) {
+                    el.innerHTML = el.dataset.src;
+                    el.removeAttribute('data-processed');
+                }
+            });
+            mermaid.run({ querySelector: 'pre.mermaid' });
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cacheMermaidSources();
+            const saved = localStorage.getItem('irym-theme') || 'dark';
+            applyTheme(saved);
+        });
+
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            applyTheme(html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
+        });
+    </script>
+</body>
+
+</html>

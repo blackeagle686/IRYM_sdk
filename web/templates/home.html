@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}IRYM SDK — Production-ready AI Infrastructure{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero-section">
+    <div class="container-xl text-center">
+        <div class="hero-badge"><i class="bi bi-stars me-1"></i>v1.0 — Now with Multi-Format RAG</div>
+        <h1 class="mb-4">
+            The AI Backend SDK<br>for <span class="gradient-text">Serious Builders</span>
+        </h1>
+        <p class="lead mb-5 mx-auto" style="max-width:580px; opacity:0.7;">
+            Connect RAG pipelines, Vector DBs, LLMs, Audio, and VLMs with a single SDK.
+            Designed for FastAPI, Django, and any async Python backend.
+        </p>
+        <div class="d-flex justify-content-center flex-wrap gap-3">
+            <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent btn-lg px-5 rounded-pill">
+                <i class="bi bi-rocket-takeoff me-2"></i>Get Started
+            </a>
+            <a href="{% url 'docs' %}" class="btn btn-outline-secondary btn-lg px-5 rounded-pill">
+                <i class="bi bi-book me-2"></i>Quickstart
+            </a>
+        </div>
+
+        <!-- Quick install -->
+        <div class="mt-5 d-inline-block text-start">
+            <pre
+                style="display:inline-block; padding: 0.75rem 1.5rem; font-size:0.875rem;">pip install irym-sdk  <span style="opacity:0.4"># chromadb sentence-transformers pypdf</span></pre>
+        </div>
+    </div>
+</section>
+
+<!-- Feature Grid -->
+<section class="py-5">
+    <div class="container-xl">
+        <h2 class="text-center fw-bold mb-2">Everything you need to ship AI features</h2>
+        <p class="text-center text-muted mb-5">One SDK. Zero boilerplate. Production ready.</p>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+                    <h5 class="fw-bold mb-2">RAG Pipeline</h5>
+                    <p class="small text-muted mb-0">Ingest PDFs, Docs, CSV, JSON, and web pages. Auto-chunking,
+                        semantic search, and citations out of the box.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-database-fill"></i></div>
+                    <h5 class="fw-bold mb-2">Vector DB</h5>
+                    <p class="small text-muted mb-0">Persistent ChromaDB or Qdrant. Singleton embedding model with full
+                        CRUD. Swap backends via config.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="bi bi-chat-dots-fill"></i></div>
+                    <h5 class="fw-bold mb-2">LLM Integration</h5>
+                    <p class="small text-muted mb-0">OpenAI-compatible API client. Supports local and cloud models.
+                        Pluggable generation backends.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:rgba(220,95,0,0.1); color:var(--accent-orange);"><i
+                            class="bi bi-mic-fill"></i></div>
+                    <h5 class="fw-bold mb-2">Audio (STT / TTS)</h5>
+                    <p class="small text-muted mb-0">Local and cloud-based Speech-to-Text and Text-to-Speech. Build
+                        voice-first AI products in minutes.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:rgba(220,95,0,0.1); color:var(--accent-orange);"><i
+                            class="bi bi-eye-fill"></i></div>
+                    <h5 class="fw-bold mb-2">VLM (Vision)</h5>
+                    <p class="small text-muted mb-0">Analyze images using local or OpenAI-compatible Vision Language
+                        Models. Multimodal from day one.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon" style="background:rgba(220,95,0,0.1); color:var(--accent-orange);"><i
+                            class="bi bi-speedometer2"></i></div>
+                    <h5 class="fw-bold mb-2">Caching Layer</h5>
+                    <p class="small text-muted mb-0">Redis-backed semantic caching. Dramatically reduce LLM costs by
+                        serving identical queries from cache.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Integration section -->
+<section class="py-5"
+    style="background: var(--code-bg); border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color);">
+    <div class="container-xl">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-5">
+                <div class="hero-badge mb-3"><i class="bi bi-code-slash me-1"></i>Works with your stack</div>
+                <h2 class="fw-bold mb-3">Zero-friction integration</h2>
+                <p class="text-muted">Plug IRYM SDK into your existing FastAPI or Django application with just two
+                    lines. The DI container handles service wiring automatically.</p>
+                <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent rounded-pill px-4">Read the Guide <i
+                        class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+            <div class="col-lg-7">
+                <pre><code class="language-python">from IRYM_sdk import init_irym, startup_irym, get_rag_pipeline
+
+<span style="opacity:0.5"># FastAPI</span>
+@app.on_event("startup")
+async def startup():
+    init_irym()
+    await startup_irym()
+
+@app.get("/ask")
+async def ask(q: str):
+    rag = get_rag_pipeline()
+    return {"answer": await rag.query(q)}</code></pre>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-5 text-center">
+    <div class="container-xl">
+        <h3 class="fw-bold mb-3">Ready to build?</h3>
+        <p class="text-muted mb-4">Full API reference, integration guides, and examples — all in the docs.</p>
+        <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent btn-lg px-5 rounded-pill">
+            <i class="bi bi-journal-code me-2"></i>Open Developer Guide
+        </a>
+    </div>
+</section>
+{% endblock %}
