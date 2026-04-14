@@ -28,13 +28,21 @@ class RAGPipeline:
         all_metadatas = []
 
         for doc_path in documents:
+            print(f"[*] Reading {doc_path}...")
             content = self._read_file(doc_path)
+            if not content:
+                print(f"[!] Warning: No content extracted from {doc_path}")
+                continue
+                
             chunks = self._chunk_text(content, chunk_size, chunk_overlap)
+            print(f"[+] Split into {len(chunks)} chunks.")
             all_chunks.extend(chunks)
             all_metadatas.extend([{"source": doc_path} for _ in chunks])
 
         if all_chunks:
+            print(f"[*] Indexing {len(all_chunks)} chunks into Vector DB (this may take a moment)...")
             await self.vector_db.add(texts=all_chunks, metadatas=all_metadatas)
+            print("[+] Indexing complete.")
 
     def _read_file(self, path: str) -> str:
         if path.endswith(".pdf"):

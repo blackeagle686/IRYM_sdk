@@ -13,7 +13,7 @@ class RedisCache(BaseCache):
 
     async def get(self, key: str) -> Optional[Any]:
         if not self.redis:
-            raise RuntimeError("RedisCache is not initialized. Call init() first.")
+            await self.init()
         value = await self.redis.get(key)
         if value:
             try:
@@ -24,7 +24,7 @@ class RedisCache(BaseCache):
 
     async def set(self, key: str, value: Any, ttl: int) -> None:
         if not self.redis:
-            raise RuntimeError("RedisCache is not initialized. Call init() first.")
+            await self.init()
         try:
             serialized_value = json.dumps(value)
         except TypeError:
@@ -33,5 +33,5 @@ class RedisCache(BaseCache):
 
     async def delete(self, key: str) -> None:
         if not self.redis:
-            raise RuntimeError("RedisCache is not initialized. Call init() first.")
+            await self.init()
         await self.redis.delete(key)

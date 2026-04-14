@@ -4,15 +4,32 @@ from IRYM_sdk.vector.base import BaseVectorDB
 from IRYM_sdk.core.config import config
 
 class ChromaVectorDB(BaseVectorDB):
-    def __init__(self, collection_name: str = "irym_collection"):
+    def __init__(self, collection_name: str = "irym_collection", embedding_service=None):
         self.persist_directory = config.CHROMA_PERSIST_DIR
         self.collection_name = collection_name
+        self.embedding_service = embedding_service
         self.client = None
         self.collection = None
 
     async def init(self):
         self.client = chromadb.PersistentClient(path=self.persist_directory)
-        self.collection = self.client.get_or_create_collection(name=self.collection_name)
+        
+        # Link our embedding service to Chroma's interface if provided
+        embedding_function = None
+        if self.embedding_service:
+            from chromadb import EmbeddingFunction, Documents, Embeddings
+            class SDKEmbeddingWrapper(EmbeddingFunction):
+                def __init__(self, service):
+                    self.service = service
+                def __call__(self, input: Documents) -> Embeddings:
+                    return self.service.embed_documents(input)
+            
+            embedding_function = SDKEmbeddingWrapper(self.embedding_service)
+
+        self.collection = self.client.get_or_create_collection(
+            name=self.collection_name,
+            embedding_function=embedding_function
+        )
 
     async def search(self, query: str, limit: int = 5) -> List[Any]:
         if not self.collection:

@@ -12,10 +12,10 @@ class QdrantVectorDB(BaseVectorDB):
 
     async def search(self, query: str) -> List[Any]:
         if not self.client:
-            raise RuntimeError("QdrantVectorDB is not initialized.")
+            await self.init()
         return [f"Mock doc matching query: {query}"]
 
     async def insert(self, vector: Any) -> None:
         if not self.client:
-            raise RuntimeError("QdrantVectorDB is not initialized.")
+            await self.init()
         pass
