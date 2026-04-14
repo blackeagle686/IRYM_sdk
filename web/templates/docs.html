@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{% if doc_name == 'GUIDE' %}Developer Guide{% else %}Quickstart{% endif %} — IRYM SDK
+{% if LANGUAGE_CODE == 'ar' %}
+{% if doc_name == 'GUIDE' %}دليل المطور{% else %}البداية السريعة{% endif %}
+{% else %}
+{% if doc_name == 'GUIDE' %}Developer Guide{% else %}Quickstart{% endif %}
+{% endif %}
+— IRYM SDK
 {% endblock %}
 
 {% block content %}
@@ -11,17 +16,20 @@
         <!-- Sidebar TOC -->
         <div class="col-lg-3 d-none d-lg-block">
             <nav class="docs-sidebar">
-                <div class="sidebar-title">On this page</div>
+                <div class="sidebar-title">{% if LANGUAGE_CODE == 'ar' %}في هذه الصفحة{% else %}On this page{% endif %}
+                </div>
                 <div id="toc"></div>
 
                 <hr style="opacity:0.1; margin: 1rem 0.5rem;">
-                <div class="sidebar-title">Resources</div>
+                <div class="sidebar-title">{% if LANGUAGE_CODE == 'ar' %}المصادر{% else %}Resources{% endif %}</div>
                 <a class="sidebar-link {% if doc_name != 'GUIDE' %}fw-semibold{% endif %}" href="{% url 'docs' %}">
-                    <i class="bi bi-book me-1"></i> Quickstart
+                    <i class="bi bi-book me-1"></i>
+                    {% if LANGUAGE_CODE == 'ar' %}البداية السريعة{% else %}Quickstart{% endif %}
                 </a>
                 <a class="sidebar-link {% if doc_name == 'GUIDE' %}fw-semibold{% endif %}"
                     href="{% url 'docs_named' 'GUIDE' %}">
-                    <i class="bi bi-journal-code me-1"></i> Developer Guide
+                    <i class="bi bi-journal-code me-1"></i>
+                    {% if LANGUAGE_CODE == 'ar' %}دليل المطور{% else %}Developer Guide{% endif %}
                 </a>
                 <a class="sidebar-link" href="https://github.com/blackeagle686/IRYM_sdk" target="_blank">
                     <i class="bi bi-github me-1"></i> GitHub
@@ -33,10 +41,17 @@
         <div class="col-lg-9">
             <nav aria-label="breadcrumb" class="mb-4">
                 <ol class="breadcrumb" style="font-size:0.85rem;">
-                    <li class="breadcrumb-item"><a href="{% url 'home' %}"
-                            class="text-decoration-none text-muted">Home</a></li>
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'home' %}" class="text-decoration-none text-muted">
+                            {% if LANGUAGE_CODE == 'ar' %}الرئيسية{% else %}Home{% endif %}
+                        </a>
+                    </li>
                     <li class="breadcrumb-item active">
+                        {% if LANGUAGE_CODE == 'ar' %}
+                        {% if doc_name == 'GUIDE' %}دليل المطور{% else %}البداية السريعة{% endif %}
+                        {% else %}
                         {% if doc_name == 'GUIDE' %}Developer Guide{% else %}Quickstart{% endif %}
+                        {% endif %}
                     </li>
                 </ol>
             </nav>
@@ -49,16 +64,21 @@
             <div class="mt-5 pt-4" style="border-top: 1px solid var(--border-color);">
                 {% if doc_name == 'GUIDE' %}
                 <a href="{% url 'docs' %}" class="text-decoration-none text-muted small">
-                    <i class="bi bi-arrow-left me-1"></i>Back to Quickstart
+                    <i class="bi bi-arrow-left me-1"></i>
+                    {% if LANGUAGE_CODE == 'ar' %}العودة إلى البداية السريعة{% else %}Back to Quickstart{% endif %}
                 </a>
                 {% else %}
                 <a href="{% url 'docs_named' 'GUIDE' %}" class="text-decoration-none float-end small">
-                    Developer Guide <i class="bi bi-arrow-right ms-1"></i>
+                    {% if LANGUAGE_CODE == 'ar' %}دليل المطور{% else %}Developer Guide{% endif %}
+                    <i class="bi bi-arrow-right ms-1"></i>
                 </a>
                 {% endif %}
-                <p class="text-muted small mb-0">Found an issue? <a
+                <p class="text-muted small mb-0">
+                    {% if LANGUAGE_CODE == 'ar' %}وجدت مشكلة؟ <a href="https://github.com/blackeagle686/IRYM_sdk/issues"
+                        target="_blank">افتح تذكرة على GitHub</a>{% else %}Found an issue? <a
                         href="https://github.com/blackeagle686/IRYM_sdk/issues" target="_blank">Open an issue on
-                        GitHub</a></p>
+                        GitHub</a>{% endif %}
+                </p>
             </div>
         </div>
 
@@ -66,7 +86,6 @@
 </div>
 
 <script>
-    // Auto-generate TOC from headings
     document.addEventListener('DOMContentLoaded', () => {
         const headings = document.querySelectorAll('.docs-body h2, .docs-body h3');
         const toc = document.getElementById('toc');
@@ -80,8 +99,6 @@
             a.textContent = h.textContent;
             toc.appendChild(a);
         });
-
-        // Active section highlight on scroll
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => {
                 const link = toc.querySelector(`a[href="#${e.target.id}"]`);

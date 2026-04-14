@@ -1,157 +1,152 @@
 {% extends 'base.html' %}
 
-{% block title %}IRYM SDK — Production-ready AI Infrastructure{% endblock %}
+{% block title %}
+IRYM SDK —
+{% if LANGUAGE_CODE == 'ar' %}
+بنية تحتية للذكاء الاصطناعي جاهزة للإنتاج
+{% else %}
+Production-ready AI Infrastructure
+{% endif %}
+{% endblock %}
 
 {% block content %}
+
 <!-- Hero -->
 <section class="hero-section">
     <div class="container-xl text-center">
-        <div class="hero-badge"><i class="bi bi-stars me-1"></i>v1.0 — Now with Multi-Format RAG</div>
+
+        <div class="hero-badge">
+            <i class="bi bi-stars me-1"></i>
+            {% if LANGUAGE_CODE == 'ar' %}
+            v1.0 — جاهز للإنتاج مع RAG متعدد المصادر
+            {% else %}
+            v1.0 — Production-Ready Multi-Format RAG
+            {% endif %}
+        </div>
+
         <h1 class="mb-4">
-            The AI Backend SDK<br>for <span class="gradient-text">Serious Builders</span>
+            {% if LANGUAGE_CODE == 'ar' %}
+            ابنِ أنظمة ذكاء اصطناعي أسرع<br>
+            <span class="gradient-text">بدون تعقيد</span>
+            {% else %}
+            Build AI Backends Faster<br>
+            <span class="gradient-text">Without the Chaos</span>
+            {% endif %}
         </h1>
-        <p class="lead mb-5 mx-auto" style="max-width:580px; opacity:0.7;">
-            Connect RAG pipelines, Vector DBs, LLMs, Audio, and VLMs with a single SDK.
-            Designed for FastAPI, Django, and any async Python backend.
+
+        <p class="lead mb-5 mx-auto" style="max-width:620px; opacity:0.75;">
+            {% if LANGUAGE_CODE == 'ar' %}
+            توقف عن توصيل الأدوات يدويًا. يوفر لك IRYM SDK طبقة موحدة لإدارة RAG، قواعد البيانات المتجهة،
+            نماذج اللغة، والذكاء متعدد الوسائط — في تصميم نظيف وقابل للتوسع.
+            {% else %}
+            Stop wiring tools together. IRYM SDK gives you a unified layer for RAG pipelines,
+            vector databases, LLMs, and multimodal AI — all in one clean architecture.
+            {% endif %}
         </p>
+
         <div class="d-flex justify-content-center flex-wrap gap-3">
             <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent btn-lg px-5 rounded-pill">
-                <i class="bi bi-rocket-takeoff me-2"></i>Get Started
+                <i class="bi bi-rocket-takeoff me-2"></i>
+                {% if LANGUAGE_CODE == 'ar' %}ابدأ الآن{% else %}Get Started{% endif %}
             </a>
+
             <a href="{% url 'docs' %}" class="btn btn-outline-secondary btn-lg px-5 rounded-pill">
-                <i class="bi bi-book me-2"></i>Quickstart
+                <i class="bi bi-book me-2"></i>
+                {% if LANGUAGE_CODE == 'ar' %}التوثيق{% else %}Docs{% endif %}
             </a>
         </div>
 
-        <!-- Quick install -->
         <div class="mt-5 d-inline-block text-start">
-            <pre
-                style="display:inline-block; padding: 0.75rem 1.5rem; font-size:0.875rem;">git clone https://github.com/blackeagle686/IRYM_sdk.git</pre>
+            <pre style="padding:0.75rem 1.5rem; font-size:0.875rem;">pip install irym-sdk</pre>
         </div>
+
     </div>
 </section>
 
-<!-- Feature Grid -->
 <section class="py-5">
-    <div class="container-xl">
-        <h2 class="text-center fw-bold mb-2">Everything you need to ship AI features</h2>
-        <p class="text-center text-muted mb-5">One SDK. Zero boilerplate. Production ready.</p>
-
-        <div class="row g-4">
-            <!-- Row 1 -->
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="bi bi-lightning-charge-fill"></i></div>
-                    <h5 class="fw-bold mb-2">RAG Pipeline</h5>
-                    <p class="small text-muted mb-0">Ingest PDFs, Docs, CSV, JSON, and web pages. Auto-chunking,
-                        semantic search, and citations out of the box.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="bi bi-database-fill"></i></div>
-                    <h5 class="fw-bold mb-2">Vector DB</h5>
-                    <p class="small text-muted mb-0">Persistent ChromaDB or Qdrant. Singleton embedding model with full
-                        CRUD. Swap backends via config.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="bi bi-chat-dots-fill"></i></div>
-                    <h5 class="fw-bold mb-2">LLM Integration</h5>
-                    <p class="small text-muted mb-0">OpenAI-compatible API client. Supports local and cloud models.
-                        Pluggable generation backends.</p>
-                </div>
-            </div>
-
-            <!-- Row 2 -->
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background:rgba(220,95,0,0.1); color:var(--accent-orange);"><i
-                            class="bi bi-mic-fill"></i></div>
-                    <h5 class="fw-bold mb-2">Audio (STT / TTS)</h5>
-                    <p class="small text-muted mb-0">Local and cloud-based Speech-to-Text and Text-to-Speech. Build
-                        voice-first AI products in minutes.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background:rgba(220,95,0,0.1); color:var(--accent-orange);"><i
-                            class="bi bi-eye-fill"></i></div>
-                    <h5 class="fw-bold mb-2">VLM (Vision)</h5>
-                    <p class="small text-muted mb-0">Analyze images using local or OpenAI-compatible Vision Language
-                        Models. Multimodal from day one.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background:rgba(220,95,0,0.1); color:var(--accent-orange);"><i
-                            class="bi bi-speedometer2"></i></div>
-                    <h5 class="fw-bold mb-2">Caching Layer</h5>
-                    <p class="small text-muted mb-0">Redis-backed semantic caching. Dramatically reduce LLM costs by
-                        serving identical queries from cache.</p>
-                </div>
-            </div>
-
-            <!-- Row 3: Advanced Infrastructure -->
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background:rgba(220,95,0,0.1); color:var(--accent-orange);"><i
-                            class="bi bi-arrow-repeat"></i></div>
-                    <h5 class="fw-bold mb-2">Lifecycle Management</h5>
-                    <p class="small text-muted mb-0">Register async startup/shutdown hooks. Cleanly manage database
-                        pools and AI model pre-loading.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background:rgba(220,95,0,0.1); color:var(--accent-orange);"><i
-                            class="bi bi-graph-up-arrow"></i></div>
-                    <h5 class="fw-bold mb-2">Observability</h5>
-                    <p class="small text-muted mb-0">Built-in structured logging and tracing skeletons. Monitor your AI
-                        service health and performance.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon" style="background:rgba(220,95,0,0.1); color:var(--accent-orange);"><i
-                            class="bi bi-exclamation-triangle-fill"></i></div>
-                    <h5 class="fw-bold mb-2">Error Handling</h5>
-                    <p class="small text-muted mb-0">Robust typed exception hierarchy. Catch service-specific failures
-                        with clarity and precision.</p>
-                </div>
-            </div>
-        </div>
+  <div class="container-xl">
+    <h2 class="text-center fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}كل ما تحتاجه لإطلاق ميزات الذكاء الاصطناعي{% else %}Everything you need to ship AI features{% endif %}</h2>
+    <p class="text-center text-muted mb-5">{% if LANGUAGE_CODE == 'ar' %}SDK واحد. صفر كود متكرر. جاهز للإنتاج.{% else %}One SDK. Zero boilerplate. Production ready.{% endif %}</p>
+    <div class="row g-4">
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+        <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}خط إنتاج RAG{% else %}RAG Pipeline{% endif %}</h5>
+        <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}استوعب ملفات PDF و Docs و CSV و JSON وصفحات الويب. تقسيم تلقائي، بحث دلالي، واستشهادات جاهزة.{% else %}Ingest PDFs, Docs, CSV, JSON, and web pages. Auto-chunking, semantic search, and citations out of the box.{% endif %}</p>
+      </div></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon"><i class="bi bi-database-fill"></i></div>
+        <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}قاعدة بيانات متجهة{% else %}Vector DB{% endif %}</h5>
+        <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}دعم ChromaDB أو Qdrant. نموذج تضمين واحد لعمليات CRUD كاملة. قم بتبديل المحرك عبر الإعدادات.{% else %}Persistent ChromaDB or Qdrant. Singleton embedding model with full CRUD. Swap backends via config.{% endif %}</p>
+      </div></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon"><i class="bi bi-chat-dots-fill"></i></div>
+        <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}تكامل LLM{% else %}LLM Integration{% endif %}</h5>
+        <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}عميل يتوافق مع OpenAI. يدعم النماذج المحلية والسحابية. محركات توليد قابلة للتوصيل.{% else %}OpenAI-compatible API client. Supports local and cloud models. Pluggable generation backends.{% endif %}</p>
+      </div></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(220,95,0,0.1);color:var(--accent-orange);"><i class="bi bi-mic-fill"></i></div>
+        <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}الصوت (STT / TTS){% else %}Audio (STT / TTS){% endif %}</h5>
+        <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تحويل الكلام إلى نص وبالعكس، محلياً أو سحابياً. ابنِ منتجات صوتية في دقائق.{% else %}Local and cloud-based Speech-to-Text and Text-to-Speech. Build voice-first AI products in minutes.{% endif %}</p>
+      </div></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(220,95,0,0.1);color:var(--accent-orange);"><i class="bi bi-eye-fill"></i></div>
+        <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}VLM - الرؤية{% else %}VLM (Vision){% endif %}</h5>
+        <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}حلل الصور باستخدام نماذج الرؤية المحلية أو المتوافقة مع OpenAI. متعدد الوسائط من اليوم الأول.{% else %}Analyze images using local or OpenAI-compatible Vision Language Models. Multimodal from day one.{% endif %}</p>
+      </div></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(220,95,0,0.1);color:var(--accent-orange);"><i class="bi bi-speedometer2"></i></div>
+        <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}طبقة التخزين المؤقت{% else %}Caching Layer{% endif %}</h5>
+        <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تخزين دلالي مدعوم بـ Redis. قلل تكاليف النماذج اللغوية بشكل كبير.{% else %}Redis-backed semantic caching. Dramatically reduce LLM costs by serving identical queries from cache.{% endif %}</p>
+      </div></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(220,95,0,0.1);color:var(--accent-orange);"><i class="bi bi-arrow-repeat"></i></div>
+        <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}إدارة دورة الحياة{% else %}Lifecycle Management{% endif %}</h5>
+        <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}سجّل مهام البدء والإغلاق غير المتزامنة. أدر اتصالات قواعد البيانات وتحميل النماذج بذكاء.{% else %}Register async startup/shutdown hooks. Cleanly manage database pools and AI model pre-loading.{% endif %}</p>
+      </div></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(220,95,0,0.1);color:var(--accent-orange);"><i class="bi bi-graph-up-arrow"></i></div>
+        <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}المراقبة والوضوح{% else %}Observability{% endif %}</h5>
+        <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تسجيل منظم وهياكل تتبع مدمجة. راقب أداء وصحة خطوط إنتاج الذكاء الاصطناعي الخاصة بك.{% else %}Built-in structured logging and tracing skeletons. Monitor your AI service health and performance.{% endif %}</p>
+      </div></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(220,95,0,0.1);color:var(--accent-orange);"><i class="bi bi-exclamation-triangle-fill"></i></div>
+        <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}معالجة الأخطاء{% else %}Error Handling{% endif %}</h5>
+        <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تسلسل هرمي قوي للاستثناءات. التقط إخفاقات الخدمات بوضوح ودقة تامة.{% else %}Robust typed exception hierarchy. Catch service-specific failures with clarity and precision.{% endif %}</p>
+      </div></div>
     </div>
+  </div>
 </section>
 
-<!-- Integration section -->
-<section class="py-5"
-    style="background: var(--code-bg); border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color);">
+
+<!-- Integration -->
+<section class="py-5" style="background:var(--code-bg); border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color);">
     <div class="container-xl">
         <div class="row align-items-center g-5">
+
             <div class="col-lg-5">
-                <div class="hero-badge mb-3"><i class="bi bi-code-slash me-1"></i>Works with your stack</div>
-                <h2 class="fw-bold mb-3">Zero-friction integration</h2>
-                <p class="text-muted">Plug IRYM SDK into your existing FastAPI or Django application with just two
-                    lines. The DI container handles service wiring automatically.</p>
-                <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent rounded-pill px-4">Read the Guide <i
-                        class="bi bi-arrow-right ms-1"></i></a>
+                <div class="hero-badge mb-3">
+                    <i class="bi bi-code-slash me-1"></i>
+                    {% if LANGUAGE_CODE == 'ar' %}يعمل مع تقنياتك{% else %}Works with your stack{% endif %}
+                </div>
+
+                <h2 class="fw-bold mb-3">
+                    {% if LANGUAGE_CODE == 'ar' %}تكامل سريع{% else %}Zero-friction integration{% endif %}
+                </h2>
+
+                <p class="text-muted">
+                    {% if LANGUAGE_CODE == 'ar' %}
+                    اربط SDK مع مشروعك الحالي في دقائق.
+                    {% else %}
+                    Plug the SDK into your backend in minutes.
+                    {% endif %}
+                </p>
+
+                <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent rounded-pill px-4">
+                    {% if LANGUAGE_CODE == 'ar' %}ابدأ الآن{% else %}Get Started{% endif %}
+                </a>
             </div>
+
             <div class="col-lg-7">
-                <pre><code class="language-python">from IRYM_sdk import init_irym, startup_irym, get_rag_pipeline
+<pre><code class="language-python">from irym_sdk import init_irym, get_rag_pipeline
 
-<span style="opacity:0.5"># FastAPI</span>
-@app.on_event("startup")
-async def startup():
-    init_irym()
-    await startup_irym()
+init_irym()
 
-@app.get("/ask")
-async def ask(q: str):
-    rag = get_rag_pipeline()
-    return {"answer": await rag.query(q)}</code></pre>
+rag = get_rag_pipeline()
+answer = await rag.query("What is AI?")
+print(answer)</code></pre>
             </div>
+
         </div>
     </div>
 </section>
@@ -159,11 +154,24 @@ async def ask(q: str):
 <!-- CTA -->
 <section class="py-5 text-center">
     <div class="container-xl">
-        <h3 class="fw-bold mb-3">Ready to build?</h3>
-        <p class="text-muted mb-4">Full API reference, integration guides, and examples — all in the docs.</p>
+
+        <h3 class="fw-bold mb-3">
+            {% if LANGUAGE_CODE == 'ar' %}ابدأ الآن{% else %}Ready to build?{% endif %}
+        </h3>
+
+        <p class="text-muted mb-4">
+            {% if LANGUAGE_CODE == 'ar' %}
+            كل ما تحتاجه موجود في التوثيق.
+            {% else %}
+            Everything you need is in the docs.
+            {% endif %}
+        </p>
+
         <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent btn-lg px-5 rounded-pill">
-            <i class="bi bi-journal-code me-2"></i>Open Developer Guide
+            {% if LANGUAGE_CODE == 'ar' %}افتح التوثيق{% else %}Open Docs{% endif %}
         </a>
+
     </div>
 </section>
+
 {% endblock %}

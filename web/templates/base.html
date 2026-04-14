@@ -1,6 +1,7 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
-
+<html lang="{{ LANGUAGE_CODE }}" data-bs-theme="dark" {% if LANGUAGE_CODE == 'ar' %}dir="rtl"{% endif %}>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,7 +35,6 @@
             --muted: rgba(0, 0, 0, 0.5);
         }
 
-        /* ── Base ─────────────────────────── */
         body {
             font-family: var(--font-sans);
             font-size: 15px;
@@ -42,7 +42,6 @@
             transition: background-color 0.2s, color 0.2s;
         }
 
-        /* ── Navbar ───────────────────────── */
         .irym-nav {
             background: var(--nav-bg);
             border-bottom: 1px solid var(--border-color);
@@ -77,7 +76,6 @@
             color: var(--accent) !important;
         }
 
-        /* ── Theme Toggle ─────────────────── */
         .theme-toggle {
             width: 34px;
             height: 34px;
@@ -95,7 +93,6 @@
             transform: rotate(15deg);
         }
 
-        /* ── Buttons ──────────────────────── */
         .btn-accent {
             background: linear-gradient(135deg, var(--accent), var(--accent-orange));
             color: #fff;
@@ -110,7 +107,6 @@
             transform: translateY(-1px);
         }
 
-        /* ── Code blocks ──────────────────── */
         pre {
             background: var(--code-bg) !important;
             border: 1px solid var(--border-color);
@@ -121,6 +117,13 @@
             line-height: 1.7;
             overflow-x: auto;
             margin: 1rem 0;
+            direction: ltr;
+            text-align: left;
+        }
+
+        code {
+            direction: ltr;
+            text-align: left;
         }
 
         code:not(pre code) {
@@ -132,7 +135,6 @@
             font-size: 0.85em;
         }
 
-        /* ── Mermaid ──────────────────────── */
         pre.mermaid {
             background: var(--code-bg) !important;
             border: 1px solid var(--border-color);
@@ -142,7 +144,6 @@
             overflow: auto;
         }
 
-        /* ── Hero ─────────────────────────── */
         .hero-section {
             padding: 88px 0 76px;
             background: linear-gradient(155deg, rgba(207, 10, 10, 0.055) 0%, rgba(220, 95, 0, 0.04) 100%);
@@ -173,7 +174,6 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* ── Feature cards ────────────────── */
         .feature-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -201,12 +201,6 @@
             margin-bottom: 0.9rem;
         }
 
-        .feature-icon.orange {
-            background: rgba(220, 95, 0, 0.1);
-            color: var(--accent-orange);
-        }
-
-        /* ── Sidebar ──────────────────────── */
         .docs-sidebar {
             position: sticky;
             top: 70px;
@@ -253,7 +247,6 @@
             color: var(--accent);
         }
 
-        /* ── Docs typography (unified scale) ─ */
         .docs-body {
             font-size: 1.05rem;
             line-height: 1.8;
@@ -355,7 +348,6 @@
             border: 1px solid var(--border-color);
         }
 
-        /* ── Footer ───────────────────────── */
         .irym-footer {
             border-top: 1px solid var(--border-color);
             padding: 1.75rem 0;
@@ -365,7 +357,6 @@
 </head>
 
 <body>
-
     <nav class="navbar navbar-expand-lg sticky-top irym-nav">
         <div class="container-xl">
             <a class="navbar-brand" href="{% url 'home' %}">IRYM <span>SDK</span></a>
@@ -377,23 +368,43 @@
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'docs' %}is-active{% endif %}"
                             href="{% url 'docs' %}">
-                            <i class="bi bi-book me-1"></i>Quickstart
+                            <i class="bi bi-book me-1"></i>
+                            {% if LANGUAGE_CODE == 'ar' %}البداية السريعة{% else %}Quickstart{% endif %}
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'docs_named' %}is-active{% endif %}"
                             href="{% url 'docs_named' 'GUIDE' %}">
-                            <i class="bi bi-journal-code me-1"></i>Developer Guide
+                            <i class="bi bi-journal-code me-1"></i>
+                            {% if LANGUAGE_CODE == 'ar' %}دليل المطور{% else %}Developer Guide{% endif %}
                         </a>
                     </li>
                 </ul>
                 <div class="d-flex align-items-center gap-2">
+                    <!-- Language Toggle -->
+                    <form action="{% url 'set_language' %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.path }}">
+                        <select name="language" onchange="this.form.submit()"
+                            class="btn btn-sm btn-outline-secondary rounded-pill px-2"
+                            style="font-size:0.75rem; background:var(--nav-bg); color:var(--bs-body-color);">
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            {% for language in languages %}
+                            <option value="{{ language.code }}"
+                                {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                                {{ language.name_local }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </form>
                     <button id="themeToggle" class="theme-toggle" title="Toggle theme">
                         <i id="themeIcon" class="bi bi-moon-stars-fill"></i>
                     </button>
                     <a href="https://github.com/blackeagle686/IRYM_sdk" target="_blank"
                         class="btn btn-sm btn-outline-secondary rounded-pill px-3">
-                        <i class="bi bi-github me-1"></i>GitHub
+                        <i class="bi bi-github me-1"></i>
+                        {% if LANGUAGE_CODE == 'ar' %}جيت هاب{% else %}GitHub{% endif %}
                     </a>
                 </div>
             </div>
@@ -405,8 +416,20 @@
     <footer class="irym-footer">
         <div class="container-xl">
             <div class="row align-items-center">
-                <div class="col-md-6 text-muted">&copy; 2026 IRYM SDK — Production-ready AI infrastructure.</div>
-                <div class="col-md-6 text-md-end text-muted">Built with Django &amp; Bootstrap 5</div>
+                <div class="col-md-6 text-muted">
+                    {% if LANGUAGE_CODE == 'ar' %}
+                    &copy; 2026 IRYM SDK — بنية تحتية برمجية للذكاء الاصطناعي جاهزة للإنتاج.
+                    {% else %}
+                    &copy; 2026 IRYM SDK — Production-ready AI infrastructure.
+                    {% endif %}
+                </div>
+                <div class="col-md-6 text-md-end text-muted">
+                    {% if LANGUAGE_CODE == 'ar' %}
+                    تم البناء باستخدام Django و Bootstrap 5
+                    {% else %}
+                    Built with Django &amp; Bootstrap 5
+                    {% endif %}
+                </div>
             </div>
         </div>
     </footer>
@@ -417,7 +440,6 @@
         const html = document.documentElement;
         const themeIcon = document.getElementById('themeIcon');
 
-        // Store original mermaid source once before first render
         const cacheMermaidSources = () => {
             document.querySelectorAll('pre.mermaid').forEach(el => {
                 if (!el.dataset.src) el.dataset.src = el.textContent.trim();
@@ -428,16 +450,10 @@
             html.setAttribute('data-bs-theme', theme);
             localStorage.setItem('irym-theme', theme);
             themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
-
-            // Re-render Mermaid with matching theme
             const mTheme = theme === 'dark' ? 'dark' : 'default';
             mermaid.initialize({ startOnLoad: false, theme: mTheme, securityLevel: 'loose' });
-
             document.querySelectorAll('pre.mermaid').forEach(el => {
-                if (el.dataset.src) {
-                    el.innerHTML = el.dataset.src;
-                    el.removeAttribute('data-processed');
-                }
+                if (el.dataset.src) { el.innerHTML = el.dataset.src; el.removeAttribute('data-processed'); }
             });
             mermaid.run({ querySelector: 'pre.mermaid' });
         };

@@ -4,12 +4,27 @@ import markdown
 from django.shortcuts import render
 from django.conf import settings
 
+from django.utils import translation
+
 def home(request):
     return render(request, 'home.html')
 
 def docs(request, doc_name='README'):
-    filename = 'README.md' if doc_name == 'README' else 'GUIDE.md'
+    lang = translation.get_language()
+    base_filename = 'README' if doc_name == 'README' else 'GUIDE'
+    
+    # Try language-specific file first (e.g., README.ar.md)
+    if lang == 'ar':
+        filename = f"{base_filename}.ar.md"
+    else:
+        filename = f"{base_filename}.md"
+        
     readme_path = os.path.join(settings.BASE_DIR.parent, filename)
+
+    # Fallback to English if Arabic file doesn't exist
+    if not os.path.exists(readme_path):
+        filename = f"{base_filename}.md"
+        readme_path = os.path.join(settings.BASE_DIR.parent, filename)
 
     if not os.path.exists(readme_path):
         readme_path = os.path.join(settings.BASE_DIR.parent, 'README.md')
