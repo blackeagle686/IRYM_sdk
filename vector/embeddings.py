@@ -20,7 +20,9 @@ class BaseEmbeddings(ABC):
 class SentenceTransformerEmbeddings(BaseEmbeddings):
     def __init__(self, model_name: str = None):
         model_to_use = model_name or config.EMBEDDING_MODEL
+        print(f"[*] Initializing Embedding Model: {model_to_use}...")
         self.model = SentenceTransformer(model_to_use)
+        print(f"[+] Embedding Model Loaded.")
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         embeddings = self.model.encode(texts)

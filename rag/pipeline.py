@@ -37,6 +37,21 @@ class RAGPipeline:
             await self.vector_db.add(texts=all_chunks, metadatas=all_metadatas)
 
     def _read_file(self, path: str) -> str:
+        if path.endswith(".pdf"):
+            try:
+                from pypdf import PdfReader
+                reader = PdfReader(path)
+                text = ""
+                for page in reader.pages:
+                    text += page.extract_text() + "\n"
+                return text
+            except ImportError:
+                print(f"[!] Warning: pypdf not installed. Cannot read PDF: {path}")
+                return ""
+            except Exception as e:
+                print(f"[!] Error reading PDF {path}: {e}")
+                return ""
+        
         with open(path, 'r', encoding='utf-8', errors='ignore') as f:
             return f.read()
 

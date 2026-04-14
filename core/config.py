@@ -1,4 +1,8 @@
 import os
+from dotenv import load_dotenv
+
+# Load .env file if present
+load_dotenv()
 
 class Config:
     REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
