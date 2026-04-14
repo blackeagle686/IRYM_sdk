@@ -80,52 +80,26 @@ The `RAGPipeline` is the highest-level service for handling document-based knowl
 
 ```python
 import asyncio
-from IRYM_sdk import init_irym, get_rag_pipeline
+from IRYM_sdk import init_irym, startup_irym, get_rag_pipeline
 
 async def rag_demo():
     init_irym()
+    await startup_irym()
     rag = get_rag_pipeline()
 
-    # 1. Ingest documents (Supports folders with .txt, .md, .pdf)
+    # 1. Ingest documents (Supports .txt, .md, .pdf, .docx, .csv, .json)
     await rag.ingest("./my_knowledge_base")
 
-    # 2. Query with context
-    answer = await rag.query("What are the system requirements?")
+    # 2. Ingest from Web URL
+    await rag.ingest_url("https://example.com/docs/api")
+
+    # 3. Query with automatic Citations
+    answer = await rag.query("What are the pricing plans?")
     print(f"AI Answer: {answer}")
-
-    # 3. Clear data if needed
-    # await rag.clear_data()
-
-if __name__ == "__main__":
-    asyncio.run(rag_demo())
 ```
 
-## 📂 Vector DB Service
-
-You can also use the `VectorDB` service directly for granular control:
-
-```python
-from IRYM_sdk.core.container import container
-
-async def vector_crud_demo():
-    vdb = container.get("vector_db")
-    await vdb.init()
-
-    # Add raw text
-    await vdb.add(
-        texts=["IRYM SDK supports multiple vector stores."],
-        metadatas=[{"category": "info"}],
-        ids=["id_001"]
-    )
-
-    # Search
-    results = await vdb.search("Which vector stores are supported?", limit=2)
-    for doc in results:
-        print(f"Found: {doc['content']} (Score: {doc['distance']})")
-
-    # Delete
-    await vdb.delete(ids=["id_001"])
-```
+### 🧠 Source Attribution
+The SDK now automatically instructs the LLM to cite its sources. When you query the RAG pipeline, the response will often include markers like `[Source: cloud.pdf]` or `[Source: https://example.com]`.
 
 ## 🧠 Advanced Usage: Insight Engine
 

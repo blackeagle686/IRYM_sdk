@@ -18,11 +18,17 @@ class BaseEmbeddings(ABC):
         pass
 
 class SentenceTransformerEmbeddings(BaseEmbeddings):
+    _model_cache = {}
+
     def __init__(self, model_name: str = None):
         model_to_use = model_name or config.EMBEDDING_MODEL
-        print(f"[*] Initializing Embedding Model: {model_to_use}...")
-        self.model = SentenceTransformer(model_to_use)
-        print(f"[+] Embedding Model Loaded.")
+        
+        if model_to_use not in SentenceTransformerEmbeddings._model_cache:
+            print(f"[*] Initializing Embedding Model: {model_to_use}...")
+            SentenceTransformerEmbeddings._model_cache[model_to_use] = SentenceTransformer(model_to_use)
+            print(f"[+] Embedding Model Loaded into cache.")
+        
+        self.model = SentenceTransformerEmbeddings._model_cache[model_to_use]
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         embeddings = self.model.encode(texts)

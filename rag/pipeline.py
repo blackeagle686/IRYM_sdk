@@ -21,7 +21,7 @@ class RAGPipeline:
         else:
             for root, _, files in os.walk(path):
                 for file in files:
-                    if file.endswith((".txt", ".md", ".pdf")):
+                    if file.endswith((".txt", ".md", ".pdf", ".docx", ".csv", ".json")):
                         documents.append(os.path.join(root, file))
 
         all_chunks = []
@@ -37,12 +37,45 @@ class RAGPipeline:
             chunks = self._chunk_text(content, chunk_size, chunk_overlap)
             print(f"[+] Split into {len(chunks)} chunks.")
             all_chunks.extend(chunks)
-            all_metadatas.extend([{"source": doc_path} for _ in chunks])
+            all_metadatas.extend([{"source": os.path.basename(doc_path)} for _ in chunks])
 
         if all_chunks:
             print(f"[*] Indexing {len(all_chunks)} chunks into Vector DB (this may take a moment)...")
             await self.vector_db.add(texts=all_chunks, metadatas=all_metadatas)
             print("[+] Indexing complete.")
+
+    async def ingest_url(self, url: str, chunk_size: int = 500, chunk_overlap: int = 50) -> None:
+        """
+        Scrapes a URL, chunks the content, and stores in vector DB.
+        """
+        print(f"[*] Scraping URL: {url}...")
+        try:
+            import requests
+            from bs4 import BeautifulSoup
+            
+            response = requests.get(url, timeout=10)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.text, 'html.parser')
+            
+            # Remove script and style elements
+            for script in soup(["script", "style"]):
+                script.decompose()
+            
+            content = soup.get_text(separator=' ')
+            # Clean up whitespace
+            content = " ".join(content.split())
+            
+            chunks = self._chunk_text(content, chunk_size, chunk_overlap)
+            print(f"[+] Scraped and split into {len(chunks)} chunks.")
+            
+            if chunks:
+                await self.vector_db.add(
+                    texts=chunks, 
+                    metadatas=[{"source": url} for _ in chunks]
+                )
+                print(f"[+] Indexed {url} successfully.")
+        except Exception as e:
+            print(f"[!] Error scraping {url}: {e}")
 
     def _read_file(self, path: str) -> str:
         if path.endswith(".pdf"):
@@ -58,6 +91,35 @@ class RAGPipeline:
                 return ""
             except Exception as e:
                 print(f"[!] Error reading PDF {path}: {e}")
+                return ""
+        
+        elif path.endswith(".docx"):
+            try:
+                import docx
+                doc = docx.Document(path)
+                return "\n".join([para.text for para in doc.paragraphs])
+            except ImportError:
+                print(f"[!] Warning: python-docx not installed. Cannot read DOCX: {path}")
+                return ""
+        
+        elif path.endswith(".csv"):
+            try:
+                import csv
+                with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                    reader = csv.reader(f)
+                    return "\n".join([",".join(row) for row in reader])
+            except Exception as e:
+                print(f"[!] Error reading CSV {path}: {e}")
+                return ""
+        
+        elif path.endswith(".json"):
+            try:
+                import json
+                with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                    data = json.load(f)
+                    return json.dumps(data, indent=2)
+            except Exception as e:
+                print(f"[!] Error reading JSON {path}: {e}")
                 return ""
         
         with open(path, 'r', encoding='utf-8', errors='ignore') as f:
