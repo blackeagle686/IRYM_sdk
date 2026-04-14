@@ -17,20 +17,32 @@ def docs(request, doc_name='README'):
     with open(readme_path, 'r', encoding='utf-8') as f:
         content = f.read()
 
-    # Convert markdown to HTML
+    # 1. Protect Mermaid blocks from codehilite
+    mermaid_blocks = []
+    def protect_mermaid(match):
+        mermaid_blocks.append(match.group(1))
+        return f"[[MERMAID_BLOCK_{len(mermaid_blocks)-1}]]"
+
+    # Match ```mermaid ... ```
+    content = re.sub(r'```mermaid\s*\n(.*?)\n```', protect_mermaid, content, flags=re.DOTALL)
+
+    # 2. Convert markdown to HTML
     html_content = markdown.markdown(
         content,
         extensions=['fenced_code', 'codehilite', 'tables', 'toc']
     )
 
-    # Fix Mermaid blocks: <pre><code class="language-mermaid">...</code></pre>
-    # must become <pre class="mermaid">...</pre>
-    html_content = re.sub(
-        r'<pre><code class="language-mermaid">(.*?)</code></pre>',
-        r'<pre class="mermaid">\1</pre>',
-        html_content,
-        flags=re.DOTALL
-    )
+    # 3. Restore Mermaid blocks and ensure they are NOT wrapped in <p> tags
+    def restore_mermaid(match):
+        index = int(match.group(1))
+        # Strip trailing newlines from content to avoid extra spacing in the diagram
+        code = mermaid_blocks[index].strip()
+        return f'<pre class="mermaid">{code}</pre>'
+
+    # Also match placeholders inside <p> tags and remove the <p>
+    html_content = re.sub(r'<p>\[\[MERMAID_BLOCK_(\d+)\]\]</p>', restore_mermaid, html_content)
+    # Generic replacement for any remaining ones
+    html_content = re.sub(r'\[\[MERMAID_BLOCK_(\d+)\]\]', restore_mermaid, html_content)
 
     return render(request, 'docs.html', {
         'content': html_content,
