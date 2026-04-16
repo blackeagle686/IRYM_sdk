@@ -44,7 +44,7 @@ graph TD
 2. **الواجهة أولاً**: كل وحدة تلتزم بعقد أساسي غير متزامن.
 3. **قواعد بيانات متجهة مرنة**: دعم أصلي لـ **ChromaDB** و **Qdrant**.
 4. **تضمينات مدمجة**: مهيأة مسبقاً مع `sentence-transformers` لتوليد التضمينات محلياً.
-5. **تنسيق RAG**: نظام `RAGPipeline` شامل يعالج تحميل المستندات، تقسيمها، تخزينها، واسترجاعها بذكاء.
+5. **تنسيق RAG**: نظام `RAGPipeline` شامل يعالج تحميل المستندات (.pdf, .docx, .xlsx)، قواعد بيانات SQL، واجهات البرمجة الخارجية (APIs)، وكشط الويب.
 
 ## 📦 التثبيت
 
@@ -85,4 +85,20 @@ async def rag_demo():
     # 3. الاستعلام مع استشهادات تلقائية
     answer = await rag.query("ما هي خطط التسعير؟")
     print(f"إجابة الذكاء الاصطناعي: {answer}")
+```
+
+## 🖼️ التشغيل السريع: الرؤية (VLM)
+
+يقوم `VLMPipeline` بتنسيق مهام الرؤية مع التخزين المؤقت التلقائي و RAG.
+
+```python
+from IRYM_sdk import init_irym_full, get_vlm_pipeline
+
+async def vision_demo():
+    await init_irym_full()
+    vlm = get_vlm_pipeline()
+
+    # متكامل: تخزين النتائج + حقن سياق RAG
+    answer = await vlm.ask("ماذا يوجد في هذه الصورة؟", "image.png", use_rag=True)
+    print(answer)
 ```

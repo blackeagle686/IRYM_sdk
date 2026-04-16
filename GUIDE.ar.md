@@ -15,11 +15,21 @@ from IRYM_sdk import init_irym, startup_irym, get_rag_pipeline
 async def run_rag():
     init_irym()
     await startup_irym()
-    rag = get_rag_pipeline()
-    
     # الاستعاب من مصادر متعددة
-    await rag.ingest("./docs/")
-    await rag.ingest_url("https://docs.ai-library.com")
+    await rag.ingest("./docs/")             # ملفات (PDF, MD, TXT, DOCX, XLSX)
+    await rag.ingest_url("https://ai.com")  # كاشط الويب
+    
+    # جديد: استيعاب متقدم
+    await rag.ingest_sql(
+        connection_string="sqlite:///data.db",
+        query="SELECT content, author FROM posts",
+        text_column="content"
+    )
+    
+    await rag.ingest_api(
+        url="https://api.service.com/v1/news",
+        data_path="results.items"
+    )
     
     # الاستعلام مع الاستشهادات
     response = await rag.query("كيف يمكنني تكوين مخزن المتجهات؟")
@@ -44,6 +54,25 @@ stt = OpenAISTT()
 tts = OpenAITTS()
 await stt.init()
 text = await stt.transcribe("voice.mp3")
+```
+
+### 3. خدمة الرؤية (VLM)
+قم بتحليل الصور باستخدام نماذج رؤية محلية أو متوافقة مع OpenAI. يعالج خط الإنتاج المتكامل **التخزين المؤقت** و**سياق الـ RAG** تلقائياً.
+
+```python
+from IRYM_sdk import init_irym_full, get_vlm_pipeline
+
+async def vision_demo():
+    await init_irym_full()
+    vlm = get_vlm_pipeline()
+    
+    # تكامل في 3 أسطر: النموذج + التخزين المؤقت + سياق RAG
+    answer = await vlm.ask(
+        prompt="صف محتويات هذا الرسم العلمي.", 
+        image_path="diagram.jpg",
+        use_rag=True
+    )
+    print(answer)
 ```
 
 ---

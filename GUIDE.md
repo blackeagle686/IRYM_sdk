@@ -15,11 +15,21 @@ from IRYM_sdk import init_irym, startup_irym, get_rag_pipeline
 async def run_rag():
     init_irym()
     await startup_irym()
-    rag = get_rag_pipeline()
-    
     # Ingest from multiple sources
-    await rag.ingest("./docs/")
-    await rag.ingest_url("https://docs.ai-library.com")
+    await rag.ingest("./docs/")             # Files (PDF, MD, TXT, DOCX, XLSX)
+    await rag.ingest_url("https://ai.com")  # Web Scraper
+    
+    # NEW: Advanced Ingestion
+    await rag.ingest_sql(
+        connection_string="sqlite:///data.db",
+        query="SELECT content, author FROM posts",
+        text_column="content"
+    )
+    
+    await rag.ingest_api(
+        url="https://api.service.com/v1/news",
+        data_path="results.items"
+    )
     
     # Query with citations
     response = await rag.query("How do I configure the vector store?")
@@ -47,12 +57,22 @@ text = await stt.transcribe("voice.mp3")
 ```
 
 ### 3. VLM (Vision Language Models)
-Process images and video frames using local or OpenAI-compatible vision models.
+Analyze images using local or OpenAI-compatible vision models. The integrated pipeline handles **Caching** and **RAG context** automatically.
 
 ```python
-from IRYM_sdk.llm.vlm_openai import OpenAI_VLM
-vlm = OpenAI_VLM()
-answer = await vlm.analyze_image("path/to/image.jpg", "What is happening in this picture?")
+from IRYM_sdk import init_irym_full, get_vlm_pipeline
+
+async def vision_demo():
+    await init_irym_full()
+    vlm = get_vlm_pipeline()
+    
+    # 3-line integration: Model + Cache + RAG Context
+    answer = await vlm.ask(
+        prompt="Describe this scientific diagram.", 
+        image_path="diagram.jpg",
+        use_rag=True
+    )
+    print(answer)
 ```
 
 ---

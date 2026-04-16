@@ -57,12 +57,10 @@ class RAGPipeline:
             response.raise_for_status()
             soup = BeautifulSoup(response.text, 'html.parser')
             
-            # Remove script and style elements
             for script in soup(["script", "style"]):
                 script.decompose()
             
             content = soup.get_text(separator=' ')
-            # Clean up whitespace
             content = " ".join(content.split())
             
             chunks = self._chunk_text(content, chunk_size, chunk_overlap)
@@ -76,6 +74,75 @@ class RAGPipeline:
                 print(f"[+] Indexed {url} successfully.")
         except Exception as e:
             print(f"[!] Error scraping {url}: {e}")
+
+    async def ingest_sql(self, connection_string: str, query: str, text_column: str, chunk_size: int = 500, chunk_overlap: int = 50) -> None:
+        """
+        Ingests data from a SQL database.
+        """
+        print(f"[*] Ingesting from SQL: {connection_string}...")
+        try:
+            from sqlalchemy import create_engine, text
+            engine = create_engine(connection_string)
+            with engine.connect() as conn:
+                result = conn.execute(text(query))
+                rows = result.mappings().all()
+            
+            all_chunks = []
+            all_metadatas = []
+            
+            for row in rows:
+                content = str(row.get(text_column, ""))
+                if not content: continue
+                
+                chunks = self._chunk_text(content, chunk_size, chunk_overlap)
+                all_chunks.extend(chunks)
+                metadata = {k: v for k, v in row.items() if k != text_column}
+                metadata["source"] = "sql_query"
+                all_metadatas.extend([metadata for _ in chunks])
+            
+            if all_chunks:
+                await self.vector_db.add(texts=all_chunks, metadatas=all_metadatas)
+                print(f"[+] Indexed {len(rows)} SQL rows successfully.")
+        except Exception as e:
+            print(f"[!] SQL Ingestion Error: {e}")
+
+    async def ingest_api(self, url: str, method: str = "GET", headers: dict = None, data_path: str = None, chunk_size: int = 500, chunk_overlap: int = 50) -> None:
+        """
+        Ingests data from an external JSON API.
+        """
+        print(f"[*] Ingesting from API: {url}...")
+        try:
+            import httpx
+            async with httpx.AsyncClient() as client:
+                if method.upper() == "GET":
+                    resp = await client.get(url, headers=headers)
+                else:
+                    resp = await client.post(url, headers=headers)
+                resp.raise_for_status()
+                data = resp.json()
+
+            # If a data_path is provided (e.g., "results.items"), drill down
+            items = data
+            if data_path:
+                for part in data_path.split('.'):
+                    items = items.get(part, [])
+            
+            if not isinstance(items, list):
+                items = [items]
+
+            all_chunks = []
+            all_metadatas = []
+            for item in items:
+                content = str(item) # Simplified: index the whole item as string if not specified better
+                chunks = self._chunk_text(content, chunk_size, chunk_overlap)
+                all_chunks.extend(chunks)
+                all_metadatas.extend([{"source": url} for _ in chunks])
+
+            if all_chunks:
+                await self.vector_db.add(texts=all_chunks, metadatas=all_metadatas)
+                print(f"[+] Indexed API response successfully.")
+        except Exception as e:
+            print(f"[!] API Ingestion Error: {e}")
 
     def _read_file(self, path: str) -> str:
         if path.endswith(".pdf"):
@@ -102,6 +169,18 @@ class RAGPipeline:
                 print(f"[!] Warning: python-docx not installed. Cannot read DOCX: {path}")
                 return ""
         
+        elif path.endswith((".xlsx", ".xls")):
+            try:
+                import pandas as pd
+                df = pd.read_excel(path)
+                return df.to_string()
+            except ImportError:
+                print(f"[!] Warning: pandas/openpyxl not installed. Cannot read Excel: {path}")
+                return ""
+            except Exception as e:
+                print(f"[!] Error reading Excel {path}: {e}")
+                return ""
+
         elif path.endswith(".csv"):
             try:
                 import csv

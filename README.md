@@ -58,7 +58,7 @@ graph TD
 2. **Interface First**: Every module complies with an asynchronous base contract (`BaseCache`, `BaseLLM`, `BaseVectorDB`, etc.).
 3. **Flexible Vector DB**: Native support for **ChromaDB** (Default/Persistent) and **Qdrant**.
 4. **Embedded Insights**: Pre-configured with `sentence-transformers` (`all-MiniLM-L6-v2`) for local embedding generation.
-5. **RAG Orchestration**: All-in-one `RAGPipeline` that handles document loading, chunking, storage, and intelligent retrieval.
+5. **RAG Orchestration**: All-in-one `RAGPipeline` that handles document loading (.pdf, .docx, .xlsx), SQL databases, external APIs, and web scraping.
 
 ## 📦 Installation
 
@@ -128,4 +128,20 @@ async def insight_demo():
     # This invokes: Clean Query -> Vector Search -> Rerank -> LLM Generation
     final_response = await insight.query("How do I extend the cache layer?")
     print(final_response)
+```
+
+## 🖼️ Quickstart: VLM (Vision)
+
+The `VLMPipeline` orchestrates vision tasks with automatic caching and RAG.
+
+```python
+from IRYM_sdk import init_irym_full, get_vlm_pipeline
+
+async def vision_demo():
+    await init_irym_full()
+    vlm = get_vlm_pipeline()
+
+    # Integrated: Result Caching + RAG context injection
+    answer = await vlm.ask("What is in this image?", "image.png", use_rag=True)
+    print(answer)
 ```
