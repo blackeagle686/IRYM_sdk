@@ -37,6 +37,9 @@ class OpenAIVLM(BaseVLM):
             
         if not self.api_key:
             return f"[Mock OpenAI VLM Response (No API Key) to: {prompt} with image: {image_path}]"
+            
+        if not self.model:
+            raise RuntimeError("OpenAIVLM model is not configured (model field is empty).")
 
         try:
             base64_image = self._encode_image(image_path)

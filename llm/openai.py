@@ -25,6 +25,9 @@ class OpenAILLM(BaseLLM):
             raise RuntimeError("OpenAILLM is not initialized.")
         if not self.api_key:
             return f"[Mock OpenAI Response (No API Key) to: {prompt}]"
+            
+        if not self.model:
+            raise RuntimeError("OpenAILLM model is not configured (model field is empty).")
 
         try:
             resp = await self.client.chat.completions.create(
