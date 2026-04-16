@@ -82,31 +82,44 @@ graph TD
 5. **RAG Orchestration**: All-in-one `RAGPipeline` that handles document loading (.pdf, .docx, .xlsx), SQL databases, external APIs, and web scraping.
 
 ## 📦 Installation
+Choose the method that fits your workflow best.
 
-### 1. Clone the Repository
-Clone the repository and install the dependencies:
-
+### 1. Automated Installation (Recommended)
+Get everything ready in one command:
 ```bash
 git clone https://github.com/blackeagle686/IRYM_sdk.git
 cd IRYM_sdk
-pip install -r requirements.txt
+./install.sh
 ```
 
-### 2. Local Pip Installation (Optional)
-If you want to install it as a package in your local environment:
+### 2. Manual Installation
+Alternatively, use the provided `Makefile` or `pip`:
 ```bash
-# Install core dependencies only
-pip install .
+# Full installation with all services (VDB, RAG, Memory, etc.)
+make install-full
 
-# Install with ALL advanced features (Vector DBs, RAG, Redis, etc.)
+# Or basic installation
+make install
+```
+
+### 3. Local Pip Installation
+```bash
+pip install .
+# Or with extras
 pip install ".[full]"
 ```
 3. **Configure Environment Variables**:
    ```env
+   OPENAI_API_KEY="your_key"
    VECTOR_DB_TYPE="chroma"             # "chroma" or "qdrant"
    CHROMA_PERSIST_DIR="./chroma_db"
-   EMBEDDING_MODEL="all-MiniLM-L6-v2"
+   REDIS_URL="redis://localhost:6379/0" # Required for persistent Memory/Cache
    ```
+
+### 🛠️ System Dependencies
+- **Redis Server**: Required for stateful memory and caching.
+  - Ubuntu: `sudo apt install redis-server`
+  - macOS: `brew install redis`
 
 ## 📖 Quickstart: RAG Pipeline
 
