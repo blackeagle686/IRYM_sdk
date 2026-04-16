@@ -1,6 +1,6 @@
 from IRYM_sdk.llm.base import BaseLLM
 from IRYM_sdk.core.config import config
-from openai import OpenAI
+from openai import AsyncOpenAI
 
 class OpenAILLM(BaseLLM):
     def __init__(self):
@@ -15,7 +15,7 @@ class OpenAILLM(BaseLLM):
     async def init(self):
         if not self.api_key:
             print("Warning: OPENAI_API_KEY is missing. Operating in mock mode.")
-        self.client = OpenAI(
+        self.client = AsyncOpenAI(
             api_key=self.api_key,
             base_url=self.base_url,
         )

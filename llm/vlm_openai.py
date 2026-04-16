@@ -7,9 +7,9 @@ import mimetypes
 
 class OpenAIVLM(BaseVLM):
     def __init__(self):
-        self.api_key = config.OPENAI_API_KEY
-        self.base_url = config.OPENAI_BASE_URL
-        self.model = config.OPENAI_VLM_MODEL
+        self.api_key = getattr(config, "OPENAI_VLM_API_KEY", "") or getattr(config, "OPENAI_API_KEY", "")
+        self.base_url = getattr(config, "OPENAI_VLM_BASE_URL", "") or getattr(config, "OPENAI_BASE_URL", "")
+        self.model = getattr(config, "OPENAI_VLM_MODEL", "")
         self.client = None
 
     def is_available(self) -> bool:
