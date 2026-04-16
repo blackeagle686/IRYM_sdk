@@ -33,4 +33,12 @@ class Config:
     # Fallback Behavior
     AUTO_ACCEPT_FALLBACK = os.getenv("AUTO_ACCEPT_FALLBACK", "false").lower() == "true"
     
+    # Training Config
+    FINETUNE_PROVIDER = os.getenv("FINETUNE_PROVIDER", "local") # "local" or "openai"
+    TRAINING_OUTPUT_DIR = os.getenv("TRAINING_OUTPUT_DIR", "./finetuned_models")
+    TRAINING_BATCH_SIZE = int(os.getenv("TRAINING_BATCH_SIZE", "1"))
+    TRAINING_EPOCHS = int(os.getenv("TRAINING_EPOCHS", "1"))
+    TRAINING_LEARNING_RATE = float(os.getenv("TRAINING_LEARNING_RATE", "2e-4"))
+    TRAINING_LORA_R = int(os.getenv("TRAINING_LORA_R", "8"))
+    
 config = Config()

@@ -11,6 +11,8 @@ from IRYM_sdk.llm.vlm_local import LocalVLM
 from IRYM_sdk.insight.vlm_pipeline import VLMPipeline
 from IRYM_sdk.insight.engine import InsightEngine
 from IRYM_sdk.rag.pipeline import RAGPipeline
+from IRYM_sdk.training.local_finetuner import LocalFineTuner
+from IRYM_sdk.training.openai_finetuner import OpenAIFineTuner
 
 def init_irym():
     # 1. Register Cache
@@ -49,6 +51,10 @@ def init_irym():
         raise ValueError(f"Unsupported vector DB type: {config.VECTOR_DB_TYPE}")
     
     container.register("vector_db", vector_db)
+
+    # 6. Register Fine-Tuning Services
+    container.register("finetune_local", LocalFineTuner())
+    container.register("finetune_openai", OpenAIFineTuner())
 
 async def startup_irym():
     """
@@ -123,6 +129,16 @@ def get_vlm_pipeline(openai_model: str = None, local_model: str = None, prefer_l
         return VLMPipeline(vlm_local, vlm_openai, vector_db, cache)
     
     return VLMPipeline(vlm_openai, vlm_local, vector_db, cache)
+
+def get_finetuner(provider: str = None) -> Any:
+    """
+    Returns the fine-tuning service based on provider ('local' or 'openai').
+    Defaults to config.FINETUNE_PROVIDER.
+    """
+    provider = provider or config.FINETUNE_PROVIDER
+    if provider == "openai":
+        return container.get("finetune_openai")
+    return container.get("finetune_local")
 
 async def init_irym_full():
     """
