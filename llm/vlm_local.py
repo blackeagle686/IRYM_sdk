@@ -31,26 +31,36 @@ class LocalVLM(BaseVLM):
                 architectures = getattr(config_opt, "architectures", [])
                 
                 model = None
+                
+                # Check for bitsandbytes
+                quant_kwargs = {}
+                try:
+                    import bitsandbytes
+                    quant_kwargs = {"load_in_4bit": True}
+                    print("[*] bitsandbytes available. Enabling 4-bit quantization to prevent OOM...")
+                except ImportError:
+                    print("[-] bitsandbytes not found. Loading model in standard precision (may cause OOM on small GPUs).")
+
                 # Explicit Qwen3/Qwen2 VL support
                 if "Qwen3VLForConditionalGeneration" in architectures:
                     try:
                         from transformers.models.qwen3_vl.modeling_qwen3_vl import Qwen3VLForConditionalGeneration
-                        model = Qwen3VLForConditionalGeneration.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
+                        model = Qwen3VLForConditionalGeneration.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True, **quant_kwargs)
                     except ImportError:
                         try:
                             from transformers import AutoModelForVision2Seq
-                            model = AutoModelForVision2Seq.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
+                            model = AutoModelForVision2Seq.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True, **quant_kwargs)
                         except ImportError:
-                            model = AutoModelForCausalLM.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
+                            model = AutoModelForCausalLM.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True, **quant_kwargs)
                 elif "Qwen2VLForConditionalGeneration" in architectures:
                     from transformers import Qwen2VLForConditionalGeneration
-                    model = Qwen2VLForConditionalGeneration.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
+                    model = Qwen2VLForConditionalGeneration.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True, **quant_kwargs)
                 else:
                     try:
                         from transformers import AutoModelForVision2Seq
-                        model = AutoModelForVision2Seq.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
+                        model = AutoModelForVision2Seq.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True, **quant_kwargs)
                     except (ImportError, ValueError):
-                        model = AutoModelForCausalLM.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
+                        model = AutoModelForCausalLM.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True, **quant_kwargs)
                 
                 LocalVLM._model_cache[self.model_name] = {
                     "model": model,
