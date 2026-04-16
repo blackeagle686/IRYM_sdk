@@ -25,6 +25,14 @@ graph TD
         DI -->|"يوفر"| DB["خدمة البيانات (SQLAlchemy)"]
         DI -->|"يوفر"| QUEUE["خدمة المهام (Celery)"]
     end
+
+    subgraph مصادر البيانات
+        DS_GITHUB["مستودعات GitHub"]
+        DS_WEB["كشط الويب"]
+        DS_SQL["قواعد بيانات SQL"]
+        DS_API["واجهات البرمجة APIs"]
+        DS_FILE["ملفات وأكواد محلية"]
+    end
     
     subgraph عمليات الذكاء الاصطناعي
         DI -->|"يوفر"| LLM["خدمة النماذج اللغوية (OpenAI/Local)"]
@@ -32,9 +40,29 @@ graph TD
         DI -->|"يوفر"| AUDIO["خدمة الصوت (STT/TTS)"]
         DI -->|"يوفر"| VDB["قواعد البيانات المتجهة"]
         DI -->|"يوفر"| RAG["خط إنتاج RAG"]
+        DI -->|"يوفر"| INSIGHT["محرك الاستبصار"]
         
         RAG -->|"استرجاع السياق من"| VDB
         RAG -->|"توليد الإجابة عبر"| LLM
+        
+        INSIGHT -->|"استرجاع"| VDB
+        INSIGHT -->|"توليد"| LLM
+        INSIGHT -.->|"تخزين مؤقت"| CACHE
+
+        DS_GITHUB --> RAG
+        DS_WEB --> RAG
+        DS_SQL --> RAG
+        DS_API --> RAG
+        DS_FILE --> RAG
+    end
+
+    subgraph المراقبة (Observability)
+        OBS["المسجل والمتبع"] -.->|"يراقب"| CACHE
+        OBS -.->|"يراقب"| DB
+        OBS -.->|"يراقب"| LLM
+        OBS -.->|"يراقب"| VLM
+        OBS -.->|"يراقب"| AUDIO
+        OBS -.->|"يراقب"| VDB
     end
 ```
 
@@ -93,14 +121,17 @@ async def rag_demo():
     await startup_irym()
     rag = get_rag_pipeline()
 
-    # 1. استيعاب المستندات (يدعم .txt, .md, .pdf, .docx, .csv, .json)
-    await rag.ingest("./my_knowledge_base")
+    # 1. استيعاب المستندات (يدعم المستندات + الأكواد المصدرية .py, .js, .go, .rs, إلخ)
+    await rag.ingest("./my_project")
 
-    # 2. استيعاب من رابط ويب
+    # 2. استيعاب من مستودع GitHub (نسخ وفهرسة تلقائية)
+    await rag.ingest_github("https://github.com/blackeagle686/IRYM_sdk.git")
+
+    # 3. استيعاب من رابط ويب
     await rag.ingest_url("https://example.com/docs/api")
 
-    # 3. الاستعلام مع استشهادات تلقائية
-    answer = await rag.query("ما هي خطط التسعير؟")
+    # 4. الاستعلام مع مراجع تلقائية (Citations)
+    answer = await rag.query("كيف يمكنني توسيع طبقة التخزين المؤقت؟")
     print(f"إجابة الذكاء الاصطناعي: {answer}")
 ```
 

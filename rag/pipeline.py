@@ -16,13 +16,23 @@ class RAGPipeline:
         if not os.path.exists(path):
             raise FileNotFoundError(f"Path {path} does not exist.")
 
+        # Common code and text extensions for ingestion
+        valid_extensions = (
+            ".txt", ".md", ".pdf", ".docx", ".csv", ".json", # Docs
+            ".py", ".js", ".ts", ".jsx", ".tsx", ".c", ".cpp", ".h", # Code
+            ".java", ".go", ".rs", ".php", ".rb", ".sql", ".sh" # More Code
+        )
+
         documents = []
         if os.path.isfile(path):
             documents.append(path)
         else:
             for root, _, files in os.walk(path):
+                # Skip hidden directories (like .git)
+                if any(part.startswith('.') for part in root.split(os.sep)):
+                    continue
                 for file in files:
-                    if file.endswith((".txt", ".md", ".pdf", ".docx", ".csv", ".json")):
+                    if file.lower().endswith(valid_extensions):
                         documents.append(os.path.join(root, file))
 
         all_chunks = []
@@ -38,12 +48,50 @@ class RAGPipeline:
             chunks = self._chunk_text(content, chunk_size, chunk_overlap)
             print(f"[+] Split into {len(chunks)} chunks.")
             all_chunks.extend(chunks)
-            all_metadatas.extend([{"source": os.path.basename(doc_path)} for _ in chunks])
+            all_metadatas.extend([{"source": os.path.basename(doc_path), "path": doc_path} for _ in chunks])
 
         if all_chunks:
-            print(f"[*] Indexing {len(all_chunks)} chunks into Vector DB (this may take a moment)...")
+            print(f"[*] Indexing {len(all_chunks)} chunks into Vector DB...")
             await self.vector_db.add(texts=all_chunks, metadatas=all_metadatas)
             print("[+] Indexing complete.")
+
+    async def ingest_github(self, repo_url: str, branch: str = "main", chunk_size: int = 500, chunk_overlap: int = 50) -> None:
+        """
+        Clones a GitHub repository and ingests its contents.
+        """
+        import tempfile
+        import subprocess
+        import shutil
+
+        print(f"[*] cloning GitHub Repo: {repo_url} (branch: {branch})...")
+        temp_dir = tempfile.mkdtemp()
+        try:
+            # Clone with depth 1 for speed
+            result = subprocess.run(
+                ["git", "clone", "--depth", "1", "-b", branch, repo_url, temp_dir],
+                capture_output=True, text=True
+            )
+            if result.returncode != 0:
+                # If 'main' fails, try 'master' automatically
+                if branch == "main" and "Remote branch main not found" in result.stderr:
+                    print("[!] 'main' branch not found. Retrying with 'master'...")
+                    shutil.rmtree(temp_dir)
+                    temp_dir = tempfile.mkdtemp()
+                    result = subprocess.run(
+                        ["git", "clone", "--depth", "1", "-b", "master", repo_url, temp_dir],
+                        capture_output=True, text=True
+                    )
+                
+                if result.returncode != 0:
+                    raise RuntimeError(f"Git clone failed: {result.stderr}")
+
+            print(f"[+] Repository cloned. Starting ingestion...")
+            await self.ingest(temp_dir, chunk_size, chunk_overlap)
+            print(f"[+] GitHub Ingestion successful: {repo_url}")
+
+        finally:
+            shutil.rmtree(temp_dir)
+            print("[*] Temporary repository files cleaned up.")
 
     async def ingest_url(self, url: str, chunk_size: int = 500, chunk_overlap: int = 50) -> None:
         """

@@ -25,6 +25,14 @@ graph TD
         DI -->|"Provides"| DB["DB Service (SQLAlchemyDB)"]
         DI -->|"Provides"| QUEUE["Queue Service (CeleryQueue)"]
     end
+
+    subgraph Data Sources
+        DS_GITHUB["GitHub Repos"]
+        DS_WEB["Web Scraping"]
+        DS_SQL["SQL Databases"]
+        DS_API["External APIs"]
+        DS_FILE["Local Files & Code"]
+    end
     
     subgraph AI & Data Operations
         DI -->|"Provides"| LLM["LLM Service (OpenAI/Local)"]
@@ -40,6 +48,12 @@ graph TD
         INSIGHT -->|"Retrieves"| VDB
         INSIGHT -->|"Generates"| LLM
         INSIGHT -.->|"Caches"| CACHE
+
+        DS_GITHUB --> RAG
+        DS_WEB --> RAG
+        DS_SQL --> RAG
+        DS_API --> RAG
+        DS_FILE --> RAG
     end
     
     subgraph Observability
@@ -100,14 +114,17 @@ async def rag_demo():
     await startup_irym()
     rag = get_rag_pipeline()
 
-    # 1. Ingest documents (Supports .txt, .md, .pdf, .docx, .csv, .json)
-    await rag.ingest("./my_knowledge_base")
+    # 1. Ingest documents (Supports Docs + Source Code .py, .js, .go, .rs, etc.)
+    await rag.ingest("./my_project")
 
-    # 2. Ingest from Web URL
+    # 2. Ingest from GitHub Repository (Automated cloning & indexing)
+    await rag.ingest_github("https://github.com/blackeagle686/IRYM_sdk.git")
+
+    # 3. Ingest from Web URL
     await rag.ingest_url("https://example.com/docs/api")
 
-    # 3. Query with automatic Citations
-    answer = await rag.query("What are the pricing plans?")
+    # 4. Query with automatic Citations
+    answer = await rag.query("How do I extend the cache layer?")
     print(f"AI Answer: {answer}")
 ```
 
