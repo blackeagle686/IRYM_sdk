@@ -4,6 +4,9 @@ from IRYM_sdk.insight.composer import PromptComposer
 from IRYM_sdk.insight.optimizer import Optimizer
 from typing import Optional
 from IRYM_sdk.core.utils import async_confirm
+from IRYM_sdk.observability.logger import get_logger
+
+logger = get_logger("IRYM.Insight")
 
 class InsightEngine(BaseInsightService):
     """
@@ -47,8 +50,20 @@ class InsightEngine(BaseInsightService):
         # 3. Prompt construction
         prompt = self.composer.build_prompt(optimized_query, docs)
 
-        # 4. LLM Generation
-        response = await provider.generate(prompt)
+        # 4. LLM Generation (with runtime fallback)
+        try:
+            response = await provider.generate(prompt)
+        except Exception as e:
+            logger.error(f"Primary LLM provider failed: {e}")
+            if provider == self.llm_openai:
+                confirmed = await async_confirm(f"OpenAI LLM failed ({e}). Switch to Local LLM for this request?")
+                if confirmed:
+                    logger.info("Retrying with Local LLM...")
+                    response = await self.llm_local.generate(prompt)
+                else:
+                    return f"Error: OpenAI LLM failed and fallback was rejected. Details: {e}"
+            else:
+                raise e
 
         # 5. Response caching
         if self.cache:

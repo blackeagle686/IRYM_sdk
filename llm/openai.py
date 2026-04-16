@@ -25,11 +25,11 @@ class OpenAILLM(BaseLLM):
         if not self.api_key:
             return f"[Mock OpenAI Response (No API Key) to: {prompt}]"
 
-        response = self.client.chat.completions.create(
-            model="LongCat-Flash-Chat",
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
-        text = response.choices[0].message.content
-        return text
+        try:
+            resp = await self.client.chat.completions.create(
+                model=config.OPENAI_LLM_MODEL,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return resp.choices[0].message.content
+        except Exception as e:
+            raise RuntimeError(f"OpenAI API call failed: {e}")

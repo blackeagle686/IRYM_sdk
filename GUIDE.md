@@ -75,6 +75,17 @@ async def vision_demo():
     print(answer)
 ```
 
+### Service Fallback & Confirmation
+IRYM SDK prioritizes your primary providers (OpenAI) but includes a robust fallback to local models (Ollama).
+
+By default, the SDK is **Safety-First**: it will prompt you in the terminal for confirmation before starting a local model to avoid unexpected usage.
+
+To change this behavior for production or non-interactive environments:
+```bash
+# .env
+AUTO_ACCEPT_FALLBACK=true  # Automatically switch to local without asking
+```
+
 ---
 
 ## 🏗️ Advanced Infrastructure

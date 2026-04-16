@@ -42,7 +42,7 @@ class OpenAIVLM(BaseVLM):
             mime_type = self._get_mime_type(image_path)
             
             response = await self.client.chat.completions.create(
-                model="gpt-4o",
+                model=config.OPENAI_VLM_MODEL,
                 messages=[
                     {
                         "role": "user",

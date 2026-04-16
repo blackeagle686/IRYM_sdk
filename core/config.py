@@ -8,6 +8,8 @@ class Config:
     REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "ak_2yp3Xw1Ny7ky2pF7er9x93ZO9jj6G")
     OPENAI_BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.longcat.chat/openai")
+    OPENAI_LLM_MODEL = os.getenv("OPENAI_LLM_MODEL", "gpt-4o")
+    OPENAI_VLM_MODEL = os.getenv("OPENAI_VLM_MODEL", "gpt-4o")
     QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
 
     # Vector DB Config

@@ -64,8 +64,20 @@ class VLMPipeline:
                 context_str = "\n".join([d.page_content for d in docs[:3]])
                 final_prompt = f"Context from database:\n{context_str}\n\nUser Question: {prompt}"
 
-        # 4. VLM Generation
-        response = await provider.generate_with_image(final_prompt, image_path)
+        # 4. VLM Generation (with runtime fallback)
+        try:
+            response = await provider.generate_with_image(final_prompt, image_path)
+        except Exception as e:
+            logger.error(f"Primary VLM provider failed: {e}")
+            if provider == self.vlm_openai:
+                confirmed = await async_confirm(f"OpenAI VLM failed ({e}). Switch to Local VLM for this request?")
+                if confirmed:
+                    logger.info("Retrying with Local VLM...")
+                    response = await self.vlm_local.generate_with_image(final_prompt, image_path)
+                else:
+                    return f"Error: OpenAI VLM failed and fallback was rejected. Details: {e}"
+            else:
+                raise e
 
         # 5. Save to Cache
         if self.cache:
