@@ -2,6 +2,8 @@ from IRYM_sdk.llm.base import BaseLLM
 from IRYM_sdk.core.config import config
 from openai import AsyncOpenAI
 from IRYM_sdk.observability.tracing import tracer
+from IRYM_sdk.core.container import container
+from typing import Optional
 
 
 class OpenAILLM(BaseLLM):
@@ -27,9 +29,37 @@ class OpenAILLM(BaseLLM):
             base_url=self.base_url if self.base_url else None,
         )
 
-    async def generate(self, prompt: str) -> str:
+    async def generate(self, prompt: str, session_id: Optional[str] = None) -> str:
         if not self.client:
             raise RuntimeError("OpenAILLM is not initialized.")
+
+        # Handle Memory
+        memory = None
+        current_messages = []
+        
+        try:
+            memory = container.get("memory")
+        except KeyError:
+            pass
+
+        if session_id and memory:
+            # 1. Retrieve history
+            history_context = await memory.get_context(session_id)
+            # 2. Retrieve semantic context
+            semantic_context = await memory.search_memory(session_id, prompt)
+            
+            system_prompt = "You are a helpful AI assistant."
+            if semantic_context:
+                system_prompt += f"\n\nContext from previous conversations:\n{semantic_context}"
+            
+            current_messages.append({"role": "system", "content": system_prompt})
+            
+            # Add history (simple append for now)
+            history = await memory.history.get(session_id)
+            for item in history:
+                current_messages.append(item["content"])
+        else:
+            current_messages.append({"role": "user", "content": prompt})
 
         # Mock mode
         if not self.api_key:
@@ -40,11 +70,13 @@ class OpenAILLM(BaseLLM):
 
         span_id = tracer.start_span("OpenAILLM.generate", {"model": self.model})
         try:
+            # Final user message if using memory
+            if session_id and memory:
+                current_messages.append({"role": "user", "content": prompt})
+
             resp = await self.client.chat.completions.create(
                 model=self.model,
-                messages=[
-                    {"role": "user", "content": prompt}
-                ],
+                messages=current_messages,
             )
 
             # Safe extraction
@@ -62,6 +94,11 @@ class OpenAILLM(BaseLLM):
             content = message.content.strip() if message and message.content else ""
             
             tracer.end_span(span_id, status="success", usage=usage)
+            
+            # Store interaction in memory
+            if session_id and memory:
+                await memory.add_interaction(session_id, prompt, content)
+                
             return content
 
         except Exception as e:

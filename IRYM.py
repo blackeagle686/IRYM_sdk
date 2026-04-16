@@ -13,6 +13,7 @@ from IRYM_sdk.insight.engine import InsightEngine
 from IRYM_sdk.rag.pipeline import RAGPipeline
 from IRYM_sdk.training.local_finetuner import LocalFineTuner
 from IRYM_sdk.training.openai_finetuner import OpenAIFineTuner
+from IRYM_sdk.memory.manager import MemoryManager
 
 def init_irym():
     # 1. Register Cache
@@ -55,6 +56,9 @@ def init_irym():
     # 6. Register Fine-Tuning Services
     container.register("finetune_local", LocalFineTuner())
     container.register("finetune_openai", OpenAIFineTuner())
+
+    # 7. Register Memory Manager
+    container.register("memory", MemoryManager(container.get("vector_db")))
 
 async def startup_irym():
     """

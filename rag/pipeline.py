@@ -1,6 +1,7 @@
 import os
 from typing import List, Optional
 from IRYM_sdk.insight.engine import InsightEngine
+from IRYM_sdk.core.container import container
 
 class RAGPipeline:
     def __init__(self, vector_db, primary, fallback=None, cache=None):
@@ -286,11 +287,30 @@ class RAGPipeline:
                 break
         return chunks
 
-    async def query(self, question: str) -> str:
+    async def query(self, question: str, session_id: Optional[str] = None) -> str:
         """
         Queries the RAG pipeline using the InsightEngine.
+        Optionally uses memory for context-aware retrieval.
         """
-        return await self.engine.query(question)
+        refined_question = question
+        
+        if session_id:
+            try:
+                memory = container.get("memory")
+                history = await memory.history.get(session_id)
+                if history:
+                    # Simple query refinement: prepend last few turns to clarify context
+                    context_snippet = ""
+                    for item in history[-2:]:
+                        role = item["content"].get("role", "unknown")
+                        content = item["content"].get("content", "")
+                        context_snippet += f"{role}: {content} "
+                    
+                    refined_question = f"Context: {context_snippet}\nQuestion: {question}"
+            except KeyError:
+                pass
+                
+        return await self.engine.query(refined_question)
 
     async def clear_data(self) -> None:
         """Clears all data from the vector database."""
