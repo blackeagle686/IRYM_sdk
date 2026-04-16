@@ -1,6 +1,6 @@
 from typing import Any, List, Optional, Dict
 from IRYM_sdk.memory.base import BaseMemory
-from IRYM_sdk.vector.chroma import ChromaDB # Assuming ChromaDB is available
+# Using generic VectorDB from container
 # We might need to handle cases where vector db is not initialized yet.
 
 class SemanticMemory(BaseMemory):
