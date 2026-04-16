@@ -13,10 +13,10 @@ class InsightEngine(BaseInsightService):
     Main orchestration layer.
     Manages vector retrieval, prompt building, LLM generation, and cache checking.
     """
-    def __init__(self, vector_db, llm_openai, llm_local, cache=None):
+    def __init__(self, vector_db, primary, fallback, cache=None):
         self.vector_db = vector_db
-        self.llm_openai = llm_openai
-        self.llm_local = llm_local
+        self.primary = primary
+        self.fallback = fallback
         self.cache = cache
         
         self.retriever = VectorRetriever(vector_db)
@@ -29,13 +29,13 @@ class InsightEngine(BaseInsightService):
     async def query(self, question: str, context: Optional[dict] = None):
         optimized_query = self.optimizer.rewrite_query(question)
         
-        # 0. Selection: Choose provider (OpenAI preferred)
-        provider = self.llm_openai
+        # 0. Selection: Choose provider (Primary preferred)
+        provider = self.primary
         if hasattr(provider, "is_available") and not provider.is_available():
-            confirmed = await async_confirm("OpenAI LLM is unavailable. Switch to Local LLM?")
+            confirmed = await async_confirm("Primary LLM provider is unavailable. Switch to Fallback?")
             if not confirmed:
-                return "Operation cancelled by user: OpenAI unavailable and Local fallback rejected."
-            provider = self.llm_local
+                return "Operation cancelled by user: Primary unavailable and Fallback rejected."
+            provider = self.fallback
 
         # 1. Cache check (Fast path)
         if self.cache:
@@ -54,14 +54,14 @@ class InsightEngine(BaseInsightService):
         try:
             response = await provider.generate(prompt)
         except Exception as e:
-            logger.error(f"Primary LLM provider failed: {e}")
-            if provider == self.llm_openai:
-                confirmed = await async_confirm(f"OpenAI LLM failed ({e}). Switch to Local LLM for this request?")
+            logger.error(f"LLM provider failed: {e}")
+            if provider == self.primary:
+                confirmed = await async_confirm(f"Primary LLM failed ({e}). Switch to Fallback for this request?")
                 if confirmed:
-                    logger.info("Retrying with Local LLM...")
-                    response = await self.llm_local.generate(prompt)
+                    logger.info("Retrying with secondary provider...")
+                    response = await self.fallback.generate(prompt)
                 else:
-                    return f"Error: OpenAI LLM failed and fallback was rejected. Details: {e}"
+                    return f"Error: Primary LLM failed and fallback was rejected. Details: {e}"
             else:
                 raise e
 

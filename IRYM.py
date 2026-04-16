@@ -89,18 +89,31 @@ def get_rag_pipeline() -> RAGPipeline:
     cache = container.get("cache")
     return RAGPipeline(vector_db, llm, cache)
 
-def get_insight_engine() -> InsightEngine:
+def get_insight_engine(prefer_local: bool = False, prefer_openai: bool = False) -> InsightEngine:
     vector_db = container.get("vector_db")
     llm_openai = container.get("llm_openai")
     llm_local = container.get("llm_local")
     cache = container.get("cache")
+    
+    if prefer_local:
+        return InsightEngine(vector_db, llm_local, llm_openai, cache)
+        
     return InsightEngine(vector_db, llm_openai, llm_local, cache)
 
-def get_vlm_pipeline() -> VLMPipeline:
+def get_vlm_pipeline(prefer_local: bool = False, prefer_openai: bool = False) -> VLMPipeline:
     vlm_openai = container.get("vlm_openai")
     vlm_local = container.get("vlm_local")
     vector_db = container.get("vector_db")
     cache = container.get("cache")
+    
+    # If a specific preference is forced, we can swap them so the 'primary' in the pipeline is different
+    # or let the pipeline handle the preference.
+    # Currently VLMPipeline(vlm_openai, vlm_local, ...) treats openai as primary.
+    
+    if prefer_local:
+        # Invert: Local is primary, OpenAI is fallback
+        return VLMPipeline(vlm_local, vlm_openai, vector_db, cache)
+    
     return VLMPipeline(vlm_openai, vlm_local, vector_db, cache)
 
 async def init_irym_full():
