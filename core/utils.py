@@ -16,19 +16,19 @@ async def async_confirm(message: str) -> bool:
     if getattr(config, "AUTO_ACCEPT_FALLBACK", False):
         return True
     
-    # Check if we are in an interactive terminal
-    if not sys.stdin.isatty():
-        logger.warning("No interactive terminal detected. Defaulting to REJECT for fallback.")
-        return False
-
     def _sync_input():
-        while True:
-            choice = input(f"\n[IRYM WARNING] {message} (y/n): ").lower().strip()
-            if choice in ['y', 'yes']:
-                return True
-            if choice in ['n', 'no']:
-                return False
-            print("Please enter 'y' or 'n'.")
+        try:
+            while True:
+                # We try input() even if not a TTY, as many notebooks support it
+                choice = input(f"\n[IRYM WARNING] {message} (y/n): ").lower().strip()
+                if choice in ['y', 'yes']:
+                    return True
+                if choice in ['n', 'no']:
+                    return False
+                print("Please enter 'y' or 'n'.")
+        except (EOFError, Exception) as e:
+            logger.warning(f"Interactive confirmation failed or not supported in this environment: {e}")
+            return False
 
     loop = asyncio.get_event_loop()
     try:
