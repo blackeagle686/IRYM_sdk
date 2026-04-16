@@ -40,4 +40,4 @@ class LocalVLM(BaseVLM):
                 response.raise_for_status()
                 return response.json().get("response", "")
         except Exception as e:
-            return f"Error in LocalVLM (Ollama): {str(e)}"
+            raise RuntimeError(f"LocalVLM (Ollama) call failed: {e}")

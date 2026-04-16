@@ -60,4 +60,5 @@ class OpenAIVLM(BaseVLM):
             )
             return response.choices[0].message.content
         except Exception as e:
-            return f"Error in OpenAIVLM: {str(e)}"
+            # Raise so orchestration layers can handle fallback
+            raise RuntimeError(f"OpenAIVLM API call failed: {e}")

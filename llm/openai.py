@@ -32,4 +32,4 @@ class OpenAILLM(BaseLLM):
             )
             return resp.choices[0].message.content
         except Exception as e:
-            raise RuntimeError(f"OpenAI API call failed: {e}")
+            raise RuntimeError(f"OpenAILLM API call failed: {e}")
