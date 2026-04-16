@@ -22,5 +22,7 @@ class Config:
     LOCAL_LLM_EMBED_MODEL = os.getenv("LOCAL_LLM_EMBED_MODEL", "")
     LOCAL_VLM_MODEL = os.getenv("LOCAL_VLM_MODEL", "")
     
+    # Fallback Behavior
+    AUTO_ACCEPT_FALLBACK = os.getenv("AUTO_ACCEPT_FALLBACK", "false").lower() == "true"
     
 config = Config()

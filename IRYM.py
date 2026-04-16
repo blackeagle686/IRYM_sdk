@@ -12,24 +12,34 @@ from IRYM_sdk.insight.engine import InsightEngine
 from IRYM_sdk.rag.pipeline import RAGPipeline
 
 def init_irym():
-    # Register Cache
+    # 1. Register Cache
     container.register("cache", RedisCache())
     
-    # Register LLM
-    container.register("llm", OpenAILLM())
+    # 2. Register LLM Providers
+    container.register("llm_openai", OpenAILLM())
+    container.register("llm_local", LocalLLM())
     
-    # Register Embeddings
+    # Compatibility mapping for generic 'llm'
+    if config.LOCAL_LLM_TEXT_MODEL:
+        container.register("llm", container.get("llm_local"))
+    else:
+        container.register("llm", container.get("llm_openai"))
+
+    # 3. Register Embeddings
     embeddings = SentenceTransformerEmbeddings()
     container.register("embeddings", embeddings)
 
-    # Register VLM
-    # Defaults to OpenAI if config doesn't specify local preference
-    if config.LOCAL_VLM_MODEL:
-        container.register("vlm", LocalVLM())
-    else:
-        container.register("vlm", OpenAIVLM())
+    # 4. Register VLM Providers
+    container.register("vlm_openai", OpenAIVLM())
+    container.register("vlm_local", LocalVLM())
     
-    # Register Vector DB based on config
+    # Compatibility mapping for generic 'vlm'
+    if config.LOCAL_VLM_MODEL:
+        container.register("vlm", container.get("vlm_local"))
+    else:
+        container.register("vlm", container.get("vlm_openai"))
+    
+    # 5. Register Vector DB based on config
     if config.VECTOR_DB_TYPE == "chroma":
         vector_db = ChromaVectorDB(embedding_service=embeddings)
     elif config.VECTOR_DB_TYPE == "qdrant":
@@ -49,20 +59,26 @@ async def startup_irym():
     if hasattr(cache, "init"):
         await cache.init()
     
-    # 2. Start LLM
-    llm = container.get("llm")
-    if hasattr(llm, "init"):
-        await llm.init()
+    # 2. Start LLM Providers
+    llm_openai = container.get("llm_openai")
+    llm_local = container.get("llm_local")
+    if hasattr(llm_openai, "init"):
+        await llm_openai.init()
+    if hasattr(llm_local, "init"):
+        await llm_local.init()
         
     # 3. Start Vector DB
     vector_db = container.get("vector_db")
     if hasattr(vector_db, "init"):
         await vector_db.init()
     
-    # 4. Start VLM
-    vlm = container.get("vlm")
-    if hasattr(vlm, "init"):
-        await vlm.init()
+    # 4. Start VLM Providers
+    vlm_openai = container.get("vlm_openai")
+    vlm_local = container.get("vlm_local")
+    if hasattr(vlm_openai, "init"):
+        await vlm_openai.init()
+    if hasattr(vlm_local, "init"):
+        await vlm_local.init()
     
     print("[+] IRYM SDK Services started successfully.")
 
@@ -74,15 +90,17 @@ def get_rag_pipeline() -> RAGPipeline:
 
 def get_insight_engine() -> InsightEngine:
     vector_db = container.get("vector_db")
-    llm = container.get("llm")
+    llm_openai = container.get("llm_openai")
+    llm_local = container.get("llm_local")
     cache = container.get("cache")
-    return InsightEngine(vector_db, llm, cache)
+    return InsightEngine(vector_db, llm_openai, llm_local, cache)
 
 def get_vlm_pipeline() -> VLMPipeline:
-    vlm = container.get("vlm")
+    vlm_openai = container.get("vlm_openai")
+    vlm_local = container.get("vlm_local")
     vector_db = container.get("vector_db")
     cache = container.get("cache")
-    return VLMPipeline(vlm, vector_db, cache)
+    return VLMPipeline(vlm_openai, vlm_local, vector_db, cache)
 
 async def init_irym_full():
     """

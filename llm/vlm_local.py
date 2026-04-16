@@ -8,6 +8,11 @@ class LocalVLM(BaseVLM):
         self.model = config.LOCAL_VLM_MODEL or "moondream"
         self.base_url = "http://localhost:11434/api/generate"
 
+    def is_available(self) -> bool:
+        # For simplicity, we assume if a model is set, it might be available.
+        # A more robust check would involve the init check.
+        return bool(self.model)
+
     async def init(self):
         # Check if ollama is running
         try:

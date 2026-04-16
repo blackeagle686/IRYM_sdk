@@ -8,6 +8,9 @@ class OpenAILLM(BaseLLM):
         self.base_url = config.OPENAI_BASE_URL
         self.client = None
 
+    def is_available(self) -> bool:
+        return bool(self.api_key) and not self.api_key.startswith("ak_")
+
     async def init(self):
         if not self.api_key:
             print("Warning: OPENAI_API_KEY is missing. Operating in mock mode.")
