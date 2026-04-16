@@ -9,6 +9,7 @@ from IRYM_sdk.llm.vlm_openai import OpenAIVLM
 from IRYM_sdk.llm.vlm_local import LocalVLM
 from IRYM_sdk.insight.vlm_pipeline import VLMPipeline
 from IRYM_sdk.insight.engine import InsightEngine
+from IRYM_sdk.rag.pipeline import RAGPipeline
 
 def init_irym():
     # Register Cache
