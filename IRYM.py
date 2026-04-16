@@ -2,6 +2,7 @@ from IRYM_sdk.core.container import container
 from IRYM_sdk.core.config import config
 from IRYM_sdk.cache.redis_cache import RedisCache
 from IRYM_sdk.llm.openai import OpenAILLM
+from IRYM_sdk.llm.local import LocalLLM
 from IRYM_sdk.vector.chroma import ChromaVectorDB
 from IRYM_sdk.vector.qdrant import QdrantVectorDB
 from IRYM_sdk.vector.embeddings import SentenceTransformerEmbeddings
