@@ -41,14 +41,20 @@ graph TD
         DI -->|"Provides"| VDB["Vector DB (QdrantVectorDB)"]
         DI -->|"Provides"| RAG["RAG Pipeline"]
         DI -->|"Provides"| INSIGHT["Insight Engine"]
+        DI -->|"Provides"| MEMORY["Memory Service (History & Semantic)"]
         
         RAG -->|"Retrieves context from"| VDB
         RAG -->|"Generates answer via"| LLM
+        RAG -.->|"Refines query via"| MEMORY
+        
+        LLM -->|"Enriched by"| MEMORY
+        VLM -->|"Enriched by"| MEMORY
+        MEMORY -->|"Stores/Retrieves semantic facts"| VDB
         
         INSIGHT -->|"Retrieves"| VDB
         INSIGHT -->|"Generates"| LLM
         INSIGHT -.->|"Caches"| CACHE
-
+        
         DS_GITHUB --> RAG
         DS_WEB --> RAG
         DS_SQL --> RAG
@@ -63,6 +69,7 @@ graph TD
         OBS -.->|"Monitors"| VLM
         OBS -.->|"Monitors"| AUDIO
         OBS -.->|"Monitors"| VDB
+        OBS -.->|"Monitors"| MEMORY
     end
 ```
 
