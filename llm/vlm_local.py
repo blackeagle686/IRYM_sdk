@@ -1,7 +1,4 @@
-import base64
-import httpx
-from IRYM_sdk.llm.base import BaseVLM
-from IRYM_sdk.core.config import config
+from IRYM_sdk.observability.tracing import tracer
 
 class LocalVLM(BaseVLM):
     _model_cache = {}
@@ -83,7 +80,7 @@ class LocalVLM(BaseVLM):
             self.is_ollama = True
             try:
                 async with httpx.AsyncClient() as client:
-                    resp = await client.get("http://localhost:11434/api/tags")
+                    resp = await client.get(f"{self.base_url.replace('/api/generate', '')}/api/tags")
                     if resp.status_code != 200:
                         print(f"Warning: Ollama not responding at {self.base_url}.")
             except Exception:
@@ -93,8 +90,18 @@ class LocalVLM(BaseVLM):
         if not self.hf_model and not self.is_ollama:
             await self.init()
 
+        span_id = tracer.start_span("LocalVLM.generate_with_image", {"model": self.model, "engine": "ollama" if self.is_ollama else "transformers"})
+
         if self.is_ollama:
-            return await self._ollama_generate(prompt, image_path)
+            try:
+                response = await self._ollama_generate(prompt, image_path)
+                words = (len(prompt.split()) + len(response.split()))
+                usage = {"total_tokens": int(words * 1.5)}
+                tracer.end_span(span_id, status="success", usage=usage)
+                return response
+            except Exception as e:
+                tracer.end_span(span_id, status="error", error=str(e))
+                raise
             
         try:
             from PIL import Image
@@ -121,8 +128,16 @@ class LocalVLM(BaseVLM):
                 
             generated_ids_trimmed = [out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)]
             output = self.processor.batch_decode(generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+            
+            usage = {
+                "prompt_tokens": inputs.input_ids.shape[1],
+                "completion_tokens": len(generated_ids_trimmed[0]),
+                "total_tokens": inputs.input_ids.shape[1] + len(generated_ids_trimmed[0])
+            }
+            tracer.end_span(span_id, status="success", usage=usage)
             return output[0]
         except Exception as e:
+            tracer.end_span(span_id, status="error", error=str(e))
             raise RuntimeError(f"LocalVLM transformers execution failed: {e}")
 
     async def generate(self, prompt: str) -> str:
@@ -130,8 +145,18 @@ class LocalVLM(BaseVLM):
         if not self.hf_model and not self.is_ollama:
             await self.init()
             
+        span_id = tracer.start_span("LocalVLM.generate", {"model": self.model, "engine": "ollama" if self.is_ollama else "transformers"})
+
         if self.is_ollama:
-            return await self._ollama_generate(prompt, image_path=None)
+            try:
+                response = await self._ollama_generate(prompt, image_path=None)
+                words = (len(prompt.split()) + len(response.split()))
+                usage = {"total_tokens": int(words * 1.3)}
+                tracer.end_span(span_id, status="success", usage=usage)
+                return response
+            except Exception as e:
+                tracer.end_span(span_id, status="error", error=str(e))
+                raise
 
         try:
             import torch
@@ -147,8 +172,16 @@ class LocalVLM(BaseVLM):
                 
             generated_ids_trimmed = [out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)]
             output = self.processor.batch_decode(generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+            
+            usage = {
+                "prompt_tokens": inputs.input_ids.shape[1],
+                "completion_tokens": len(generated_ids_trimmed[0]),
+                "total_tokens": inputs.input_ids.shape[1] + len(generated_ids_trimmed[0])
+            }
+            tracer.end_span(span_id, status="success", usage=usage)
             return output[0]
         except Exception as e:
+            tracer.end_span(span_id, status="error", error=str(e))
             raise RuntimeError(f"LocalVLM text generate failed: {e}")
 
     async def _ollama_generate(self, prompt: str, image_path: str = None) -> str:

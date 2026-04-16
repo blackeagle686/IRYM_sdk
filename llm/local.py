@@ -1,6 +1,4 @@
-import httpx
-from IRYM_sdk.llm.base import BaseLLM
-from IRYM_sdk.core.config import config
+from IRYM_sdk.observability.tracing import tracer
 
 class LocalLLM(BaseLLM):
     _model_cache = {}
@@ -68,8 +66,19 @@ class LocalLLM(BaseLLM):
         if not self.hf_model and not self.is_ollama:
             await self.init()
             
+        span_id = tracer.start_span("LocalLLM.generate", {"model": self.model, "engine": "ollama" if self.is_ollama else "transformers"})
+
         if self.is_ollama:
-            return await self._ollama_generate(prompt)
+            try:
+                response = await self._ollama_generate(prompt)
+                # Estimate tokens for Ollama (approx. 1.3 tokens per word)
+                words = (len(prompt.split()) + len(response.split()))
+                usage = {"total_tokens": int(words * 1.3)}
+                tracer.end_span(span_id, status="success", usage=usage)
+                return response
+            except Exception as e:
+                tracer.end_span(span_id, status="error", error=str(e))
+                raise
 
         try:
             import torch
@@ -86,8 +95,18 @@ class LocalLLM(BaseLLM):
                 
             generated_ids_trimmed = [out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)]
             output = self.tokenizer.batch_decode(generated_ids_trimmed, skip_special_tokens=True)
+            
+            # Precise token count for transformers
+            usage = {
+                "prompt_tokens": inputs.input_ids.shape[1],
+                "completion_tokens": len(generated_ids_trimmed[0]),
+                "total_tokens": inputs.input_ids.shape[1] + len(generated_ids_trimmed[0])
+            }
+            
+            tracer.end_span(span_id, status="success", usage=usage)
             return output[0]
         except Exception as e:
+            tracer.end_span(span_id, status="error", error=str(e))
             raise RuntimeError(f"LocalLLM transformers generate failed: {e}")
 
     async def _ollama_generate(self, prompt: str) -> str:

@@ -53,15 +53,19 @@ class VLMPipeline:
         if self.cache:
             cached = await self.cache.get(cache_key)
             if cached:
+                logger.info(f"VLM Cache Hit for key: {cache_key}")
                 return cached
+            logger.info(f"VLM Cache Miss for key: {cache_key}")
 
         # 3. RAG Context Injection
         final_prompt = prompt
         if use_rag and self.retriever:
+            logger.info(f"Retrieving RAG context for prompt: {prompt[:50]}...")
             # Retrieve text context relevant to the prompt
             docs = await self.retriever.retrieve(prompt)
             if docs:
                 context_str = "\n".join([d.page_content for d in docs[:3]])
+                logger.info(f"Injected {len(docs)} documents into VLM prompt.")
                 final_prompt = f"Context from database:\n{context_str}\n\nUser Question: {prompt}"
 
         # 4. VLM Generation (with runtime fallback)

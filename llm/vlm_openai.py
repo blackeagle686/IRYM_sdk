@@ -5,6 +5,8 @@ from openai import AsyncOpenAI
 import os
 import mimetypes
 
+from IRYM_sdk.observability.tracing import tracer
+
 class OpenAIVLM(BaseVLM):
     def __init__(self):
         self.api_key = getattr(config, "OPENAI_VLM_API_KEY", "") or getattr(config, "OPENAI_API_KEY", "")
@@ -35,17 +37,19 @@ class OpenAIVLM(BaseVLM):
         if not self.client:
             await self.init()
             
+        # Mock mode
         if not self.api_key:
             return f"[Mock OpenAI VLM Response (No API Key) to: {prompt} with image: {image_path}]"
             
         if not self.model:
             raise RuntimeError("OpenAIVLM model is not configured (model field is empty).")
 
+        span_id = tracer.start_span("OpenAIVLM.generate_with_image", {"model": self.model})
         try:
             base64_image = self._encode_image(image_path)
             mime_type = self._get_mime_type(image_path)
             
-            response = await self.client.chat.completions.create(
+            resp = await self.client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {
@@ -62,7 +66,21 @@ class OpenAIVLM(BaseVLM):
                     }
                 ]
             )
-            return response.choices[0].message.content
+
+            if not resp or not resp.choices:
+                tracer.end_span(span_id, status="error", error="Empty response from OpenAI VLM")
+                raise RuntimeError("Empty response from OpenAI VLM API.")
+
+            usage = {
+                "prompt_tokens": resp.usage.prompt_tokens,
+                "completion_tokens": resp.usage.completion_tokens,
+                "total_tokens": resp.usage.total_tokens
+            }
+            
+            content = resp.choices[0].message.content
+            tracer.end_span(span_id, status="success", usage=usage)
+            return content
+
         except Exception as e:
-            # Raise so orchestration layers can handle fallback
+            tracer.end_span(span_id, status="error", error=str(e))
             raise RuntimeError(f"OpenAIVLM API call failed: {e}")

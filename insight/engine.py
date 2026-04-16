@@ -28,6 +28,8 @@ class InsightEngine(BaseInsightService):
 
     async def query(self, question: str, context: Optional[dict] = None):
         optimized_query = self.optimizer.rewrite_query(question)
+        if optimized_query != question:
+            logger.info(f"Query optimized: {question} -> {optimized_query}")
         
         # 0. Selection: Choose provider (Primary preferred)
         provider = self.primary
@@ -38,14 +40,20 @@ class InsightEngine(BaseInsightService):
             provider = self.fallback
 
         # 1. Cache check (Fast path)
+        cache_key = f"insight:{optimized_query}"
         if self.cache:
-            cached = await self.cache.get(f"insight:{optimized_query}")
+            cached = await self.cache.get(cache_key)
             if cached:
+                logger.info(f"Insight Cache Hit for key: {cache_key}")
                 return cached
+            logger.info(f"Insight Cache Miss for key: {cache_key}")
 
         # 2. Vector retrieval & reranking
+        logger.info(f"Retrieving Knowledge for: {optimized_query[:50]}...")
         docs = await self.retriever.retrieve(optimized_query)
-        docs = self.optimizer.rerank(docs, optimized_query)
+        if docs:
+            logger.info(f"Retrieved {len(docs)} documents. Reranking...")
+            docs = self.optimizer.rerank(docs, optimized_query)
 
         # 3. Prompt construction
         prompt = self.composer.build_prompt(optimized_query, docs)
@@ -73,6 +81,6 @@ class InsightEngine(BaseInsightService):
 
         # 5. Response caching
         if self.cache:
-            await self.cache.set(f"insight:{optimized_query}", response, ttl=300)
+            await self.cache.set(cache_key, response, ttl=300)
 
         return response

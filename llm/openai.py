@@ -1,6 +1,7 @@
 from IRYM_sdk.llm.base import BaseLLM
 from IRYM_sdk.core.config import config
 from openai import AsyncOpenAI
+from IRYM_sdk.observability.tracing import tracer
 
 
 class OpenAILLM(BaseLLM):
@@ -37,6 +38,7 @@ class OpenAILLM(BaseLLM):
         if not self.model:
             raise RuntimeError("OpenAILLM model is not configured.")
 
+        span_id = tracer.start_span("OpenAILLM.generate", {"model": self.model})
         try:
             resp = await self.client.chat.completions.create(
                 model=self.model,
@@ -47,10 +49,21 @@ class OpenAILLM(BaseLLM):
 
             # Safe extraction
             if not resp or not resp.choices:
+                tracer.end_span(span_id, status="error", error="Empty response from OpenAI")
                 raise RuntimeError("Empty response from OpenAI API.")
 
+            usage = {
+                "prompt_tokens": resp.usage.prompt_tokens,
+                "completion_tokens": resp.usage.completion_tokens,
+                "total_tokens": resp.usage.total_tokens
+            }
+            
             message = resp.choices[0].message
-            return message.content.strip() if message and message.content else ""
+            content = message.content.strip() if message and message.content else ""
+            
+            tracer.end_span(span_id, status="success", usage=usage)
+            return content
 
         except Exception as e:
+            tracer.end_span(span_id, status="error", error=str(e))
             raise RuntimeError(f"OpenAILLM API call failed: {e}")
