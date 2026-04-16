@@ -13,7 +13,7 @@ class OpenAIVLM(BaseVLM):
         self.client = None
 
     def is_available(self) -> bool:
-        return bool(self.api_key) and not self.api_key.startswith("ak_") # Check for real key
+        return bool(self.api_key) and not self.api_key.startswith("ak_") and bool(self.model)
 
     async def init(self):
         if not self.api_key:
@@ -39,7 +39,7 @@ class OpenAIVLM(BaseVLM):
             return f"[Mock OpenAI VLM Response (No API Key) to: {prompt} with image: {image_path}]"
             
         if not self.model:
-            raise f"OpenAIVLM model is not configured (model field is empty)."
+            raise RuntimeError("OpenAIVLM model is not configured (model field is empty).")
 
         try:
             base64_image = self._encode_image(image_path)
