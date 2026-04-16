@@ -148,14 +148,36 @@ class RAGPipeline:
     def _read_file(self, path: str) -> str:
         if path.endswith(".pdf"):
             try:
+                # 1. Try pypdf (modern)
                 from pypdf import PdfReader
                 reader = PdfReader(path)
-                text = ""
-                for page in reader.pages:
-                    text += page.extract_text() + "\n"
-                return text
+                return "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
             except ImportError:
-                print(f"[!] Warning: pypdf not installed. Cannot read PDF: {path}")
+                pass
+            
+            try:
+                # 2. Try fitz (PyMuPDF - very fast and common in Colab)
+                import fitz
+                doc = fitz.open(path)
+                return "\n".join([page.get_text() for page in doc])
+            except ImportError:
+                pass
+
+            try:
+                # 3. Try pdfplumber
+                import pdfplumber
+                with pdfplumber.open(path) as pdf:
+                    return "\n".join([page.extract_text() for page in pdf.pages if page.extract_text()])
+            except ImportError:
+                pass
+                
+            try:
+                # 4. Try legacy PyPDF2
+                from PyPDF2 import PdfReader
+                reader = PdfReader(path)
+                return "\n".join([page.extract_text() for page in reader.pages if page.extract_text()])
+            except ImportError:
+                print(f"[!] Warning: No PDF library installed (tried pypdf, fitz, pdfplumber, PyPDF2). Please `pip install pypdf` or `pymupdf` to read: {path}")
                 return ""
             except Exception as e:
                 print(f"[!] Error reading PDF {path}: {e}")
