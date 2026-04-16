@@ -6,6 +6,7 @@ class OpenAILLM(BaseLLM):
     def __init__(self):
         self.api_key = config.OPENAI_API_KEY
         self.base_url = config.OPENAI_BASE_URL
+        self.model = config.OPENAI_LLM_MODEL
         self.client = None
 
     def is_available(self) -> bool:
@@ -27,7 +28,7 @@ class OpenAILLM(BaseLLM):
 
         try:
             resp = await self.client.chat.completions.create(
-                model=config.OPENAI_LLM_MODEL,
+                model=self.model,
                 messages=[{"role": "user", "content": prompt}]
             )
             return resp.choices[0].message.content

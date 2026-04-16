@@ -9,6 +9,7 @@ class OpenAIVLM(BaseVLM):
     def __init__(self):
         self.api_key = config.OPENAI_API_KEY
         self.base_url = config.OPENAI_BASE_URL
+        self.model = config.OPENAI_VLM_MODEL
         self.client = None
 
     def is_available(self) -> bool:
@@ -42,7 +43,7 @@ class OpenAIVLM(BaseVLM):
             mime_type = self._get_mime_type(image_path)
             
             response = await self.client.chat.completions.create(
-                model=config.OPENAI_VLM_MODEL,
+                model=self.model,
                 messages=[
                     {
                         "role": "user",
