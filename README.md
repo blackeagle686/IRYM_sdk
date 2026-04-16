@@ -151,7 +151,16 @@ async def rag_demo():
 ### 🧠 Source Attribution
 The SDK now automatically instructs the LLM to cite its sources. When you query the RAG pipeline, the response will often include markers like `[Source: cloud.pdf]` or `[Source: https://example.com]`.
 
-## 🛡️ Dynamic Fallbacks & Native PyTorch
+## ⚠️ Local Model Hardware Requirements
+If you plan to use local inference (Ollama or Transformers), please ensure your system meets these specifications:
+- **RAM**: 8GB Minimum (16GB+ recommended).
+- **GPU**: 4GB+ VRAM required for VLM models (using 4-bit quantization).
+- **Disk**: 10GB+ free space for model storage.
+
+> [!WARNING]
+> High-resource models may cause system instability on low-RAM or CPU-only devices. The SDK defaults to a safety-first approach and will prompt for confirmation before starting local providers.
+
+## 🏹 Dynamic Fallbacks & Native PyTorch
 
 IRYM_sdk includes a robust "fail-loud and recover gracefully" orchestration architecture for AI providers:
 

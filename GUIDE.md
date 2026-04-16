@@ -75,10 +75,38 @@ async def vision_demo():
     print(answer)
 ```
 
-### Service Fallback & Confirmation
-IRYM SDK prioritizes your primary providers (OpenAI) but includes a robust fallback to local models (Ollama).
+### 4. Memory System (Context Awareness)
+The IRYM Memory System unifies **Conversation History** (Short-term) and **Semantic Retrieval** (Long-term) to make your AI stateful. It is automatically integrated and triggered when you pass a `session_id`.
 
-By default, the SDK is **Safety-First**: it will prompt you in the terminal for confirmation before starting a local model to avoid unexpected usage.
+```python
+from IRYM_sdk import init_irym_full, get_llm
+
+async def memory_demo():
+    await init_irym_full()
+    llm = get_llm()
+    
+    # First turn - Interaction is automatically stored
+    await llm.generate("Hi, I'm a developer building IRYM.", session_id="user_123")
+    
+    # Second turn - Context is automatically retrieved
+    response = await llm.generate("What am I building?", session_id="user_123")
+    print(response) # "You are building IRYM!"
+```
+
+### ⚠️ Important: Local Model Hardware Requirements
+When using local models (Ollama or Transformers), ensure your machine meets these requirements:
+
+- **LLM (Qwen-1.5B/7B)**: Minimum 8GB RAM. 16GB+ recommended for 7B models.
+- **VLM (Moondream/Qwen-VL)**: Requires a dedicated GPU with at least 4GB VRAM (using 4-bit quantization) or 8GB+ for standard loading.
+- **Storage**: Ensure at least 10GB of free space for model weights.
+
+> [!WARNING]
+> Running large models on CPU-only machines or low-RAM devices may result in extreme latency or system crashes. The SDK will prompt for confirmation before starting local models unless `AUTO_ACCEPT_FALLBACK=true` is set.
+
+### Service Fallback & Confirmation
+IRYM SDK prioritizes your primary providers (OpenAI) but includes a robust fallback to local models (Ollama/Transformers).
+
+By default, the SDK is **Safety-First**: it will prompt you in the terminal for confirmation before starting a local model to avoid unexpected resource usage.
 
 To change this behavior for production or non-interactive environments:
 ```bash

@@ -2,21 +2,29 @@
 
 {% block title %}
 {% if LANGUAGE_CODE == 'ar' %}
-    {% if doc_name == 'GUIDE' %}
-        دليل المطور
-    {% elif doc_name == 'PIPELINES' %}
-        خطوط البيانات
-    {% else %}
-        البداية السريعة
-    {% endif %}
+{% if doc_name == 'GUIDE' %}
+دليل المطور
+{% elif doc_name == 'PIPELINES' %}
+خطوط البيانات
+{% elif doc_name == 'TRAINING' %}
+تدريب النماذج
+{% elif doc_name == 'PUBLISH' %}
+نشر الخدمات
 {% else %}
-    {% if doc_name == 'GUIDE' %}
-        Developer Guide
-    {% elif doc_name == 'PIPELINES' %}
-        Data Pipelines
-    {% else %}
-        Quickstart
-    {% endif %}
+البداية السريعة
+{% endif %}
+{% else %}
+{% if doc_name == 'GUIDE' %}
+Developer Guide
+{% elif doc_name == 'PIPELINES' %}
+Data Pipelines
+{% elif doc_name == 'TRAINING' %}
+Model Training
+{% elif doc_name == 'PUBLISH' %}
+Publishing Services
+{% else %}
+Quickstart
+{% endif %}
 {% endif %}
 — IRYM SDK
 {% endblock %}
@@ -45,15 +53,27 @@
                 </a>
 
                 <a class="sidebar-link {% if doc_name == 'GUIDE' %}fw-semibold{% endif %}"
-                   href="{% url 'docs_named' 'GUIDE' %}">
+                    href="{% url 'docs_named' 'GUIDE' %}">
                     <i class="bi bi-journal-code me-1"></i>
                     {% if LANGUAGE_CODE == 'ar' %}دليل المطور{% else %}Developer Guide{% endif %}
                 </a>
 
                 <a class="sidebar-link {% if doc_name == 'PIPELINES' %}fw-semibold{% endif %}"
-                   href="{% url 'docs_named' 'PIPELINES' %}">
+                    href="{% url 'docs_named' 'PIPELINES' %}">
                     <i class="bi bi-diagram-3 me-1"></i>
                     {% if LANGUAGE_CODE == 'ar' %}خطوط البيانات{% else %}Data Pipelines{% endif %}
+                </a>
+
+                <a class="sidebar-link {% if doc_name == 'TRAINING' %}fw-semibold{% endif %}"
+                    href="{% url 'docs_named' 'TRAINING' %}">
+                    <i class="bi bi-cpu me-1"></i>
+                    {% if LANGUAGE_CODE == 'ar' %}تدريب النماذج{% else %}Model Training{% endif %}
+                </a>
+
+                <a class="sidebar-link {% if doc_name == 'PUBLISH' %}fw-semibold{% endif %}"
+                    href="{% url 'docs_named' 'PUBLISH' %}">
+                    <i class="bi bi-rocket-takeoff me-1"></i>
+                    {% if LANGUAGE_CODE == 'ar' %}نشر الخدمات{% else %}Publishing{% endif %}
                 </a>
 
                 <a class="sidebar-link" href="https://github.com/blackeagle686/IRYM_sdk" target="_blank">
@@ -74,21 +94,29 @@
 
                     <li class="breadcrumb-item active">
                         {% if LANGUAGE_CODE == 'ar' %}
-                            {% if doc_name == 'GUIDE' %}
-                                دليل المطور
-                            {% elif doc_name == 'PIPELINES' %}
-                                خطوط البيانات
-                            {% else %}
-                                البداية السريعة
-                            {% endif %}
+                        {% if doc_name == 'GUIDE' %}
+                        دليل المطور
+                        {% elif doc_name == 'PIPELINES' %}
+                        خطوط البيانات
+                        {% elif doc_name == 'TRAINING' %}
+                        تدريب النماذج
+                        {% elif doc_name == 'PUBLISH' %}
+                        نشر الخدمات
                         {% else %}
-                            {% if doc_name == 'GUIDE' %}
-                                Developer Guide
-                            {% elif doc_name == 'PIPELINES' %}
-                                Data Pipelines
-                            {% else %}
-                                Quickstart
-                            {% endif %}
+                        البداية السريعة
+                        {% endif %}
+                        {% else %}
+                        {% if doc_name == 'GUIDE' %}
+                        Developer Guide
+                        {% elif doc_name == 'PIPELINES' %}
+                        Data Pipelines
+                        {% elif doc_name == 'TRAINING' %}
+                        Model Training
+                        {% elif doc_name == 'PUBLISH' %}
+                        Publishing
+                        {% else %}
+                        Quickstart
+                        {% endif %}
                         {% endif %}
                     </li>
                 </ol>
@@ -102,40 +130,47 @@
             <div class="mt-5 pt-4" style="border-top: 1px solid var(--border-color);">
 
                 {% if doc_name == 'GUIDE' %}
-                    <a href="{% url 'docs_named' 'PIPELINES' %}" class="text-decoration-none float-end small">
-                        {% if LANGUAGE_CODE == 'ar' %}خطوط البيانات{% else %}Data Pipelines{% endif %}
-                        <i class="bi bi-arrow-right ms-1"></i>
-                    </a>
+                <a href="{% url 'docs_named' 'PIPELINES' %}" class="text-decoration-none float-end small">
+                    {% if LANGUAGE_CODE == 'ar' %}خطوط البيانات{% else %}Data Pipelines{% endif %}
+                    <i class="bi bi-arrow-right ms-1"></i>
+                </a>
 
                 {% elif doc_name == 'PIPELINES' %}
-                    <a href="{% url 'docs_named' 'GUIDE' %}" class="text-decoration-none text-muted small">
-                        <i class="bi bi-arrow-left me-1"></i>
-                        {% if LANGUAGE_CODE == 'ar' %}العودة لدليل المطور{% else %}Back to Developer Guide{% endif %}
-                    </a>
+                <a href="{% url 'docs_named' 'TRAINING' %}" class="text-decoration-none float-end small">
+                    {% if LANGUAGE_CODE == 'ar' %}تدريب النماذج{% else %}Model Training{% endif %}
+                    <i class="bi bi-arrow-right ms-1"></i>
+                </a>
 
-                    <a href="{% url 'home' %}" class="text-decoration-none float-end small">
-                        {% if LANGUAGE_CODE == 'ar' %}الرئيسية{% else %}Home{% endif %}
-                        <i class="bi bi-arrow-right ms-1"></i>
-                    </a>
+                {% elif doc_name == 'TRAINING' %}
+                <a href="{% url 'docs_named' 'PUBLISH' %}" class="text-decoration-none float-end small">
+                    {% if LANGUAGE_CODE == 'ar' %}نشر الخدمات{% else %}Publishing{% endif %}
+                    <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+
+                {% elif doc_name == 'PUBLISH' %}
+                <a href="{% url 'home' %}" class="text-decoration-none float-end small">
+                    {% if LANGUAGE_CODE == 'ar' %}الرئيسية{% else %}Home{% endif %}
+                    <i class="bi bi-arrow-right ms-1"></i>
+                </a>
 
                 {% else %}
-                    <a href="{% url 'docs_named' 'GUIDE' %}" class="text-decoration-none float-end small">
-                        {% if LANGUAGE_CODE == 'ar' %}دليل المطور{% else %}Developer Guide{% endif %}
-                        <i class="bi bi-arrow-right ms-1"></i>
-                    </a>
+                <a href="{% url 'docs_named' 'GUIDE' %}" class="text-decoration-none float-end small">
+                    {% if LANGUAGE_CODE == 'ar' %}دليل المطور{% else %}Developer Guide{% endif %}
+                    <i class="bi bi-arrow-right ms-1"></i>
+                </a>
                 {% endif %}
 
                 <p class="text-muted small mb-0">
                     {% if LANGUAGE_CODE == 'ar' %}
-                        وجدت مشكلة؟
-                        <a href="https://github.com/blackeagle686/IRYM_sdk/issues" target="_blank">
-                            افتح تذكرة على GitHub
-                        </a>
+                    وجدت مشكلة؟
+                    <a href="https://github.com/blackeagle686/IRYM_sdk/issues" target="_blank">
+                        افتح تذكرة على GitHub
+                    </a>
                     {% else %}
-                        Found an issue?
-                        <a href="https://github.com/blackeagle686/IRYM_sdk/issues" target="_blank">
-                            Open an issue on GitHub
-                        </a>
+                    Found an issue?
+                    <a href="https://github.com/blackeagle686/IRYM_sdk/issues" target="_blank">
+                        Open an issue on GitHub
+                    </a>
                     {% endif %}
                 </p>
             </div>
@@ -145,34 +180,34 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const headings = document.querySelectorAll('.docs-body h2, .docs-body h3');
-    const toc = document.getElementById('toc');
+    document.addEventListener('DOMContentLoaded', () => {
+        const headings = document.querySelectorAll('.docs-body h2, .docs-body h3');
+        const toc = document.getElementById('toc');
 
-    headings.forEach((h, i) => {
-        const id = 'heading-' + i;
-        h.id = id;
+        headings.forEach((h, i) => {
+            const id = 'heading-' + i;
+            h.id = id;
 
-        const a = document.createElement('a');
-        a.href = '#' + id;
-        a.className = 'sidebar-link';
-        a.style.paddingLeft = h.tagName === 'H3' ? '20px' : '10px';
-        a.textContent = h.textContent;
+            const a = document.createElement('a');
+            a.href = '#' + id;
+            a.className = 'sidebar-link';
+            a.style.paddingLeft = h.tagName === 'H3' ? '20px' : '10px';
+            a.textContent = h.textContent;
 
-        toc.appendChild(a);
-    });
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-            const link = toc.querySelector(`a[href="#${e.target.id}"]`);
-            if (link) {
-                link.style.color = e.isIntersecting ? 'var(--accent)' : '';
-            }
+            toc.appendChild(a);
         });
-    }, { rootMargin: '-20% 0px -70% 0px' });
 
-    headings.forEach(h => observer.observe(h));
-});
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                const link = toc.querySelector(`a[href="#${e.target.id}"]`);
+                if (link) {
+                    link.style.color = e.isIntersecting ? 'var(--accent)' : '';
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+
+        headings.forEach(h => observer.observe(h));
+    });
 </script>
 
 {% endblock %}

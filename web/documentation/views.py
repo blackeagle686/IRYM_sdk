@@ -13,7 +13,7 @@ def docs(request, doc_name='README'):
     lang = translation.get_language()
     
     # Map doc_name to valid files or default to README
-    valid_docs = ['README', 'GUIDE', 'PIPELINES']
+    valid_docs = ['README', 'GUIDE', 'PIPELINES', 'TRAINING', 'PUBLISH']
     base_filename = doc_name.upper() if doc_name.upper() in valid_docs else 'README'
     
     # Try language-specific file first (e.g., README.ar.md)
