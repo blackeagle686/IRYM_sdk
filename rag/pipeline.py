@@ -3,10 +3,11 @@ from typing import List, Optional
 from IRYM_sdk.insight.engine import InsightEngine
 
 class RAGPipeline:
-    def __init__(self, vector_db, llm, cache=None):
+    def __init__(self, vector_db, primary, fallback=None, cache=None):
         self.vector_db = vector_db
-        self.llm = llm
-        self.engine = InsightEngine(vector_db, llm, cache)
+        self.primary = primary
+        self.fallback = fallback or primary
+        self.engine = InsightEngine(vector_db, self.primary, self.fallback, cache)
 
     async def ingest(self, path: str, chunk_size: int = 500, chunk_overlap: int = 50) -> None:
         """

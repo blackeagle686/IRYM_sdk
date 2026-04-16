@@ -85,9 +85,10 @@ async def startup_irym():
 
 def get_rag_pipeline() -> RAGPipeline:
     vector_db = container.get("vector_db")
-    llm = container.get("llm")
+    llm_openai = container.get("llm_openai")
+    llm_local = container.get("llm_local")
     cache = container.get("cache")
-    return RAGPipeline(vector_db, llm, cache)
+    return RAGPipeline(vector_db, primary=llm_local, fallback=llm_openai, cache=cache)
 
 def get_insight_engine(openai_model: str = None, local_model: str = None, prefer_local: bool = True) -> InsightEngine:
     vector_db = container.get("vector_db")
