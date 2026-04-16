@@ -28,7 +28,7 @@ class Config:
     # Local LLM's Config
     LOCAL_LLM_TEXT_MODEL = os.getenv("LOCAL_LLM_TEXT_MODEL", "Qwen/Qwen2-1.5B-Instruct")
     LOCAL_LLM_EMBED_MODEL = os.getenv("LOCAL_LLM_EMBED_MODEL", "all-MiniLM-L6-v2")
-    LOCAL_VLM_MODEL = os.getenv("LOCAL_VLM_MODEL", "Qwen/Qwen3-VL-4B-Instruct-FP8")
+    LOCAL_VLM_MODEL = os.getenv("LOCAL_VLM_MODEL", "Qwen/Qwen2-VL-2B-Instruct")
     
     # Fallback Behavior
     AUTO_ACCEPT_FALLBACK = os.getenv("AUTO_ACCEPT_FALLBACK", "false").lower() == "true"
