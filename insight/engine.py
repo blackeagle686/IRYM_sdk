@@ -58,8 +58,14 @@ class InsightEngine(BaseInsightService):
             if provider == self.primary:
                 confirmed = await async_confirm(f"Primary LLM failed ({e}). Switch to Fallback for this request?")
                 if confirmed:
+                    if hasattr(self.fallback, "is_available") and not self.fallback.is_available():
+                        return f"Error: Secondary provider is not configured. Cannot fallback."
+                    
                     logger.info("Retrying with secondary provider...")
-                    response = await self.fallback.generate(prompt)
+                    try:
+                        response = await self.fallback.generate(prompt)
+                    except Exception as fallback_e:
+                        return f"Error: Both primary and fallback providers failed.\nPrimary: {e}\nFallback: {fallback_e}"
                 else:
                     return f"Error: Primary LLM failed and fallback was rejected. Details: {e}"
             else:
