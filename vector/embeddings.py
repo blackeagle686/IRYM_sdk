@@ -24,6 +24,11 @@ class SentenceTransformerEmbeddings(BaseEmbeddings):
         model_to_use = model_name or config.EMBEDDING_MODEL
         
         if model_to_use not in SentenceTransformerEmbeddings._model_cache:
+            if SentenceTransformer is None:
+                raise ImportError(
+                    "sentence-transformers is not installed. "
+                    "Please install it using: pip install sentence-transformers"
+                )
             print(f"[*] Initializing Embedding Model: {model_to_use}...")
             SentenceTransformerEmbeddings._model_cache[model_to_use] = SentenceTransformer(model_to_use)
             print(f"[+] Embedding Model Loaded into cache.")
