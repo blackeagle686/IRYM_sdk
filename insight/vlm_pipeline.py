@@ -34,7 +34,7 @@ class VLMPipeline:
             # Fallback if file access fails
             return f"vlm_cache:{hashlib.md5((prompt + image_path).encode()).hexdigest()}"
 
-    async def ask(self, prompt: str, image_path: str, use_rag: bool = False) -> str:
+    async def ask(self, prompt: str, image_path: str, use_rag: bool = False, session_id: Optional[str] = None) -> str:
         """
         Ask a question about an image, optionally using RAG for context.
         """
@@ -64,13 +64,17 @@ class VLMPipeline:
             # Retrieve text context relevant to the prompt
             docs = await self.retriever.retrieve(prompt)
             if docs:
-                context_str = "\n".join([d.page_content for d in docs[:3]])
+                context_parts = []
+                for d in docs[:3]:
+                    content = d.get("content", str(d)) if isinstance(d, dict) else str(d)
+                    context_parts.append(content)
+                context_str = "\n".join(context_parts)
                 logger.info(f"Injected {len(docs)} documents into VLM prompt.")
                 final_prompt = f"Context from database:\n{context_str}\n\nUser Question: {prompt}"
 
         # 4. VLM Generation (with runtime fallback)
         try:
-            response = await provider.generate_with_image(final_prompt, image_path)
+            response = await provider.generate_with_image(final_prompt, image_path, session_id=session_id)
         except Exception as e:
             logger.error(f"VLM provider failed: {e}")
             if provider == self.primary:
@@ -81,7 +85,7 @@ class VLMPipeline:
                     
                     logger.info("Retrying with secondary provider...")
                     try:
-                        response = await self.fallback.generate_with_image(final_prompt, image_path)
+                        response = await self.fallback.generate_with_image(final_prompt, image_path, session_id=session_id)
                     except Exception as fallback_e:
                         return f"Error: Both primary and fallback providers failed.\nPrimary: {e}\nFallback: {fallback_e}"
                 else:

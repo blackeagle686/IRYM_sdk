@@ -3,6 +3,8 @@ import httpx
 from IRYM_sdk.llm.base import BaseVLM
 from IRYM_sdk.core.config import config
 from IRYM_sdk.observability.tracing import tracer
+from IRYM_sdk.core.container import container
+from typing import Optional
 
 class LocalVLM(BaseVLM):
     _model_cache = {}
@@ -90,103 +92,167 @@ class LocalVLM(BaseVLM):
             except Exception:
                 print("Warning: Could not connect to local Ollama. Ensure it is running.")
 
-    async def generate_with_image(self, prompt: str, image_path: str) -> str:
+    async def generate_with_image(self, prompt: str, image_path: str, session_id: Optional[str] = None) -> str:
         if not self.hf_model and not self.is_ollama:
             await self.init()
 
+        # Handle Memory
+        memory = None
+        try:
+            memory = container.get("memory")
+        except KeyError:
+            pass
+
+        context_prefix = ""
+        messages = []
+        if session_id and memory:
+            # Retrieve history and semantic context
+            semantic_context = await memory.search_memory(session_id, prompt)
+            if semantic_context:
+                context_prefix = f"Context from previous interactions:\n{semantic_context}\n\n"
+            
+            history = await memory.history.get(session_id)
+            for item in history:
+                messages.append(item["content"])
+
         span_id = tracer.start_span("LocalVLM.generate_with_image", {"model": self.model, "engine": "ollama" if self.is_ollama else "transformers"})
 
+        response = ""
         if self.is_ollama:
             try:
-                response = await self._ollama_generate(prompt, image_path)
-                words = (len(prompt.split()) + len(response.split()))
+                # Ollama vision prompt construction
+                ollama_prompt = ""
+                for m in messages:
+                    content = m["content"]
+                    if isinstance(content, list):
+                        # Extract text if complex
+                        content = next((c["text"] for c in content if c["type"] == "text"), "")
+                    ollama_prompt += f"{m['role'].capitalize()}: {content}\n"
+                
+                ollama_prompt += f"User: {context_prefix}{prompt}\nAssistant:"
+                
+                response = await self._ollama_generate(ollama_prompt, image_path)
+                words = (len(ollama_prompt.split()) + len(response.split()))
                 usage = {"total_tokens": int(words * 1.5)}
                 tracer.end_span(span_id, status="success", usage=usage)
-                return response
             except Exception as e:
                 tracer.end_span(span_id, status="error", error=str(e))
                 raise
-            
-        try:
-            from PIL import Image
-            import torch
-            image = Image.open(image_path).convert("RGB")
-            
-            # Simple generic transformers interface
-            messages = [
-                {"role": "user", "content": [
-                    {"type": "image"},
-                    {"type": "text", "text": prompt}
-                ]}
-            ]
-            
-            # Use processor apply_chat_template if available, else plain text
-            if hasattr(self.processor, "apply_chat_template"):
-                text = self.processor.apply_chat_template(messages, add_generation_prompt=True)
-                inputs = self.processor(text=[text], images=[image], padding=True, return_tensors="pt").to(self.hf_model.device)
-            else:
-                inputs = self.processor(images=image, text=prompt, return_tensors="pt").to(self.hf_model.device)
-
-            with torch.no_grad():
-                generated_ids = self.hf_model.generate(**inputs, max_new_tokens=512)
+        else:
+            try:
+                from PIL import Image
+                import torch
+                image = Image.open(image_path).convert("RGB")
                 
-            generated_ids_trimmed = [out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)]
-            output = self.processor.batch_decode(generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)
-            
-            usage = {
-                "prompt_tokens": inputs.input_ids.shape[1],
-                "completion_tokens": len(generated_ids_trimmed[0]),
-                "total_tokens": inputs.input_ids.shape[1] + len(generated_ids_trimmed[0])
-            }
-            tracer.end_span(span_id, status="success", usage=usage)
-            return output[0]
-        except Exception as e:
-            tracer.end_span(span_id, status="error", error=str(e))
-            raise RuntimeError(f"LocalVLM transformers execution failed: {e}")
+                # Add current message
+                messages.append({
+                    "role": "user", 
+                    "content": [
+                        {"type": "image"},
+                        {"type": "text", "text": f"{context_prefix}{prompt}"}
+                    ]
+                })
 
-    async def generate(self, prompt: str) -> str:
+                if hasattr(self.processor, "apply_chat_template"):
+                    text = self.processor.apply_chat_template(messages, add_generation_prompt=True)
+                    inputs = self.processor(text=[text], images=[image], padding=True, return_tensors="pt").to(self.hf_model.device)
+                else:
+                    # Fallback
+                    inputs = self.processor(images=image, text=f"{context_prefix}{prompt}", return_tensors="pt").to(self.hf_model.device)
+
+                with torch.no_grad():
+                    generated_ids = self.hf_model.generate(**inputs, max_new_tokens=512)
+                    
+                generated_ids_trimmed = [out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)]
+                output = self.processor.batch_decode(generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+                response = output[0]
+                
+                usage = {
+                    "prompt_tokens": inputs.input_ids.shape[1],
+                    "completion_tokens": len(generated_ids_trimmed[0]),
+                    "total_tokens": inputs.input_ids.shape[1] + len(generated_ids_trimmed[0])
+                }
+                tracer.end_span(span_id, status="success", usage=usage)
+            except Exception as e:
+                tracer.end_span(span_id, status="error", error=str(e))
+                raise RuntimeError(f"LocalVLM transformers execution failed: {e}")
+
+        # Store interaction in memory
+        if session_id and memory:
+            await memory.add_interaction(session_id, prompt, response)
+            
+        return response
+
+    async def generate(self, prompt: str, session_id: Optional[str] = None) -> str:
         """Text-only generation fallback for VLMs."""
         if not self.hf_model and not self.is_ollama:
             await self.init()
             
+        # Handle Memory
+        memory = None
+        try:
+            memory = container.get("memory")
+        except KeyError:
+            pass
+
+        context_prefix = ""
+        messages = []
+        if session_id and memory:
+            semantic_context = await memory.search_memory(session_id, prompt)
+            if semantic_context:
+                context_prefix = f"Context from previous interactions:\n{semantic_context}\n\n"
+            
+            history = await memory.history.get(session_id)
+            for item in history:
+                messages.append(item["content"])
+
+        messages.append({"role": "user", "content": f"{context_prefix}{prompt}"})
+
         span_id = tracer.start_span("LocalVLM.generate", {"model": self.model, "engine": "ollama" if self.is_ollama else "transformers"})
 
+        response = ""
         if self.is_ollama:
             try:
-                response = await self._ollama_generate(prompt, image_path=None)
-                words = (len(prompt.split()) + len(response.split()))
+                ollama_prompt = "\n".join([f"{m['role'].capitalize()}: {m['content']}" for m in messages]) + "\nAssistant:"
+                response = await self._ollama_generate(ollama_prompt, image_path=None)
+                words = (len(ollama_prompt.split()) + len(response.split()))
                 usage = {"total_tokens": int(words * 1.3)}
                 tracer.end_span(span_id, status="success", usage=usage)
-                return response
             except Exception as e:
                 tracer.end_span(span_id, status="error", error=str(e))
                 raise
+        else:
+            try:
+                import torch
+                if hasattr(self.processor, "apply_chat_template"):
+                    text = self.processor.apply_chat_template(messages, add_generation_prompt=True)
+                    inputs = self.processor(text=[text], return_tensors="pt").to(self.hf_model.device)
+                else:
+                    plain_text = "\n".join([f"{m['role']}: {m['content']}" for m in messages]) + "\nassistant:"
+                    inputs = self.processor(text=plain_text, return_tensors="pt").to(self.hf_model.device)
+                    
+                with torch.no_grad():
+                    generated_ids = self.hf_model.generate(**inputs, max_new_tokens=512)
+                    
+                generated_ids_trimmed = [out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)]
+                output = self.processor.batch_decode(generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+                response = output[0]
+                
+                usage = {
+                    "prompt_tokens": inputs.input_ids.shape[1],
+                    "completion_tokens": len(generated_ids_trimmed[0]),
+                    "total_tokens": inputs.input_ids.shape[1] + len(generated_ids_trimmed[0])
+                }
+                tracer.end_span(span_id, status="success", usage=usage)
+            except Exception as e:
+                tracer.end_span(span_id, status="error", error=str(e))
+                raise RuntimeError(f"LocalVLM text generate failed: {e}")
 
-        try:
-            import torch
-            messages = [{"role": "user", "content": prompt}]
-            if hasattr(self.processor, "apply_chat_template"):
-                text = self.processor.apply_chat_template(messages, add_generation_prompt=True)
-                inputs = self.processor(text=[text], return_tensors="pt").to(self.hf_model.device)
-            else:
-                inputs = self.processor(text=prompt, return_tensors="pt").to(self.hf_model.device)
-                
-            with torch.no_grad():
-                generated_ids = self.hf_model.generate(**inputs, max_new_tokens=512)
-                
-            generated_ids_trimmed = [out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)]
-            output = self.processor.batch_decode(generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)
-            
-            usage = {
-                "prompt_tokens": inputs.input_ids.shape[1],
-                "completion_tokens": len(generated_ids_trimmed[0]),
-                "total_tokens": inputs.input_ids.shape[1] + len(generated_ids_trimmed[0])
-            }
-            tracer.end_span(span_id, status="success", usage=usage)
-            return output[0]
-        except Exception as e:
-            tracer.end_span(span_id, status="error", error=str(e))
-            raise RuntimeError(f"LocalVLM text generate failed: {e}")
+        # Store interaction
+        if session_id and memory:
+            await memory.add_interaction(session_id, prompt, response)
+
+        return response
 
     async def _ollama_generate(self, prompt: str, image_path: str = None) -> str:
         try:
