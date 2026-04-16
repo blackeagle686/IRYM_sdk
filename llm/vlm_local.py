@@ -1,3 +1,7 @@
+import base64
+import httpx
+from IRYM_sdk.llm.base import BaseVLM
+from IRYM_sdk.core.config import config
 from IRYM_sdk.observability.tracing import tracer
 
 class LocalVLM(BaseVLM):
