@@ -23,7 +23,7 @@ class LocalVLM(BaseVLM):
         if self.model_name not in LocalVLM._model_cache:
             print(f"[*] Initializing Local VLM Model: {self.model_name}...")
             try:
-                from transformers import AutoProcessor, AutoConfig, AutoModelForVision2Seq, AutoModelForCausalLM
+                from transformers import AutoProcessor, AutoConfig, AutoModelForCausalLM
                 processor = AutoProcessor.from_pretrained(self.model_name, trust_remote_code=True)
                 
                 # Check config architecture to dynamically load the right class if Auto breaks
@@ -37,14 +37,19 @@ class LocalVLM(BaseVLM):
                         from transformers.models.qwen3_vl.modeling_qwen3_vl import Qwen3VLForConditionalGeneration
                         model = Qwen3VLForConditionalGeneration.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
                     except ImportError:
-                        model = AutoModelForVision2Seq.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
+                        try:
+                            from transformers import AutoModelForVision2Seq
+                            model = AutoModelForVision2Seq.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
+                        except ImportError:
+                            model = AutoModelForCausalLM.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
                 elif "Qwen2VLForConditionalGeneration" in architectures:
                     from transformers import Qwen2VLForConditionalGeneration
                     model = Qwen2VLForConditionalGeneration.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
                 else:
                     try:
+                        from transformers import AutoModelForVision2Seq
                         model = AutoModelForVision2Seq.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
-                    except ValueError:
+                    except (ImportError, ValueError):
                         model = AutoModelForCausalLM.from_pretrained(self.model_name, device_map="auto", torch_dtype="auto", trust_remote_code=True)
                 
                 LocalVLM._model_cache[self.model_name] = {
