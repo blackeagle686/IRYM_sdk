@@ -114,6 +114,23 @@ async def rag_demo():
 ### 🧠 Source Attribution
 The SDK now automatically instructs the LLM to cite its sources. When you query the RAG pipeline, the response will often include markers like `[Source: cloud.pdf]` or `[Source: https://example.com]`.
 
+## 🛡️ Dynamic Fallbacks & Native PyTorch
+
+IRYM_sdk includes a robust "fail-loud and recover gracefully" orchestration architecture for AI providers:
+
+### 1. Interactive Provider Fallbacks
+If your primary provider (e.g. Local) fails to connect or crashes, the SDK's orchestration (`VLMPipeline` / `InsightEngine`) instantly intercepts the failure and prompts you to fallback to the secondary provider (e.g. OpenAI), bypassing pipeline crashes.
+
+### 2. Native PyTorch Singleton Caching (`LocalVLM` & `LocalLLM`)
+No `Ollama` server? No problem! The local providers automatically detect if Hugging Face `transformers` is installed and spin up models natively in your local GPU using an optimized Singleton cache.
+> **Jupyter/Colab Tip**: If you face persistent `Ollama` warnings after installing `transformers`, run `LocalVLM._model_cache.clear()` or `LocalLLM._model_cache.clear()` in your notebook to wipe the previous state and force a PyTorch native reload.
+
+### 3. Automatic 4-Bit Quantization
+To prevent `CUDA Out of Memory` (OOM) errors on smaller GPUs (like Colab T4s), the SDK auto-detects `bitsandbytes` (`pip install bitsandbytes`) and instantly applies `load_in_4bit=True` to shrink massive models (like Qwen2-VL) into your VRAM.
+
+### 4. Resilient RAG PDFs
+The `RAGPipeline.ingest()` method supports PDFs robustly by sequentially testing for parsing libraries: `pypdf`, `pymupdf` (`fitz`), `pdfplumber`, and `PyPDF2`. Simply install whichever you prefer (`pip install pymupdf` is recommended for speed) and it works flawlessly!
+
 ## 🧠 Advanced Usage: Insight Engine
 
 The `InsightEngine` performs full context retrieval, query rewriting, and LLM generation efficiently.
