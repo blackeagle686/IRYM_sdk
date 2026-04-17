@@ -14,12 +14,8 @@ class OpenAILLM(BaseLLM):
         self.client = None
 
     def is_available(self) -> bool:
-        return (
-            bool(self.api_key)
-            and not self.api_key.startswith("ak_")
-            and bool(self.model)
-        )
-
+        return ( bool(self.api_key)and bool(self.model) ) 
+    
     async def init(self):
         if not self.api_key:
             print("Warning: OPENAI_API_KEY is missing. Operating in mock mode.")

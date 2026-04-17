@@ -27,10 +27,19 @@ def init_irym():
     container.register("llm_local", LocalLLM())
     
     # Compatibility mapping for generic 'llm'
-    if config.LOCAL_LLM_TEXT_MODEL:
+    # Prefer OpenAI when API key, base URL and model are provided; otherwise use local
+    try:
+        llm_openai = container.get("llm_openai")
+        llm_local = container.get("llm_local")
+        if llm_openai.is_available():
+            container.register("llm", llm_openai)
+        elif llm_local.is_available():
+            container.register("llm", llm_local)
+        else:
+            # Fallback to whatever was registered first
+            container.register("llm", container.get("llm_local"))
+    except Exception:
         container.register("llm", container.get("llm_local"))
-    else:
-        container.register("llm", container.get("llm_openai"))
 
     # 3. Register Embeddings
     embeddings = SentenceTransformerEmbeddings()
@@ -41,10 +50,18 @@ def init_irym():
     container.register("vlm_local", LocalVLM())
     
     # Compatibility mapping for generic 'vlm'
-    if config.LOCAL_VLM_MODEL:
+    # Prefer OpenAI VLM when API key/base URL/model are provided; otherwise use local
+    try:
+        vlm_openai = container.get("vlm_openai")
+        vlm_local = container.get("vlm_local")
+        if vlm_openai.is_available():
+            container.register("vlm", vlm_openai)
+        elif vlm_local.is_available():
+            container.register("vlm", vlm_local)
+        else:
+            container.register("vlm", container.get("vlm_local"))
+    except Exception:
         container.register("vlm", container.get("vlm_local"))
-    else:
-        container.register("vlm", container.get("vlm_openai"))
     
     # 5. Register Vector DB based on config
     if config.VECTOR_DB_TYPE == "chroma":
@@ -177,3 +194,53 @@ async def init_irym_full():
     await startup_irym()
     await lifecycle.startup()
     print("[+] IRYM SDK initialized and lifecycle hooks executed.")
+
+
+def set_providers(llm_provider: str = None, vlm_provider: str = None) -> None:
+    """
+    Explicitly configure which provider to use for generic `llm` and `vlm`.
+
+    llm_provider, vlm_provider: one of 'openai', 'local', or 'auto' (default 'auto').
+    - 'openai' forces the OpenAI provider (may raise/print warnings if not available).
+    - 'local' forces the Local provider.
+    - 'auto' (or None) prefers OpenAI when available, otherwise local.
+
+    Call this after `init_irym()` and before `startup_irym()` to customize behaviour.
+    """
+    # Helper to resolve a provider choice
+    def resolve(choice, name_openai, name_local):
+        if choice == "openai":
+            return container.get(name_openai)
+        if choice == "local":
+            return container.get(name_local)
+        # auto or None
+        try:
+            openai = container.get(name_openai)
+            local = container.get(name_local)
+            if hasattr(openai, "is_available") and openai.is_available():
+                return openai
+            return local
+        except Exception:
+            return container.get(name_local)
+
+    if llm_provider is not None:
+        llm = resolve(llm_provider, "llm_openai", "llm_local")
+        container.register("llm", llm)
+
+    if vlm_provider is not None:
+        vlm = resolve(vlm_provider, "vlm_openai", "vlm_local")
+        container.register("vlm", vlm)
+
+
+def get_providers() -> dict:
+    """Return currently configured generic providers for `llm` and `vlm`."""
+    res = {}
+    try:
+        res["llm"] = container.get("llm")
+    except Exception:
+        res["llm"] = None
+    try:
+        res["vlm"] = container.get("vlm")
+    except Exception:
+        res["vlm"] = None
+    return res
