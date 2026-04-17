@@ -145,6 +145,12 @@ def get_finetuner(provider: str = None) -> Any:
         return container.get("finetune_openai")
     return container.get("finetune_local")
 
+def get_llm() -> Any:
+    return container.get("llm")
+
+def get_memory() -> MemoryManager:
+    return container.get("memory")
+
 async def init_irym_full():
     """
     Complete initialization:
