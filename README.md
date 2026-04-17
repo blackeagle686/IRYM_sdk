@@ -121,6 +121,24 @@ pip install ".[full]"
   - Ubuntu: `sudo apt install redis-server`
   - macOS: `brew install redis`
 
+## 🚀 Framework Mode: High-Level ChatBot
+
+The IRYM SDK now includes a high-level **Framework Layer** that allows you to build complex AI agents with Vision, Speech, RAG, and Memory in just **one line of code**.
+
+```python
+from IRYM_sdk import ChatBot
+
+# Build the complete AI Agent in one line
+bot = (ChatBot(local=True, vlm=True, tts=True, stt=True)
+       .with_rag(data_to_insight_path="./knowledge")
+       .with_memory()
+       .build())
+
+# Multi-modal interaction
+response = await bot.chat("What's in this image?", image_path="vision.jpg")
+print(response) # Returns text, or dict with audio if TTS is enabled
+```
+
 ## 📖 Quickstart: RAG Pipeline
 
 The `RAGPipeline` is the highest-level service for handling document-based knowledge.

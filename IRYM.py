@@ -15,6 +15,8 @@ from IRYM_sdk.rag.pipeline import RAGPipeline
 from IRYM_sdk.training.local_finetuner import LocalFineTuner
 from IRYM_sdk.training.openai_finetuner import OpenAIFineTuner
 from IRYM_sdk.memory.manager import MemoryManager
+from IRYM_sdk.audio.local import LocalSTT, LocalTTS
+from IRYM_sdk.audio.openai import OpenAISTT, OpenAITTS
 
 def init_irym():
     # 1. Register Cache
@@ -61,6 +63,12 @@ def init_irym():
     # 7. Register Memory Manager
     container.register("memory", MemoryManager(container.get("vector_db")))
 
+    # 8. Register Audio Services
+    container.register("stt_local", LocalSTT())
+    container.register("stt_openai", OpenAISTT())
+    container.register("tts_local", LocalTTS())
+    container.register("tts_openai", OpenAITTS())
+
 async def startup_irym():
     """
     Asynchronously initializes all services registered in the container.
@@ -91,6 +99,12 @@ async def startup_irym():
         await vlm_openai.init()
     if hasattr(vlm_local, "init"):
         await vlm_local.init()
+    
+    # 5. Start Audio Services
+    for service_name in ["stt_local", "stt_openai", "tts_local", "tts_openai"]:
+        service = container.get(service_name)
+        if hasattr(service, "init"):
+            await service.init()
     
     print("[+] IRYM SDK Services started successfully.")
 

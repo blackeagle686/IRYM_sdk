@@ -124,7 +124,25 @@ pip install .
 ### 4. استيعاب مرن لملفات الـ PDF
 طريقة `RAGPipeline.ingest()` تدعم قراءة ملفات PDF بطريقة موثوقة للغاية من خلال الفحص التسلسلي لمكتبات القراءة المتوفرة: `pypdf`، `pymupdf` (باستيراد `fitz`)، `pdfplumber`، و `PyPDF2`. ببساطة، قم بتثبيت المكتبة التي تفضلها (نوصي بـ `pip install pymupdf` من أجل السرعة) وسيعمل النظام بسلاسة تامة!
 
-## �📖 التشغيل السريع: RAG Pipeline
+## 🚀 وضع الإطار (Framework Mode): روبوت دردشة عالي المستوى
+
+يتضمن IRYM SDK الآن **طبقة إطار عمل (Framework Layer)** عالية المستوى تسمح لك ببناء عملاء ذكاء اصطناعي معقدين مع رؤية، وكلام، وRAG، وذاكرة في **سطر واحد فقط من الكود**.
+
+```python
+from IRYM_sdk import ChatBot
+
+# بناء عميل ذكاء اصطناعي متكامل في سطر واحد
+bot = (ChatBot(local=True, vlm=True, tts=True, stt=True)
+       .with_rag(data_to_insight_path="./knowledge")
+       .with_memory()
+       .build())
+
+# تفاعل متعدد الوسائط
+response = await bot.chat("ماذا يوجد في هذه الصورة؟", image_path="vision.jpg")
+print(response) # يعيد نصاً، أو قاموساً يحتوي على مسار الصوت إذا تم تفعيل TTS
+```
+
+## 📖 التشغيل السريع: RAG Pipeline
 
 نظام `RAGPipeline` هو أعلى مستوى خدمة للتعامل مع المعرفة القائمة على المستندات.
 

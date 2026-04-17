@@ -91,6 +91,26 @@ async def memory_demo():
     # الجولة الثانية - يتم استرجاع السياق تلقائياً
     response = await llm.generate("ماذا أبني؟", session_id="user_123")
     print(response) # "أنت تبني IRYM!"
+
+### 🚀 إطار عمل عالي المستوى: ChatBot
+فئة `ChatBot` هي الحل النهائي لبناء عملاء ذكاء اصطناعي متكاملين في سطر واحد. يقوم بتنظيم خدمات LLM و VLM و RAG والذاكرة والخدمات الصوتية تحت واجهة واحدة بسيطة.
+
+#### 1. واجهة البناء (Builder API)
+قم بتكوين عميلك من خلال ربط الوظائف:
+```python
+from IRYM_sdk import ChatBot
+
+bot = (ChatBot(local=True, vlm=True, tts=True, stt=True)
+       .with_rag("./docs")
+       .with_memory()
+       .build())
+```
+
+#### 2. تفاعل متعدد الوسائط
+تتعامل وظيفة `chat()` مع مدخلات مختلفة تلقائياً:
+- **النص**: `await bot.chat("مرحباً")`
+- **الرؤية**: `await bot.chat("اشرح هذا", image_path="diagram.png")`
+- **الصوت**: `await bot.chat(audio_path="voice.wav")` (يقوم بالتحويل للنص والرد)
 ```
 
 ### ⚠️ هام: متطلبات الأجهزة لموديلات التشغيل المحلي

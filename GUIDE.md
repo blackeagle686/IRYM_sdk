@@ -91,6 +91,26 @@ async def memory_demo():
     # Second turn - Context is automatically retrieved
     response = await llm.generate("What am I building?", session_id="user_123")
     print(response) # "You are building IRYM!"
+
+### 🚀 High-Level Framework: ChatBot
+The `ChatBot` class is the ultimate one-liner for building full AI agents. It orchestrates LLM, VLM, RAG, Memory, and Audio services under a single fluent interface.
+
+#### 1. The Builder API
+Configure your agent by chaining methods:
+```python
+from IRYM_sdk import ChatBot
+
+bot = (ChatBot(local=True, vlm=True, tts=True, stt=True)
+       .with_rag("./docs")
+       .with_memory()
+       .build())
+```
+
+#### 2. Multi-Modal Interaction
+The `chat()` method handles different inputs automatically:
+- **Text**: `await bot.chat("Hello")`
+- **Vision**: `await bot.chat("Explain this", image_path="diagram.png")`
+- **Audio**: `await bot.chat(audio_path="voice.wav")` (Transcribes and responds)
 ```
 
 ### ⚠️ Important: Local Model Hardware Requirements
