@@ -128,16 +128,23 @@ The IRYM SDK now includes a high-level **Framework Layer** that allows you to bu
 ```python
 from IRYM_sdk import ChatBot
 
-# Build the complete AI Agent in one line
-bot = (ChatBot(local=True, vlm=True, tts=True, stt=True)
-       .with_rag(data_to_insight_path="./knowledge")
-       .with_memory()
+# Build the complete AI Agent with Security and Custom Config
+bot = (ChatBot(local=True, vlm=True)
+       .with_rag(["./docs", "./src"])       # Folders or files
+       .with_memory()                       # Enable session memory
+       .with_security(mode="strict")        # Protection against Prompt Injection
+       .with_system_prompt("Expert Dev")    # Guide bot behavior
        .build())
+
+# Or switch to OpenAI with one line
+# bot.with_openai(api_key="sk-...", base_url="https://api.openai.com")
 
 # Multi-modal interaction
 response = await bot.chat("What's in this image?", image_path="vision.jpg")
-print(response) # Returns text, or dict with audio if TTS is enabled
+print(response) 
 ```
+> [!TIP]
+> Use `.set_session("user_123")` on the bot instance to switch between different users in production environments like FastAPI.
 
 ## 📖 Quickstart: RAG Pipeline
 

@@ -126,21 +126,28 @@ pip install .
 
 ## 🚀 وضع الإطار (Framework Mode): روبوت دردشة عالي المستوى
 
-يتضمن IRYM SDK الآن **طبقة إطار عمل (Framework Layer)** عالية المستوى تسمح لك ببناء عملاء ذكاء اصطناعي معقدين مع رؤية، وكلام، وRAG، وذاكرة في **سطر واحد فقط من الكود**.
+يتضمن IRYM SDK الآن **طبقة إطار عمل (Framework Layer)** عالية المستوى تسمح لك ببناء عملاء ذكاء اصطناعي معقدين مع رؤية، وRAG، وذاكرة في **سطر واحد فقط من الكود**.
 
 ```python
 from IRYM_sdk import ChatBot
 
-# بناء عميل ذكاء اصطناعي متكامل في سطر واحد
-bot = (ChatBot(local=True, vlm=True, tts=True, stt=True)
-       .with_rag(data_to_insight_path="./knowledge")
-       .with_memory()
+# بناء عميل متكامل مع الحماية وإعدادات مخصصة
+bot = (ChatBot(local=True, vlm=True)
+       .with_rag(["./docs", "./src"])       # مجلدات أو ملفات
+       .with_memory()                       # تفعيل ذاكرة الجلسة
+       .with_security(mode="strict")        # الحماية من حقن الأوامر (Prompt Injection)
+       .with_system_prompt("Expert Dev")    # توجيه سلوك البوت
        .build())
+
+# أو الانتقال إلى OpenAI بسطر واحد
+# bot.with_openai(api_key="sk-...", base_url="https://api.openai.com")
 
 # تفاعل متعدد الوسائط
 response = await bot.chat("ماذا يوجد في هذه الصورة؟", image_path="vision.jpg")
-print(response) # يعيد نصاً، أو قاموساً يحتوي على مسار الصوت إذا تم تفعيل TTS
+print(response) 
 ```
+> [!TIP]
+> استخدم `.set_session("user_123")` على مثيل البوت للتبديل بين المستخدمين المختلفين في بيئات الإنتاج مثل FastAPI.
 
 ## 📖 التشغيل السريع: RAG Pipeline
 
