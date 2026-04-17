@@ -87,11 +87,11 @@ class ChatBotInstance:
         if self.builder._memory_enabled:
             self._memory = container.get("memory")
 
-        if self.builder.stt_enabled:
-            self._stt = container.get("stt_local") if self.builder.local else container.get("stt_openai")
-        
-        if self.builder.tts_enabled:
-            self._tts = container.get("tts_local") if self.builder.local else container.get("tts_openai")
+        # if self.builder.stt_enabled:
+        #     self._stt = container.get("stt_local") if self.builder.local else container.get("stt_openai")
+        # 
+        # if self.builder.tts_enabled:
+        #     self._tts = container.get("tts_local") if self.builder.local else container.get("tts_openai")
 
         self._initialized = True
         logger.info("ChatBotInstance lazily initialized.")
@@ -106,13 +106,13 @@ class ChatBotInstance:
         """
         await self._lazy_init()
 
-        # 1. Handle Audio Input (STT)
-        input_text = text
-        if audio_path and self._stt:
-            logger.info(f"Transcribing audio: {audio_path}")
-            input_text = await self._stt.transcribe(audio_path)
-            if not text:
-                text = input_text
+        # 1. Handle Audio Input (STT) - Temporarily Disabled
+        # input_text = text
+        # if audio_path and self._stt:
+        #     logger.info(f"Transcribing audio: {audio_path}")
+        #     input_text = await self._stt.transcribe(audio_path)
+        #     if not text:
+        #         text = input_text
 
         if not text and not image_path:
             raise ValueError("Either text, image_path, or audio_path must be provided.")
@@ -151,17 +151,18 @@ class ChatBotInstance:
         if self._memory:
             await self._memory.add_interaction(self.builder._session_id, text, response_text)
 
-        # 5. Handle Audio Output (TTS)
-        response_audio = None
-        if self.builder.tts_enabled and self._tts:
-            logger.info("Generating TTS response...")
-            response_audio = await self._tts.generate(response_text)
+        # 5. Handle Audio Output (TTS) - Temporarily Disabled
+        # response_audio = None
+        # if self.builder.tts_enabled and self._tts:
+        #     logger.info("Generating TTS response...")
+        #     # The SDK currently uses 'synthesize' instead of 'generate'
+        #     # response_audio = await self._tts.synthesize(response_text, "response.wav")
 
         # 6. Final Output
-        if self.builder.tts_enabled:
-            return {
-                "text": response_text,
-                "audio": response_audio
-            }
+        # if self.builder.tts_enabled:
+        #     return {
+        #         "text": response_text,
+        #         "audio": response_audio
+        #     }
         
         return response_text
