@@ -111,6 +111,51 @@ The `chat()` method handles different inputs automatically:
 - **Text**: `await bot.chat("Hello")`
 - **Vision**: `await bot.chat("Explain this", image_path="diagram.png")`
 - **Audio**: `await bot.chat(audio_path="voice.wav")` (Transcribes and responds)
+
+#### 3. Framework Usage Scenarios
+
+##### **A. Simple Python CLI Demo**
+```python
+import asyncio
+from IRYM_sdk import ChatBot
+
+async def main():
+    bot = ChatBot(local=True).with_memory().build()
+    print(await bot.chat("Hello!"))
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+##### **B. FastAPI Integration**
+```python
+from fastapi import FastAPI
+from IRYM_sdk import ChatBot
+
+app = FastAPI()
+bot = ChatBot(vlm=True).with_rag("./data").build()
+
+@app.post("/ask")
+async def ask_ai(prompt: str, session: str = "user1"):
+    return {"answer": await bot.set_session(session).chat(prompt)}
+```
+
+##### **C. Django Integration**
+```python
+# views.py
+from django.http import JsonResponse
+from IRYM_sdk import ChatBot
+import asyncio
+
+bot = ChatBot(local=False).with_openai("sk-...").build()
+
+def ai_chat(request):
+    txt = request.GET.get('text')
+    ans = asyncio.run(bot.chat(txt))
+    return JsonResponse({"reply": ans})
+```
+
+### ⚠️ Important: Local Model Hardware Requirements
 ```
 
 ### ⚠️ Important: Local Model Hardware Requirements

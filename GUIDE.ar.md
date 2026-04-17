@@ -111,6 +111,51 @@ bot = (ChatBot(local=True, vlm=True, tts=True, stt=True)
 - **النص**: `await bot.chat("مرحباً")`
 - **الرؤية**: `await bot.chat("اشرح هذا", image_path="diagram.png")`
 - **الصوت**: `await bot.chat(audio_path="voice.wav")` (يقوم بالتحويل للنص والرد)
+
+#### 3. سيناريوهات استخدام إطار العمل
+
+##### **أ. مثال بسيط بلغة بايثون (CLI)**
+```python
+import asyncio
+from IRYM_sdk import ChatBot
+
+async def main():
+    bot = ChatBot(local=True).with_memory().build()
+    print(await bot.chat("مرحباً!"))
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+##### **ب. التكامل مع FastAPI**
+```python
+from fastapi import FastAPI
+from IRYM_sdk import ChatBot
+
+app = FastAPI()
+bot = ChatBot(vlm=True).with_rag("./data").build()
+
+@app.post("/ask")
+async def ask_ai(prompt: str, session: str = "user1"):
+    return {"answer": await bot.set_session(session).chat(prompt)}
+```
+
+##### **ج. التكامل مع Django**
+```python
+# views.py
+from django.http import JsonResponse
+from IRYM_sdk import ChatBot
+import asyncio
+
+bot = ChatBot(local=False).with_openai("sk-...").build()
+
+def ai_chat(request):
+    txt = request.GET.get('text')
+    ans = asyncio.run(bot.chat(txt))
+    return JsonResponse({"reply": ans})
+```
+
+### ⚠️ هام: متطلبات الأجهزة لموديلات التشغيل المحلي
 ```
 
 ### ⚠️ هام: متطلبات الأجهزة لموديلات التشغيل المحلي

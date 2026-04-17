@@ -41,4 +41,8 @@ class Config:
     TRAINING_LEARNING_RATE = float(os.getenv("TRAINING_LEARNING_RATE", "2e-4"))
     TRAINING_LORA_R = int(os.getenv("TRAINING_LORA_R", "8"))
     
+    # Security Config
+    SECURITY_MAX_INPUT_LENGTH = int(os.getenv("SECURITY_MAX_INPUT_LENGTH", "4000"))
+    SECURITY_ENABLE_HALLUCINATION_CHECK = os.getenv("SECURITY_ENABLE_HALLUCINATION_CHECK", "false").lower() == "true"
+    
 config = Config()
