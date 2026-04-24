@@ -54,8 +54,16 @@ class Config:
     
     # RAG Optimization Config
     RAG_QUERY_EXPANSION = os.getenv("RAG_QUERY_EXPANSION", "true").lower() == "true"
+    RAG_HYDE_ENABLED = os.getenv("RAG_HYDE_ENABLED", "true").lower() == "true"
     RAG_MMR_ENABLED = os.getenv("RAG_MMR_ENABLED", "true").lower() == "true"
     RAG_MMR_LAMBDA = float(os.getenv("RAG_MMR_LAMBDA", "0.5"))
     RAG_MAX_CONTEXT_CHUNKS = int(os.getenv("RAG_MAX_CONTEXT_CHUNKS", "5"))
+    RAG_CONTEXT_COMPRESSION = os.getenv("RAG_CONTEXT_COMPRESSION", "true").lower() == "true"
+    
+    # Parent-Child Retrieval Config
+    RAG_PARENT_RETRIEVAL = os.getenv("RAG_PARENT_RETRIEVAL", "true").lower() == "true"
+    RAG_PARENT_CHUNK_SIZE = int(os.getenv("RAG_PARENT_CHUNK_SIZE", "1500"))
+    RAG_CHILD_CHUNK_SIZE = int(os.getenv("RAG_CHILD_CHUNK_SIZE", "300"))
+    RAG_CHUNK_OVERLAP = int(os.getenv("RAG_CHUNK_OVERLAP", "50"))
     
 config = Config()
