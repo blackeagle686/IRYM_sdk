@@ -51,8 +51,14 @@ class InsightEngine(BaseInsightService):
         # 2. Vector retrieval & Query Expansion
         logger.info(f"Retrieving Knowledge for: {optimized_query[:50]}...")
         
-        # Expand query if enabled
-        queries = await self.optimizer.expand_query(optimized_query, llm=provider)
+        # 2a. HyDE (Hypothetical Document Embedding)
+        search_query = optimized_query
+        if config.RAG_HYDE_ENABLED:
+            search_query = await self.optimizer.get_hyde_query(optimized_query, llm=provider)
+            logger.info(f"HyDE Answer Generated: {search_query[:50]}...")
+
+        # 2b. Expand query (Multi-query search)
+        queries = await self.optimizer.expand_query(search_query, llm=provider)
         
         all_docs = []
         seen_contents = set()
@@ -66,8 +72,11 @@ class InsightEngine(BaseInsightService):
                     seen_contents.add(content)
         
         if all_docs:
-            logger.info(f"Retrieved {len(all_docs)} unique documents across {len(queries)} queries. Reranking...")
+            logger.info(f"Retrieved {len(all_docs)} unique documents. Reranking...")
+            # MMR Reranking
             docs = self.optimizer.rerank(all_docs, optimized_query)
+            # Contextual Compression
+            docs = self.optimizer.compress_context(docs, optimized_query)
         else:
             docs = []
 
