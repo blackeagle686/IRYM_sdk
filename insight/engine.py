@@ -3,6 +3,7 @@ from IRYM_sdk.insight.retriever import VectorRetriever
 from IRYM_sdk.insight.composer import PromptComposer
 from IRYM_sdk.insight.optimizer import Optimizer
 from typing import Optional
+from IRYM_sdk.core.config import config
 from IRYM_sdk.core.utils import async_confirm
 from IRYM_sdk.observability.logger import get_logger
 
