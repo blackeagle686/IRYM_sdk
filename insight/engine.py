@@ -94,8 +94,11 @@ class InsightEngine(BaseInsightService):
             response = await provider.generate(prompt)
         except Exception as e:
             logger.error(f"LLM provider failed: {e}")
-            if provider == self.primary:
-                confirmed = await async_confirm(f"Primary LLM failed ({e}). Switch to Fallback for this request?")
+            if provider == self.primary and self.fallback:
+                confirmed = config.AUTO_ACCEPT_FALLBACK
+                if not confirmed:
+                    confirmed = await async_confirm(f"Primary LLM failed ({e}). Switch to Fallback for this request?")
+                
                 if confirmed:
                     if hasattr(self.fallback, "is_available") and not self.fallback.is_available():
                         return f"Error: Secondary provider is not configured. Cannot fallback."
