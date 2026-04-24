@@ -22,6 +22,10 @@ class LocalLLM(BaseLLM):
         if not self.model:
             return
 
+        if not config.LOAD_LOCAL_LLM:
+            print(f"[!] LocalLLM.init skipped for {self.model} because LOAD_LOCAL_LLM is False.")
+            return
+
         if self.model not in LocalLLM._model_cache:
             print(f"[*] Initializing Local LLM Model: {self.model}...")
             try:
@@ -69,6 +73,11 @@ class LocalLLM(BaseLLM):
 
     async def generate(self, prompt: str, session_id: Optional[str] = None) -> str:
         if not self.hf_model and not self.is_ollama:
+            if not config.LOAD_LOCAL_LLM:
+                raise RuntimeError(
+                    f"Attempted to use LocalLLM ({self.model}) but LOAD_LOCAL_LLM is False. "
+                    "Initialize IRYM with local=True to enable it."
+                )
             await self.init()
             
         # Handle Memory

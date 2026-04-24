@@ -21,19 +21,27 @@ class SentenceTransformerEmbeddings(BaseEmbeddings):
     _model_cache = {}
 
     def __init__(self, model_name: str = None):
-        model_to_use = model_name or config.EMBEDDING_MODEL
-        
-        if model_to_use not in SentenceTransformerEmbeddings._model_cache:
+        self.model_name = model_name or config.EMBEDDING_MODEL
+        self._model = None
+
+    @property
+    def model(self):
+        if self._model is None:
+            self._load_model()
+        return self._model
+
+    def _load_model(self):
+        if self.model_name not in SentenceTransformerEmbeddings._model_cache:
             if SentenceTransformer is None:
                 raise ImportError(
                     "sentence-transformers is not installed. "
                     "Please install it using: pip install sentence-transformers"
                 )
-            print(f"[*] Initializing Embedding Model: {model_to_use}...")
-            SentenceTransformerEmbeddings._model_cache[model_to_use] = SentenceTransformer(model_to_use)
+            print(f"[*] Initializing Embedding Model: {self.model_name}...")
+            SentenceTransformerEmbeddings._model_cache[self.model_name] = SentenceTransformer(self.model_name)
             print(f"[+] Embedding Model Loaded into cache.")
         
-        self.model = SentenceTransformerEmbeddings._model_cache[model_to_use]
+        self._model = SentenceTransformerEmbeddings._model_cache[self.model_name]
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
         embeddings = self.model.encode(texts)

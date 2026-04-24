@@ -32,6 +32,10 @@ class Config:
     # Qwen/Qwen2-VL-2B-Instruct
     LOCAL_VLM_MODEL = os.getenv("LOCAL_VLM_MODEL", "")
     
+    # Deferred Loading Flags
+    LOAD_LOCAL_LLM = os.getenv("LOAD_LOCAL_LLM", "false").lower() == "true"
+    LOAD_LOCAL_VLM = os.getenv("LOAD_LOCAL_VLM", "false").lower() == "true"
+    
     # Fallback Behavior
     AUTO_ACCEPT_FALLBACK = os.getenv("AUTO_ACCEPT_FALLBACK", "false").lower() == "true"
     

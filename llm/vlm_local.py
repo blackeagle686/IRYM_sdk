@@ -23,6 +23,10 @@ class LocalVLM(BaseVLM):
         if not self.model:
             return
 
+        if not config.LOAD_LOCAL_VLM:
+            print(f"[!] LocalVLM.init skipped for {self.model} because LOAD_LOCAL_VLM is False.")
+            return
+
         if self.model not in LocalVLM._model_cache:
             print(f"[*] Initializing Local VLM Model: {self.model}...")
             try:
@@ -94,6 +98,11 @@ class LocalVLM(BaseVLM):
 
     async def generate_with_image(self, prompt: str, image_path: str, session_id: Optional[str] = None) -> str:
         if not self.hf_model and not self.is_ollama:
+            if not config.LOAD_LOCAL_VLM:
+                raise RuntimeError(
+                    f"Attempted to use LocalVLM ({self.model}) but LOAD_LOCAL_VLM is False. "
+                    "Initialize IRYM with vlm=True to enable it."
+                )
             await self.init()
 
         # Handle Memory
@@ -186,6 +195,11 @@ class LocalVLM(BaseVLM):
     async def generate(self, prompt: str, session_id: Optional[str] = None) -> str:
         """Text-only generation fallback for VLMs."""
         if not self.hf_model and not self.is_ollama:
+            if not config.LOAD_LOCAL_VLM:
+                raise RuntimeError(
+                    f"Attempted to use LocalVLM ({self.model}) but LOAD_LOCAL_VLM is False. "
+                    "Initialize IRYM with vlm=True to enable it."
+                )
             await self.init()
             
         # Handle Memory

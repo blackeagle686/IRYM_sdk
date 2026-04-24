@@ -18,7 +18,11 @@ from IRYM_sdk.memory.manager import MemoryManager
 from IRYM_sdk.audio.local import LocalSTT, LocalTTS
 from IRYM_sdk.audio.openai import OpenAISTT, OpenAITTS
 
-def init_irym():
+def init_irym(local: bool = False, vlm: bool = False):
+    # 0. Set local loading preferences
+    config.LOAD_LOCAL_LLM = local
+    config.LOAD_LOCAL_VLM = vlm
+
     # 1. Register Cache
     container.register("cache", RedisCache())
     
@@ -101,8 +105,11 @@ async def startup_irym():
     llm_local = container.get("llm_local")
     if hasattr(llm_openai, "init"):
         await llm_openai.init()
-    if hasattr(llm_local, "init"):
+    
+    if config.LOAD_LOCAL_LLM and hasattr(llm_local, "init"):
         await llm_local.init()
+    elif not config.LOAD_LOCAL_LLM:
+        print("[!] Local LLM loading skipped (LOAD_LOCAL_LLM=False).")
         
     # 3. Start Vector DB
     vector_db = container.get("vector_db")
@@ -114,8 +121,11 @@ async def startup_irym():
     vlm_local = container.get("vlm_local")
     if hasattr(vlm_openai, "init"):
         await vlm_openai.init()
-    if hasattr(vlm_local, "init"):
+    
+    if config.LOAD_LOCAL_VLM and hasattr(vlm_local, "init"):
         await vlm_local.init()
+    elif not config.LOAD_LOCAL_VLM:
+        print("[!] Local VLM loading skipped (LOAD_LOCAL_VLM=False).")
     
     # 5. Start Audio Services
     for service_name in ["stt_local", "stt_openai", "tts_local", "tts_openai"]:
@@ -182,7 +192,7 @@ def get_llm() -> Any:
 def get_memory() -> MemoryManager:
     return container.get("memory")
 
-async def init_irym_full():
+async def init_irym_full(local: bool = False, vlm: bool = False):
     """
     Complete initialization:
     1. init_irym (Registry)
@@ -190,7 +200,7 @@ async def init_irym_full():
     3. lifecycle.startup (Hooks)
     """
     from IRYM_sdk.core.lifecycle import lifecycle
-    init_irym()
+    init_irym(local=local, vlm=vlm)
     await startup_irym()
     await lifecycle.startup()
     print("[+] IRYM SDK initialized and lifecycle hooks executed.")
