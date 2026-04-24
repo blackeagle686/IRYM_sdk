@@ -73,6 +73,7 @@ class OpenAILLM(BaseLLM):
             resp = await self.client.chat.completions.create(
                 model=self.model,
                 messages=current_messages,
+                max_tokens=config.SECURITY_MAX_OUTPUT_LENGTH
             )
 
             # Safe extraction

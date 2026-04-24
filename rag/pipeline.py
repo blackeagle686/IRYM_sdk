@@ -277,15 +277,50 @@ class RAGPipeline:
             return f.read()
 
     def _chunk_text(self, text: str, size: int, overlap: int) -> List[str]:
-        chunks = []
-        start = 0
-        while start < len(text):
-            end = start + size
-            chunks.append(text[start:end])
-            start = end - overlap
-            if start >= len(text) - overlap:
-                break
-        return chunks
+        """
+        Recursive character splitting to keep semantic units together.
+        Splits by paragraphs, then sentences, then words.
+        """
+        separators = ["\n\n", "\n", ". ", " ", ""]
+        
+        def split_recursive(text: str, separators: List[str]) -> List[str]:
+            if len(text) <= size:
+                return [text]
+            
+            if not separators:
+                return [text[i:i+size] for i in range(0, len(text), size - overlap)]
+            
+            sep = separators[0]
+            parts = text.split(sep)
+            
+            chunks = []
+            current_chunk = ""
+            
+            for part in parts:
+                # Add separator back except for the last part if it wasn't at the end
+                part_with_sep = part + (sep if part != parts[-1] else "")
+                
+                if len(current_chunk) + len(part_with_sep) <= size:
+                    current_chunk += part_with_sep
+                else:
+                    if current_chunk:
+                        chunks.append(current_chunk)
+                    
+                    # If the part itself is too large, split it with the remaining separators
+                    if len(part_with_sep) > size:
+                        chunks.extend(split_recursive(part_with_sep, separators[1:]))
+                        current_chunk = "" # Reset
+                    else:
+                        current_chunk = part_with_sep
+            
+            if current_chunk:
+                chunks.append(current_chunk)
+            
+            # Post-process: ensure overlap if possible
+            # (Simplified overlap for recursive split: just join small chunks if they fit)
+            return chunks
+
+        return split_recursive(text, separators)
 
     async def query(self, question: str, session_id: Optional[str] = None) -> str:
         """

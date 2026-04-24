@@ -47,8 +47,15 @@ class Config:
     TRAINING_LEARNING_RATE = float(os.getenv("TRAINING_LEARNING_RATE", "2e-4"))
     TRAINING_LORA_R = int(os.getenv("TRAINING_LORA_R", "8"))
     
-    # Security Config
-    SECURITY_MAX_INPUT_LENGTH = int(os.getenv("SECURITY_MAX_INPUT_LENGTH", "4000"))
+    # Security & Token Config
+    SECURITY_MAX_INPUT_LENGTH = int(os.getenv("SECURITY_MAX_INPUT_LENGTH", "4096"))
+    SECURITY_MAX_OUTPUT_LENGTH = int(os.getenv("SECURITY_MAX_OUTPUT_LENGTH", "2048"))
     SECURITY_ENABLE_HALLUCINATION_CHECK = os.getenv("SECURITY_ENABLE_HALLUCINATION_CHECK", "false").lower() == "true"
+    
+    # RAG Optimization Config
+    RAG_QUERY_EXPANSION = os.getenv("RAG_QUERY_EXPANSION", "true").lower() == "true"
+    RAG_MMR_ENABLED = os.getenv("RAG_MMR_ENABLED", "true").lower() == "true"
+    RAG_MMR_LAMBDA = float(os.getenv("RAG_MMR_LAMBDA", "0.5"))
+    RAG_MAX_CONTEXT_CHUNKS = int(os.getenv("RAG_MAX_CONTEXT_CHUNKS", "5"))
     
 config = Config()

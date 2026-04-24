@@ -170,7 +170,7 @@ class LocalVLM(BaseVLM):
                     inputs = self.processor(images=image, text=f"{context_prefix}{prompt}", return_tensors="pt").to(self.hf_model.device)
 
                 with torch.no_grad():
-                    generated_ids = self.hf_model.generate(**inputs, max_new_tokens=512)
+                    generated_ids = self.hf_model.generate(**inputs, max_new_tokens=config.SECURITY_MAX_OUTPUT_LENGTH)
                     
                 generated_ids_trimmed = [out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)]
                 output = self.processor.batch_decode(generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)
@@ -246,7 +246,7 @@ class LocalVLM(BaseVLM):
                     inputs = self.processor(text=plain_text, return_tensors="pt").to(self.hf_model.device)
                     
                 with torch.no_grad():
-                    generated_ids = self.hf_model.generate(**inputs, max_new_tokens=512)
+                    generated_ids = self.hf_model.generate(**inputs, max_new_tokens=config.SECURITY_MAX_OUTPUT_LENGTH)
                     
                 generated_ids_trimmed = [out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)]
                 output = self.processor.batch_decode(generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)

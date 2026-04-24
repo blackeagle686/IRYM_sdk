@@ -48,15 +48,36 @@ class InsightEngine(BaseInsightService):
                 return cached
             logger.info(f"Insight Cache Miss for key: {cache_key}")
 
-        # 2. Vector retrieval & reranking
+        # 2. Vector retrieval & Query Expansion
         logger.info(f"Retrieving Knowledge for: {optimized_query[:50]}...")
-        docs = await self.retriever.retrieve(optimized_query)
-        if docs:
-            logger.info(f"Retrieved {len(docs)} documents. Reranking...")
-            docs = self.optimizer.rerank(docs, optimized_query)
+        
+        # Expand query if enabled
+        queries = await self.optimizer.expand_query(optimized_query, llm=provider)
+        
+        all_docs = []
+        seen_contents = set()
+        
+        for q in queries:
+            docs = await self.retriever.retrieve(q)
+            for d in docs:
+                content = d.get("content", "")
+                if content not in seen_contents:
+                    all_docs.append(d)
+                    seen_contents.add(content)
+        
+        if all_docs:
+            logger.info(f"Retrieved {len(all_docs)} unique documents across {len(queries)} queries. Reranking...")
+            docs = self.optimizer.rerank(all_docs, optimized_query)
+        else:
+            docs = []
 
         # 3. Prompt construction
         prompt = self.composer.build_prompt(optimized_query, docs)
+        
+        # Enforce input length limit
+        if len(prompt.split()) > config.SECURITY_MAX_INPUT_LENGTH * 1.5: # Rough estimate
+            # Very basic truncation for now
+            prompt = prompt[:config.SECURITY_MAX_INPUT_LENGTH * 4]
 
         # 4. LLM Generation (with runtime fallback)
         try:

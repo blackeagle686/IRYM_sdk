@@ -87,7 +87,7 @@ class OpenAIVLM(BaseVLM):
             resp = await self.client.chat.completions.create(
                 model=self.model,
                 messages=current_messages,
-                max_tokens=500,
+                max_tokens=config.SECURITY_MAX_OUTPUT_LENGTH,
             )
 
             if not resp or not resp.choices:
