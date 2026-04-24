@@ -137,12 +137,17 @@ async def startup_irym():
 
 def get_rag_pipeline() -> RAGPipeline:
     vector_db = container.get("vector_db")
+    primary = container.get("llm")
     llm_openai = container.get("llm_openai")
     llm_local = container.get("llm_local")
     cache = container.get("cache")
-    return RAGPipeline(vector_db, primary=llm_local, fallback=llm_openai, cache=cache)
+    
+    # Fallback should be the one NOT chosen as primary
+    fallback = llm_openai if primary == llm_local else llm_local
+    
+    return RAGPipeline(vector_db, primary=primary, fallback=fallback, cache=cache)
 
-def get_insight_engine(openai_model: str = None, local_model: str = None, prefer_local: bool = True) -> InsightEngine:
+def get_insight_engine(openai_model: str = None, local_model: str = None, prefer_local: bool = None) -> InsightEngine:
     vector_db = container.get("vector_db")
     llm_openai = container.get("llm_openai")
     llm_local = container.get("llm_local")
@@ -153,10 +158,15 @@ def get_insight_engine(openai_model: str = None, local_model: str = None, prefer
     if local_model:
         llm_local.model = local_model
         
-    if prefer_local:
+    if prefer_local is True:
         return InsightEngine(vector_db, llm_local, llm_openai, cache)
+    elif prefer_local is False:
+        return InsightEngine(vector_db, llm_openai, llm_local, cache)
         
-    return InsightEngine(vector_db, llm_openai, llm_local, cache)
+    # Default: use generic 'llm' as primary
+    primary = container.get("llm")
+    fallback = llm_openai if primary == llm_local else llm_local
+    return InsightEngine(vector_db, primary, fallback, cache)
 
 def get_vlm_pipeline(openai_model: str = None, local_model: str = None, prefer_local: bool = True) -> VLMPipeline:
     vlm_openai = container.get("vlm_openai")
