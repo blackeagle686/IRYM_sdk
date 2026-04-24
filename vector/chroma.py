@@ -31,13 +31,14 @@ class ChromaVectorDB(BaseVectorDB):
             embedding_function=embedding_function
         )
 
-    async def search(self, query: str, limit: int = 5) -> List[Any]:
+    async def search(self, query: str, limit: int = 5, where: Optional[dict] = None) -> List[Any]:
         if not self.collection:
             await self.init()
         
         results = self.collection.query(
             query_texts=[query],
-            n_results=limit
+            n_results=limit,
+            where=where
         )
         # Flatten results to a list of dicts or documents
         docs = []
@@ -80,6 +81,19 @@ class ChromaVectorDB(BaseVectorDB):
         if not self.collection:
             await self.init()
         return self.collection.get()
+
+    async def get_by_metadata(self, where: dict) -> List[Any]:
+        if not self.collection:
+            await self.init()
+        results = self.collection.get(where=where)
+        docs = []
+        for i in range(len(results['documents'])):
+            docs.append({
+                "content": results['documents'][i],
+                "metadata": results['metadatas'][i] if results['metadatas'] else {},
+                "id": results['ids'][i]
+            })
+        return docs
 
     async def insert(self, vector: Any) -> None:
         # Placeholder for raw vector insertion if needed

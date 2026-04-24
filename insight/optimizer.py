@@ -78,6 +78,58 @@ Question: {query}"""
         except Exception:
             return [query]
 
+    async def get_hyde_query(self, query: str, llm=None) -> str:
+        """
+        Generates a hypothetical answer (HyDE) to improve embedding matching.
+        """
+        if not config.RAG_HYDE_ENABLED or not llm:
+            return query
+            
+        prompt = f"""Write a short, hypothetical technical answer to the following question. 
+Do not worry about accuracy, just use technical terms and keywords that would likely appear in a document about this topic.
+
+Question: {query}
+Hypothetical Answer:"""
+        
+        try:
+            hyde_answer = await llm.generate(prompt)
+            return hyde_answer.strip()
+        except Exception:
+            return query
+
+    def compress_context(self, docs: list, query: str) -> list:
+        """
+        Strips irrelevant sentences from retrieved chunks to focus the prompt.
+        Uses simple keyword matching for speed.
+        """
+        if not config.RAG_CONTEXT_COMPRESSION or not docs:
+            return docs
+            
+        query_words = set(query.lower().split())
+        compressed_docs = []
+        
+        for doc in docs:
+            content = doc.get("content", "")
+            # Split into sentences
+            sentences = content.replace("\n", ". ").split(". ")
+            relevant_sentences = []
+            
+            for sentence in sentences:
+                sentence_words = set(sentence.lower().split())
+                # If sentence shares keywords with query, it's likely relevant
+                if sentence_words.intersection(query_words):
+                    relevant_sentences.append(sentence)
+            
+            # If we filtered too much, keep some original context
+            if len(relevant_sentences) < 2 and len(sentences) > 2:
+                # Keep first and last sentence as fallback
+                relevant_sentences = [sentences[0], "..."] + relevant_sentences + ["...", sentences[-1]]
+            
+            doc["content"] = ". ".join(relevant_sentences)
+            compressed_docs.append(doc)
+            
+        return compressed_docs
+
     def rewrite_query(self, query: str) -> str:
         # Basic query cleaning
         if not query:
