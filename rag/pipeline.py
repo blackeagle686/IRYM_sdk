@@ -2,6 +2,7 @@ import os
 from typing import List, Optional
 from IRYM_sdk.insight.engine import InsightEngine
 from IRYM_sdk.core.container import container
+from IRYM_sdk.core.config import config
 
 class RAGPipeline:
     def __init__(self, vector_db, primary, fallback=None, cache=None):
