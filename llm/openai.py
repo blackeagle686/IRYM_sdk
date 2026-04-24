@@ -14,15 +14,20 @@ class OpenAILLM(BaseLLM):
         self.client = None
 
     def is_available(self) -> bool:
-        return ( bool(self.api_key)and bool(self.model) ) 
+        # LongCat keys often start with 'ak_', standard OpenAI keys start with 'sk-'
+        return bool(self.api_key) and bool(self.model)
     
     async def init(self):
         if not self.api_key:
             print("Warning: OPENAI_API_KEY is missing. Operating in mock mode.")
 
+        base_url = self.base_url
+        if base_url and base_url.endswith("/"):
+            base_url = base_url[:-1]
+
         self.client = AsyncOpenAI(
             api_key=self.api_key,
-            base_url=self.base_url if self.base_url else None,
+            base_url=base_url if base_url else None,
         )
 
     async def generate(self, prompt: str, session_id: Optional[str] = None) -> str:

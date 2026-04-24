@@ -17,7 +17,7 @@ class LocalVLM(BaseVLM):
         self.is_ollama = False
 
     def is_available(self) -> bool:
-        return bool(self.model)
+        return bool(self.model) and config.LOAD_LOCAL_VLM
 
     async def init(self):
         if not self.model:
