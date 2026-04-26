@@ -8,23 +8,25 @@
     <title>{% block title %}Phoenix AI SDK Docs{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
         :root {
-            --accent: #CF0A0A;
-            --accent-orange: #DC5F00;
-            --font-sans: 'Inter', sans-serif;
+            --accent: #FF4D00;
+            --accent-soft: rgba(255, 77, 0, 0.1);
+            --accent-orange: #FF8A00;
+            --font-sans: 'Outfit', 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
         [data-bs-theme="dark"] {
-            --nav-bg: #0d1117;
-            --code-bg: #161b22;
+            --nav-bg: rgba(13, 17, 23, 0.8);
+            --code-bg: #0d1117;
             --card-bg: #161b22;
             --border-color: rgba(255, 255, 255, 0.08);
             --muted: rgba(255, 255, 255, 0.5);
+            --body-bg: #010409;
         }
 
         [data-bs-theme="light"] {
@@ -37,15 +39,18 @@
 
         body {
             font-family: var(--font-sans);
-            font-size: 15px;
+            font-size: 16px;
             line-height: 1.75;
+            background-color: var(--body-bg);
             transition: background-color 0.2s, color 0.2s;
         }
 
-        .Phoenix AI-nav {
+        .phoenix-nav {
             background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
-            padding: 0.55rem 0;
+            padding: 0.75rem 0;
         }
 
         .navbar-brand {
@@ -97,14 +102,16 @@
             background: linear-gradient(135deg, var(--accent), var(--accent-orange));
             color: #fff;
             border: none;
-            font-weight: 600;
-            transition: opacity 0.2s, transform 0.15s;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 77, 0, 0.3);
+            transition: all 0.3s ease;
         }
 
         .btn-accent:hover {
             color: #fff;
-            opacity: 0.88;
-            transform: translateY(-1px);
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 77, 0, 0.4);
         }
 
         pre {
@@ -145,8 +152,19 @@
         }
 
         .hero-section {
-            padding: 88px 0 76px;
-            background: linear-gradient(155deg, rgba(207, 10, 10, 0.055) 0%, rgba(220, 95, 0, 0.04) 100%);
+            padding: 120px 0 100px;
+            background: radial-gradient(circle at top right, rgba(255, 77, 0, 0.08), transparent),
+                        radial-gradient(circle at bottom left, rgba(255, 138, 0, 0.05), transparent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.828-1.415 1.415L51.8 0h2.827zM5.373 0l-.83.828L5.957 2.243 8.2 0H5.373zM50.39 0l3.414 3.414-1.414 1.414L48.976 0h1.414zM9.61 0L6.195 3.414 7.61 4.828 11.024 0H9.61zM5.373 60l-.83-.828L5.957 57.757 8.2 60H5.373zm49.254 0l.83-.828-1.415-1.415L51.8 60h2.827zM9.61 60L6.195 56.586l1.414-1.414L11.024 60H9.61zm40.78 0l3.414-3.414-1.414-1.414L48.976 60h1.414zM30 33.172l12.728 12.728-1.414 1.414L30 35.999l-11.314 11.315-1.414-1.414L30 33.172zm0-2.828L17.272 17.616l1.414-1.414L30 28.929l11.314-11.315 1.414 1.414L30 30.344z' fill='%23ff4d00' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            z-index: -1;
         }
 
         .hero-badge {
@@ -348,7 +366,7 @@
             border: 1px solid var(--border-color);
         }
 
-        .Phoenix AI-footer {
+        .phoenix-footer {
             border-top: 1px solid var(--border-color);
             padding: 1.75rem 0;
             font-size: 0.85rem;
@@ -357,7 +375,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg sticky-top Phoenix AI-nav">
+    <nav class="navbar navbar-expand-lg sticky-top phoenix-nav">
         <div class="container-xl">
             <a class="navbar-brand" href="{% url 'home' %}">Phoenix AI <span>SDK</span></a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -413,7 +431,7 @@
 
     {% block content %}{% endblock %}
 
-    <footer class="Phoenix AI-footer">
+    <footer class="phoenix-footer">
         <div class="container-xl">
             <div class="row align-items-center">
                 <div class="col-md-6 text-muted">
@@ -448,7 +466,7 @@
 
         const applyTheme = (theme) => {
             html.setAttribute('data-bs-theme', theme);
-            localStorage.setItem('Phoenix AI-theme', theme);
+            localStorage.setItem('phoenix-theme', theme);
             themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
             const mTheme = theme === 'dark' ? 'dark' : 'default';
             mermaid.initialize({ startOnLoad: false, theme: mTheme, securityLevel: 'loose' });
@@ -460,7 +478,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             cacheMermaidSources();
-            const saved = localStorage.getItem('Phoenix AI-theme') || 'dark';
+            const saved = localStorage.getItem('phoenix-theme') || 'dark';
             applyTheme(saved);
         });
 
