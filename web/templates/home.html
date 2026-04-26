@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
 Phoenix AI SDK —
@@ -13,7 +14,12 @@ Production-ready AI Infrastructure
 
 <!-- Hero -->
 <section class="hero-section">
-    <div class="container-xl text-center">
+    <canvas id="networkCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;"></canvas>
+    <div class="container-xl text-center" style="position: relative; z-index: 1;">
+        <div class="mb-4 hero-logo-container">
+            <img src="{% static 'images/phx-dark.png' %}" alt="Phoenix AI" class="hero-logo-img theme-dark-only">
+            <img src="{% static 'images/phx-light.png' %}" alt="Phoenix AI" class="hero-logo-img theme-light-only">
+        </div>
 
         <div class="hero-badge">
             <i class="bi bi-stars me-1"></i>
@@ -174,4 +180,101 @@ print(answer)</code></pre>
     </div>
 </section>
 
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const particleCount = 70;
+    const connectionDistance = 140;
+    const mouse = { x: null, y: null, radius: 150 };
+
+    window.addEventListener('mousemove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - rect.left;
+        mouse.y = e.clientY - rect.top;
+    });
+
+    window.addEventListener('resize', () => {
+        resizeCanvas();
+    });
+
+    function resizeCanvas() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        initParticles();
+    }
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 1;
+            this.speedX = (Math.random() - 0.5) * 0.7;
+            this.speedY = (Math.random() - 0.5) * 0.7;
+        }
+
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (this.x > canvas.width) this.x = 0;
+            if (this.x < 0) this.x = canvas.width;
+            if (this.y > canvas.height) this.y = 0;
+            if (this.y < 0) this.y = canvas.height;
+
+            // Simple attraction
+            const dx = mouse.x - this.x;
+            const dy = mouse.y - this.y;
+            const distance = Math.sqrt(dx*dx + dy*dy);
+            if (distance < mouse.radius) {
+                this.x += dx * 0.01;
+                this.y += dy * 0.01;
+            }
+        }
+
+        draw() {
+            ctx.fillStyle = '#FF4D00'; 
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    function initParticles() {
+        particles = [];
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+
+            for (let j = i; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+
+                if (distance < connectionDistance) {
+                    ctx.strokeStyle = `rgba(255, 138, 0, ${0.4 * (1 - distance / connectionDistance)})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.beginPath();
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+
+    resizeCanvas();
+    animate();
+</script>
 {% endblock %}

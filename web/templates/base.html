@@ -187,6 +187,25 @@
             margin-bottom: 1.1rem;
         }
 
+        .hero-logo-img {
+            width: 220px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 4px solid var(--accent-soft);
+            filter: drop-shadow(0 0 30px rgba(255, 77, 0, 0.5));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        [data-bs-theme="dark"] .theme-light-only { display: none !important; }
+        [data-bs-theme="light"] .theme-dark-only { display: none !important; }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
         .hero-section h1 {
             font-size: clamp(1.9rem, 5vw, 3.3rem);
             font-weight: 900;
@@ -386,7 +405,7 @@
     <nav class="navbar navbar-expand-lg sticky-top phoenix-nav">
         <div class="container-xl">
             <a class="navbar-brand" href="{% url 'home' %}">
-                <img src="{% static 'images/phoenix-ai-logo.png' %}" alt="Phoenix AI Logo">
+                <img src="{% static 'images/phx-icon.png' %}" alt="Phoenix AI Logo">
                 Phoenix AI <span>SDK</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -497,6 +516,7 @@
             applyTheme(html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark');
         });
     </script>
+    {% block extra_js %}{% endblock %}
 </body>
 
 </html>
