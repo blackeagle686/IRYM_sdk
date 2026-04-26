@@ -5,10 +5,13 @@ from django.shortcuts import render
 from django.conf import settings
 
 from django.utils import translation
+from django.views.decorators.cache import cache_page
 
+@cache_page(60 * 15) # Cache home for 15 mins
 def home(request):
     return render(request, 'home.html')
 
+@cache_page(60 * 60) # Cache docs for 1 hour
 def docs(request, doc_name='README'):
     lang = translation.get_language()
     
@@ -44,11 +47,10 @@ def docs(request, doc_name='README'):
     # Match ```mermaid ... ```
     content = re.sub(r'```mermaid\s*\n(.*?)\n```', protect_mermaid, content, flags=re.DOTALL)
 
-    # 2. Convert markdown to HTML
-    html_content = markdown.markdown(
-        content,
-        extensions=['fenced_code', 'codehilite', 'tables', 'toc']
-    )
+    # 2. Convert markdown to HTML with TOC
+    md = markdown.Markdown(extensions=['fenced_code', 'codehilite', 'tables', 'toc'])
+    html_content = md.convert(content)
+    toc_content = md.toc
 
     # 3. Restore Mermaid blocks and ensure they are NOT wrapped in <p> tags
     def restore_mermaid(match):
@@ -64,5 +66,6 @@ def docs(request, doc_name='README'):
 
     return render(request, 'docs.html', {
         'content': html_content,
+        'toc': toc_content,
         'doc_name': doc_name
     })

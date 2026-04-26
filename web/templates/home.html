@@ -22,57 +22,74 @@ Production-ready AI Infrastructure
         </div>
 
         <div class="hero-badge">
-            <i class="bi bi-stars me-1"></i>
+            <i class="bi bi-cpu-fill me-2"></i>
             {% if LANGUAGE_CODE == 'ar' %}
-            v1.0 — جاهز للإنتاج مع RAG متعدد المصادر
+            v1.0 • بنية تحتية قابلة للتوسع للوكلاء وأنظمة الذكاء الاصطناعي
             {% else %}
-            v1.0 — Production-Ready Multi-Format RAG
+            v1.0 • Scalable Infrastructure for Intelligent AI Agents
             {% endif %}
         </div>
 
         <h1 class="mb-4">
             {% if LANGUAGE_CODE == 'ar' %}
-            ابنِ أنظمة ذكاء اصطناعي أسرع<br>
-            <span class="gradient-text">بدون تعقيد</span>
+            هندسة الأنظمة المستقلة<br>
+            <span class="gradient-text">فائقة الذكاء</span>
             {% else %}
-            Build AI Backends Faster<br>
-            <span class="gradient-text">Without the Chaos</span>
+            Engineer Autonomous<br>
+            <span class="gradient-text">Intelligent Systems</span>
             {% endif %}
         </h1>
 
-        <p class="lead mb-5 mx-auto" style="max-width:620px; opacity:0.75;">
+        <p class="lead mb-5 hero-description">
             {% if LANGUAGE_CODE == 'ar' %}
-            توقف عن توصيل الأدوات يدويًا. يوفر لك Phoenix AI طبقة موحدة لإدارة RAG، قواعد البيانات المتجهة،
-            نماذج اللغة، والذكاء متعدد الوسائط — في تصميم نظيف وقابل للتوسع.
+            <strong style="color: var(--accent); font-weight: 900; letter-spacing: -0.5px;">Phoenix AI</strong> 
+            هو العمود الفقري لتنظيم الذكاء الاصطناعي للمطورين الذين يبنون وكلاء وأنظمة ذكاء اصطناعي مستقلة قابلة للتوسع.
+            ابنِ وكلاء بمستوى الإنتاج مع RAG فائق القابلية للتوسع، رؤية متعددة الوسائط، وذاكرة عصبية — مصمم للسيادة المعمارية الكاملة.
             {% else %}
-            Stop wiring tools together. **Phoenix AI** provides a high-level orchestration layer for RAG pipelines,
-            vector databases, LLMs, and multimodal AI — all in one clean, fire-breathing architecture.
+            <strong style="color: var(--accent); font-weight: 900; letter-spacing: -0.5px;">Phoenix AI</strong> 
+            is the elite orchestration backbone for developers engineering scalable, production-ready AI agents and autonomous systems. 
+            Deploy agentic architectures with hyper-scalable RAG, multi-modal vision, and neural memory—engineered for total architectural sovereignty.
             {% endif %}
         </p>
 
         <div class="d-flex justify-content-center flex-wrap gap-3">
             <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent btn-lg px-5 rounded-pill">
-                <i class="bi bi-rocket-takeoff me-2"></i>
-                {% if LANGUAGE_CODE == 'ar' %}ابدأ الآن{% else %}Get Started{% endif %}
+                <i class="bi bi-lightning-fill me-2"></i>
+                {% if LANGUAGE_CODE == 'ar' %}ابدأ الآن{% else %}Start Building{% endif %}
             </a>
 
-            <a href="{% url 'docs' %}" class="btn btn-outline-secondary btn-lg px-5 rounded-pill">
-                <i class="bi bi-book me-2"></i>
-                {% if LANGUAGE_CODE == 'ar' %}التوثيق{% else %}Docs{% endif %}
+            <a href="https://github.com/blackeagle686/phoenix-ai.git" target="_blank" class="btn btn-outline-secondary btn-lg px-5 rounded-pill">
+                <i class="bi bi-github me-2"></i>
+                {% if LANGUAGE_CODE == 'ar' %}جيت هاب{% else %}Star on GitHub{% endif %}
             </a>
         </div>
 
-        <div class="mt-5 d-inline-block text-start">
-            <pre style="padding:0.75rem 1.5rem; font-size:0.875rem;">git clone https://github.com/blackeagle686/phoenix-ai.git</pre>
+        <div class="terminal-block">
+            <div class="terminal-header d-flex align-items-center justify-content-between">
+                <div class="d-flex gap-1">
+                    <div class="terminal-dot" style="background:#ff5f56;"></div>
+                    <div class="terminal-dot" style="background:#ffbd2e;"></div>
+                    <div class="terminal-dot" style="background:#27c93f;"></div>
+                </div>
+                <button class="btn btn-link p-0 text-muted terminal-copy-btn" title="Copy Command">
+                    <i class="bi bi-clipboard" id="terminalCopyIcon"></i>
+                </button>
+            </div>
+            <div class="terminal-body" id="terminalCmdBlock">
+                <span class="prompt">$</span>
+                <span class="cmd">git clone https://github.com/blackeagle686/phoenix-ai.git</span>
+            </div>
         </div>
 
     </div>
 </section>
 
-<section class="py-5">
+<section class="py-5" style="background: radial-gradient(circle at center, rgba(255, 77, 0, 0.03) 0%, transparent 70%);">
   <div class="container-xl">
-    <h2 class="text-center fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}كل ما تحتاجه لإطلاق ميزات الذكاء الاصطناعي{% else %}Everything you need to ship AI features{% endif %}</h2>
-    <p class="text-center text-muted mb-5">{% if LANGUAGE_CODE == 'ar' %}SDK واحد. صفر كود متكرر. جاهز للإنتاج.{% else %}One SDK. Zero boilerplate. Production ready.{% endif %}</p>
+    <div class="text-center mb-5">
+        <h2 class="fw-bold mb-3" style="font-size: 2.2rem;">{% if LANGUAGE_CODE == 'ar' %}كل ما تحتاجه لبناء وكلاء ذكاء اصطناعي{% else %}Everything you need to ship AI Agents{% endif %}</h2>
+        <p class="text-muted mx-auto" style="max-width: 600px;">{% if LANGUAGE_CODE == 'ar' %}SDK واحد. صفر كود متكرر. بنية تحتية هندسية متكاملة.{% else %}One unified SDK. Zero boilerplate. The definitive engineering infrastructure for autonomous intelligence.{% endif %}</p>
+    </div>
     <div class="row g-4">
       <div class="col-md-4"><div class="feature-card"><div class="feature-icon"><i class="bi bi-lightning-charge-fill"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}خط إنتاج RAG{% else %}RAG Pipeline{% endif %}</h5>
@@ -86,27 +103,27 @@ Production-ready AI Infrastructure
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}تكامل LLM{% else %}LLM Integration{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}عميل يتوافق مع OpenAI. يدعم النماذج المحلية والسحابية. محركات توليد قابلة للتوصيل.{% else %}OpenAI-compatible API client. Supports local and cloud models. Pluggable generation backends.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(220,95,0,0.1);color:var(--accent-orange);"><i class="bi bi-mic-fill"></i></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon"><i class="bi bi-mic-fill"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}الصوت (STT / TTS){% else %}Audio (STT / TTS){% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تحويل الكلام إلى نص وبالعكس، محلياً أو سحابياً. ابنِ منتجات صوتية في دقائق.{% else %}Local and cloud-based Speech-to-Text and Text-to-Speech. Build voice-first AI products in minutes.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(220,95,0,0.1);color:var(--accent-orange);"><i class="bi bi-eye-fill"></i></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon"><i class="bi bi-eye-fill"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}VLM - الرؤية{% else %}VLM (Vision){% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}حلل الصور باستخدام نماذج الرؤية المحلية أو المتوافقة مع OpenAI. متعدد الوسائط من اليوم الأول.{% else %}Analyze images using local or OpenAI-compatible Vision Language Models. Multimodal from day one.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(220,95,0,0.1);color:var(--accent-orange);"><i class="bi bi-speedometer2"></i></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon"><i class="bi bi-speedometer2"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}طبقة التخزين المؤقت{% else %}Caching Layer{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تخزين دلالي مدعوم بـ Redis. قلل تكاليف النماذج اللغوية بشكل كبير.{% else %}Redis-backed semantic caching. Dramatically reduce LLM costs by serving identical queries from cache.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(220,95,0,0.1);color:var(--accent-orange);"><i class="bi bi-arrow-repeat"></i></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon"><i class="bi bi-arrow-repeat"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}إدارة دورة الحياة{% else %}Lifecycle Management{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}سجّل مهام البدء والإغلاق غير المتزامنة. أدر اتصالات قواعد البيانات وتحميل النماذج بذكاء.{% else %}Register async startup/shutdown hooks. Cleanly manage database pools and AI model pre-loading.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(220,95,0,0.1);color:var(--accent-orange);"><i class="bi bi-graph-up-arrow"></i></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon"><i class="bi bi-graph-up-arrow"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}المراقبة والوضوح{% else %}Observability{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تسجيل منظم وهياكل تتبع مدمجة. راقب أداء وصحة خطوط إنتاج الذكاء الاصطناعي الخاصة بك.{% else %}Built-in structured logging and tracing skeletons. Monitor your AI service health and performance.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card"><div class="feature-icon" style="background:rgba(255,77,0,0.1);color:var(--accent);"><i class="bi bi-layers-fill"></i></div>
+      <div class="col-md-4"><div class="feature-card"><div class="feature-icon"><i class="bi bi-layers-fill"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}طبقة فينيكس{% else %}Phoenix Layer{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}بنية تحتية موحدة ومنظمة تحت حزمة 'phoenix'. سهولة في الاستيراد والتوسيع.{% else %}Unified infrastructure organized under the 'phoenix' package. Clean imports and extensible service discovery.{% endif %}</p>
       </div></div>
@@ -212,8 +229,9 @@ print(answer)</code></pre>
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
             this.size = Math.random() * 2 + 1;
-            this.speedX = (Math.random() - 0.5) * 0.7;
-            this.speedY = (Math.random() - 0.5) * 0.7;
+            this.speedX = (Math.random() - 0.5) * 0.6;
+            this.speedY = (Math.random() - 0.5) * 0.6;
+            this.color = Math.random() > 0.5 ? '#FF4D00' : '#FF8A00'; // Multi-color
         }
 
         update() {
@@ -225,18 +243,19 @@ print(answer)</code></pre>
             if (this.y > canvas.height) this.y = 0;
             if (this.y < 0) this.y = canvas.height;
 
-            // Simple attraction
+            // Soft attraction / repulsion
             const dx = mouse.x - this.x;
             const dy = mouse.y - this.y;
             const distance = Math.sqrt(dx*dx + dy*dy);
             if (distance < mouse.radius) {
-                this.x += dx * 0.01;
-                this.y += dy * 0.01;
+                const force = (mouse.radius - distance) / mouse.radius;
+                this.x += dx * force * 0.02;
+                this.y += dy * force * 0.02;
             }
         }
 
         draw() {
-            ctx.fillStyle = '#FF4D00'; 
+            ctx.fillStyle = this.color; 
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();
@@ -276,5 +295,22 @@ print(answer)</code></pre>
 
     resizeCanvas();
     animate();
+
+    // Terminal Copy
+    const terminalCopyBtn = document.querySelector('.terminal-copy-btn');
+    if (terminalCopyBtn) {
+        terminalCopyBtn.addEventListener('click', () => {
+            const cmd = document.querySelector('#terminalCmdBlock .cmd').textContent;
+            navigator.clipboard.writeText(cmd).then(() => {
+                const icon = document.getElementById('terminalCopyIcon');
+                icon.classList.replace('bi-clipboard', 'bi-check2');
+                terminalCopyBtn.classList.add('text-success');
+                setTimeout(() => {
+                    icon.classList.replace('bi-check2', 'bi-clipboard');
+                    terminalCopyBtn.classList.remove('text-success');
+                }, 2000);
+            });
+        });
+    }
 </script>
 {% endblock %}

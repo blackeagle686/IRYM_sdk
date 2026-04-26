@@ -33,13 +33,23 @@ Quickstart
 <div class="container-xl my-5">
     <div class="row g-5">
 
+        <!-- Mobile Sidebar Toggle -->
+        <button class="btn btn-accent d-lg-none position-fixed bottom-0 end-0 m-4 rounded-circle shadow-lg z-3" 
+                id="sidebarToggle" style="width: 56px; height: 56px;">
+            <i class="bi bi-list fs-4"></i>
+        </button>
+
         <!-- Sidebar TOC -->
-        <div class="col-lg-3 d-none d-lg-block">
+        <div class="col-lg-3 docs-sidebar-container" id="sidebarColumn">
+            {% load cache %}
+            {% cache 3600 sidebar LANGUAGE_CODE doc_name %}
             <nav class="docs-sidebar">
                 <div class="sidebar-title">
                     {% if LANGUAGE_CODE == 'ar' %}في هذه الصفحة{% else %}On this page{% endif %}
                 </div>
-                <div id="toc"></div>
+                <div id="toc-container">
+                    {{ toc|safe }}
+                </div>
 
                 <hr style="opacity:0.1; margin: 1rem 0.5rem;">
 
@@ -80,6 +90,7 @@ Quickstart
                     <i class="bi bi-github me-1"></i> GitHub
                 </a>
             </nav>
+            {% endcache %}
         </div>
 
         <!-- Main Content -->
@@ -182,31 +193,45 @@ Quickstart
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const headings = document.querySelectorAll('.docs-body h2, .docs-body h3');
-        const toc = document.getElementById('toc');
-
-        headings.forEach((h, i) => {
-            const id = 'heading-' + i;
-            h.id = id;
-
-            const a = document.createElement('a');
-            a.href = '#' + id;
-            a.className = 'sidebar-link';
-            a.style.paddingLeft = h.tagName === 'H3' ? '20px' : '10px';
-            a.textContent = h.textContent;
-
-            toc.appendChild(a);
-        });
+        const tocContainer = document.getElementById('toc-container');
+        
+        // Style the auto-generated TOC
+        const tocUl = tocContainer.querySelector('ul');
+        if (tocUl) {
+            tocUl.classList.add('list-unstyled', 'ms-0');
+            tocUl.querySelectorAll('a').forEach(a => {
+                a.classList.add('sidebar-link');
+                // The MD extension adds its own IDs, but we can sync them if needed
+            });
+        }
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => {
-                const link = toc.querySelector(`a[href="#${e.target.id}"]`);
-                if (link) {
-                    link.style.color = e.isIntersecting ? 'var(--accent)' : '';
+                if (e.isIntersecting) {
+                    const id = e.target.id;
+                    const link = tocContainer.querySelector(`a[href="#${id}"]`);
+                    if (link) {
+                        tocContainer.querySelectorAll('a').forEach(l => l.style.color = '');
+                        link.style.color = 'var(--accent)';
+                    }
                 }
             });
         }, { rootMargin: '-20% 0px -70% 0px' });
 
         headings.forEach(h => observer.observe(h));
+
+        // Sidebar Toggle Logic
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const sidebarCol = document.getElementById('sidebarColumn');
+        
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                sidebarCol.classList.toggle('active');
+                const icon = toggleBtn.querySelector('i');
+                icon.classList.toggle('bi-list');
+                icon.classList.toggle('bi-x-lg');
+            });
+        }
     });
 </script>
 
