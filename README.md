@@ -1,5 +1,9 @@
 # 🧠 Phoenix AI (Advanced AI Infrastructure SDK)
 
+<p align="center">
+  <img src="./web/static/images/phx-ai.png" alt="Phoenix AI Logo" width="400">
+</p>
+
 A production-ready, modular backend infrastructure SDK designed for AI-powered Python backend services. 
 
 Whether you are building with FastAPI, Django, or a custom event-driven service, **Phoenix AI** eliminates repetitive backend setup.
