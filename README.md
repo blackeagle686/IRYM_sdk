@@ -87,7 +87,7 @@ Choose the method that fits your workflow best.
 ### 1. Automated Installation (Recommended)
 Get everything ready in one command:
 ```bash
-git clone https://github.com/blackeagle686/phoenix.git
+git clone https://github.com/blackeagle686/phoenix-ai.git
 cd phoenix
 ./install.sh
 ```
@@ -163,7 +163,7 @@ async def rag_demo():
     await rag.ingest("./my_project")
 
     # 2. Ingest from GitHub Repository (Automated cloning & indexing)
-    await rag.ingest_github("https://github.com/blackeagle686/phoenix.git")
+    await rag.ingest_github("https://github.com/blackeagle686/phoenix-ai.git")
 
     # 3. Ingest from Web URL
     await rag.ingest_url("https://example.com/docs/api")

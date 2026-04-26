@@ -11,7 +11,7 @@ async def verify_github_ingestion():
 
     # 2. Ingest a public repository
     # Using a small repo for testing if possible, or just the current sdk for demo
-    repo_url = "https://github.com/blackeagle686/phoenix.git"
+    repo_url = "https://github.com/blackeagle686/phoenix-ai.git"
     print(f"\n--- [2] Testing GitHub Ingestion: {repo_url} ---")
     try:
         await rag.ingest_github(repo_url, branch="main")

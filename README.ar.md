@@ -96,7 +96,7 @@ graph TD
 قم بنسخ المستودع وتثبيت التبعيات:
 
 ```bash
-git clone https://github.com/blackeagle686/phoenix.git
+git clone https://github.com/blackeagle686/phoenix-ai.git
 cd phoenix
 pip install -r requirements.txt
 ```
@@ -166,7 +166,7 @@ async def rag_demo():
     await rag.ingest("./my_project")
 
     # 2. استيعاب من مستودع GitHub (نسخ وفهرسة تلقائية)
-    await rag.ingest_github("https://github.com/blackeagle686/phoenix.git")
+    await rag.ingest_github("https://github.com/blackeagle686/phoenix-ai.git")
 
     # 3. استيعاب من رابط ويب
     await rag.ingest_url("https://example.com/docs/api")
