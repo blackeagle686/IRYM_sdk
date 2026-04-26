@@ -1,9 +1,9 @@
 import asyncio
-from IRYM_sdk.IRYM import init_irym_full, get_finetuner
+from phoenix.Phoenix AI import init_phoenix_full, get_finetuner
 
 async def verify_finetuning_registry():
-    print("\n--- [1] Initializing IRYM SDK ---")
-    await init_irym_full()
+    print("\n--- [1] Initializing Phoenix AI SDK ---")
+    await init_phoenix_full()
     
     # 2. Test Local Finetuner Registration
     print("\n--- [2] Checking Local Finetuner ---")

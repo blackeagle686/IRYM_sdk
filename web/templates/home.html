@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-IRYM SDK —
+Phoenix AI SDK —
 {% if LANGUAGE_CODE == 'ar' %}
 بنية تحتية للذكاء الاصطناعي جاهزة للإنتاج
 {% else %}
@@ -36,10 +36,10 @@ Production-ready AI Infrastructure
 
         <p class="lead mb-5 mx-auto" style="max-width:620px; opacity:0.75;">
             {% if LANGUAGE_CODE == 'ar' %}
-            توقف عن توصيل الأدوات يدويًا. يوفر لك IRYM SDK طبقة موحدة لإدارة RAG، قواعد البيانات المتجهة،
+            توقف عن توصيل الأدوات يدويًا. يوفر لك Phoenix AI SDK طبقة موحدة لإدارة RAG، قواعد البيانات المتجهة،
             نماذج اللغة، والذكاء متعدد الوسائط — في تصميم نظيف وقابل للتوسع.
             {% else %}
-            Stop wiring tools together. IRYM SDK gives you a unified layer for RAG pipelines,
+            Stop wiring tools together. Phoenix AI SDK gives you a unified layer for RAG pipelines,
             vector databases, LLMs, and multimodal AI — all in one clean architecture.
             {% endif %}
         </p>
@@ -57,7 +57,7 @@ Production-ready AI Infrastructure
         </div>
 
         <div class="mt-5 d-inline-block text-start">
-            <pre style="padding:0.75rem 1.5rem; font-size:0.875rem;">git clone https://github.com/blackeagle686/IRYM_sdk.git</pre>
+            <pre style="padding:0.75rem 1.5rem; font-size:0.875rem;">git clone https://github.com/blackeagle686/phoenix.git</pre>
         </div>
 
     </div>
@@ -138,9 +138,9 @@ Production-ready AI Infrastructure
             </div>
 
             <div class="col-lg-7">
-<pre><code class="language-python">from irym_sdk import init_irym, get_rag_pipeline
+<pre><code class="language-python">from phoenix import init_phoenix, get_rag_pipeline
 
-init_irym()
+init_phoenix()
 
 rag = get_rag_pipeline()
 answer = await rag.query("What is AI?")

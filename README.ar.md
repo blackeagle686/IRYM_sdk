@@ -1,8 +1,8 @@
-# 🧠 IRYM_sdk (أستطيع قراءة عقلك)
+# 🧠 phoenix (أستطيع قراءة عقلك)
 
 تطوير بنية تحتية برمجية (SDK) جاهزة للإنتاج، مصممة لخدمات الذكاء الاصطناعي المبنية بلغة بايثون.
 
-سواء كنت تبني باستخدام FastAPI أو Django أو أي خدمة مخصصة، فإن **IRYM_sdk** يزيل عنك عناء الإعدادات المتكررة. يوفر نظاماً موحداً وقابلاً للتبديل للتخزين المؤقت (Caching)، الوصول لقواعد البيانات، المهام الخلفية، دمج نماذج اللغة (LLM)، قواعد البيانات المتجهة (Vector DB)، وخطوط إنتاج الـ RAG.
+سواء كنت تبني باستخدام FastAPI أو Django أو أي خدمة مخصصة، فإن **phoenix** يزيل عنك عناء الإعدادات المتكررة. يوفر نظاماً موحداً وقابلاً للتبديل للتخزين المؤقت (Caching)، الوصول لقواعد البيانات، المهام الخلفية، دمج نماذج اللغة (LLM)، قواعد البيانات المتجهة (Vector DB)، وخطوط إنتاج الـ RAG.
 
 ## 🏗️ تدفق الهندسة المعمارية
 
@@ -10,7 +10,7 @@
 
 ```mermaid
 graph TD
-    APP["المتصفح / التطبيق (FastAPI/Django)"] -->|"تهيئة"| INIT("IRYM.py Initializer")
+    APP["المتصفح / التطبيق (FastAPI/Django)"] -->|"تهيئة"| INIT("Phoenix AI.py Initializer")
     APP -->|"طلب خدمة"| DI{"حاوية حقن التبعية"}
     INIT -->|"تسجيل الخدمات"| DI
     
@@ -96,8 +96,8 @@ graph TD
 قم بنسخ المستودع وتثبيت التبعيات:
 
 ```bash
-git clone https://github.com/blackeagle686/IRYM_sdk.git
-cd IRYM_sdk
+git clone https://github.com/blackeagle686/phoenix.git
+cd phoenix
 pip install -r requirements.txt
 ```
 
@@ -109,7 +109,7 @@ pip install .
 
 ## �️ البدائل الديناميكية وبايثون الأصلي (Native PyTorch)
 
-يتضمن IRYM_sdk بنية تنسيق قوية مبنية على مبدأ "الإخفاق بوضوح والتعافي بلطف" (Fail-loud and recover gracefully) لمقدمي خدمات الذكاء الاصطناعي:
+يتضمن phoenix بنية تنسيق قوية مبنية على مبدأ "الإخفاق بوضوح والتعافي بلطف" (Fail-loud and recover gracefully) لمقدمي خدمات الذكاء الاصطناعي:
 
 ### 1. بدائل تفاعلية لمقدم الخدمة (Interactive Fallbacks)
 عند إخفاق مزود الخدمة الأساسي (مثل Local) في الاتصال أو تعطله، تقوم طبقة التنسيق في SDK (`VLMPipeline` / `InsightEngine`) باعتراض الفشل فوراً وسؤالك عما إذا كنت تريد التحويل إلى المزود الاحتياطي (مثل OpenAI)، مما يتجاوز أعطال النظام بشكل كامل.
@@ -126,10 +126,10 @@ pip install .
 
 ## 🚀 وضع الإطار (Framework Mode): روبوت دردشة عالي المستوى
 
-يتضمن IRYM SDK الآن **طبقة إطار عمل (Framework Layer)** عالية المستوى تسمح لك ببناء عملاء ذكاء اصطناعي معقدين مع رؤية، وRAG، وذاكرة في **سطر واحد فقط من الكود**.
+يتضمن Phoenix AI SDK الآن **طبقة إطار عمل (Framework Layer)** عالية المستوى تسمح لك ببناء عملاء ذكاء اصطناعي معقدين مع رؤية، وRAG، وذاكرة في **سطر واحد فقط من الكود**.
 
 ```python
-from IRYM_sdk import ChatBot
+from phoenix import ChatBot
 
 # بناء عميل متكامل مع الحماية وإعدادات مخصصة
 bot = (ChatBot(local=True, vlm=True)
@@ -155,18 +155,18 @@ print(response)
 
 ```python
 import asyncio
-from IRYM_sdk import init_irym, startup_irym, get_rag_pipeline
+from phoenix import init_phoenix, startup_phoenix, get_rag_pipeline
 
 async def rag_demo():
-    init_irym()
-    await startup_irym()
+    init_phoenix()
+    await startup_phoenix()
     rag = get_rag_pipeline()
 
     # 1. استيعاب المستندات (يدعم المستندات + الأكواد المصدرية .py, .js, .go, .rs, إلخ)
     await rag.ingest("./my_project")
 
     # 2. استيعاب من مستودع GitHub (نسخ وفهرسة تلقائية)
-    await rag.ingest_github("https://github.com/blackeagle686/IRYM_sdk.git")
+    await rag.ingest_github("https://github.com/blackeagle686/phoenix.git")
 
     # 3. استيعاب من رابط ويب
     await rag.ingest_url("https://example.com/docs/api")
@@ -181,10 +181,10 @@ async def rag_demo():
 يقوم `VLMPipeline` بتنسيق مهام الرؤية مع التخزين المؤقت التلقائي و RAG.
 
 ```python
-from IRYM_sdk import init_irym_full, get_vlm_pipeline
+from phoenix import init_phoenix_full, get_vlm_pipeline
 
 async def vision_demo():
-    await init_irym_full()
+    await init_phoenix_full()
     vlm = get_vlm_pipeline()
 
     # متكامل: تخزين النتائج + حقن سياق RAG

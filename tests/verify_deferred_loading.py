@@ -2,18 +2,18 @@ import asyncio
 import sys
 import os
 
-# Add the backend directory to sys.path to allow importing IRYM_sdk
+# Add the backend directory to sys.path to allow importing phoenix
 backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if backend_dir not in sys.path:
     sys.path.append(backend_dir)
 
-from IRYM_sdk import init_irym, startup_irym, container
+from phoenix import init_phoenix, startup_phoenix, container
 
 async def test_deferred_loading():
     print("--- Testing Deferred Loading (Defaults) ---")
     # By default, local=False, vlm=False
-    init_irym()
-    await startup_irym()
+    init_phoenix()
+    await startup_phoenix()
     
     llm_local = container.get("llm_local")
     vlm_local = container.get("vlm_local")
@@ -31,8 +31,8 @@ async def test_deferred_loading():
     print("\n--- Testing Explicit Loading (Local LLM) ---")
     # Note: Actually initializing a real model might be too slow for this test, 
     # but we can check the config flag was set.
-    from IRYM_sdk.core.config import config
-    init_irym(local=True)
+    from phoenix.core.config import config
+    init_phoenix(local=True)
     print(f"Config LOAD_LOCAL_LLM: {config.LOAD_LOCAL_LLM}")
     assert config.LOAD_LOCAL_LLM is True
     

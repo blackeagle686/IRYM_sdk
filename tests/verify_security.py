@@ -1,9 +1,9 @@
 import asyncio
-from IRYM_sdk import ChatBot
-from IRYM_sdk.framework.security import SecurityError
+from phoenix import ChatBot
+from phoenix.framework.security import SecurityError
 
 async def verify_security():
-    print("--- [IRYM Security Verification] ---")
+    print("--- [Phoenix AI Security Verification] ---")
     
     # 1. Initialize Bot with Security
     bot = (ChatBot(local=False) # OpenAI/Mock mode
@@ -35,7 +35,7 @@ async def verify_security():
     print("\nScenario 4: Secret Masking")
     # Actually, we can't easily make the bot leak a key without a real LLM, 
     # but we can test the mask_secrets method directly
-    from IRYM_sdk.framework.security import SecurityGuard
+    from phoenix.framework.security import SecurityGuard
     guard = SecurityGuard()
     leaked_msg = "My API key is sk-1234567890abcdef1234567890"
     masked = guard.mask_secrets(leaked_msg)

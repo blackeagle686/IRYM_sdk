@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# IRYM SDK Installer Script
+# Phoenix AI SDK Installer Script
 # This script automates the setup of a virtual environment and installs all dependencies.
 
 set -e
 
 echo "------------------------------------------------"
-echo "🧠 IRYM SDK - Automated Installer"
+echo "🧠 Phoenix AI SDK - Automated Installer"
 echo "------------------------------------------------"
 
 # 1. Check Python version
@@ -29,7 +29,7 @@ echo "[*] Upgrading pip..."
 pip install --upgrade pip
 
 # 5. Install SDK with all extras
-echo "[*] Installing IRYM SDK with full dependencies..."
+echo "[*] Installing Phoenix AI SDK with full dependencies..."
 pip install -e ".[full]"
 
 # 6. Check for Redis (System Dependency)

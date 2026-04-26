@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}IRYM SDK Docs{% endblock %}</title>
+    <title>{% block title %}Phoenix AI SDK Docs{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
@@ -42,7 +42,7 @@
             transition: background-color 0.2s, color 0.2s;
         }
 
-        .irym-nav {
+        .Phoenix AI-nav {
             background: var(--nav-bg);
             border-bottom: 1px solid var(--border-color);
             padding: 0.55rem 0;
@@ -348,7 +348,7 @@
             border: 1px solid var(--border-color);
         }
 
-        .irym-footer {
+        .Phoenix AI-footer {
             border-top: 1px solid var(--border-color);
             padding: 1.75rem 0;
             font-size: 0.85rem;
@@ -357,9 +357,9 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg sticky-top irym-nav">
+    <nav class="navbar navbar-expand-lg sticky-top Phoenix AI-nav">
         <div class="container-xl">
-            <a class="navbar-brand" href="{% url 'home' %}">IRYM <span>SDK</span></a>
+            <a class="navbar-brand" href="{% url 'home' %}">Phoenix AI <span>SDK</span></a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -401,7 +401,7 @@
                     <button id="themeToggle" class="theme-toggle" title="Toggle theme">
                         <i id="themeIcon" class="bi bi-moon-stars-fill"></i>
                     </button>
-                    <a href="https://github.com/blackeagle686/IRYM_sdk" target="_blank"
+                    <a href="https://github.com/blackeagle686/phoenix" target="_blank"
                         class="btn btn-sm btn-outline-secondary rounded-pill px-3">
                         <i class="bi bi-github me-1"></i>
                         {% if LANGUAGE_CODE == 'ar' %}جيت هاب{% else %}GitHub{% endif %}
@@ -413,14 +413,14 @@
 
     {% block content %}{% endblock %}
 
-    <footer class="irym-footer">
+    <footer class="Phoenix AI-footer">
         <div class="container-xl">
             <div class="row align-items-center">
                 <div class="col-md-6 text-muted">
                     {% if LANGUAGE_CODE == 'ar' %}
-                    &copy; 2026 IRYM SDK — بنية تحتية برمجية للذكاء الاصطناعي جاهزة للإنتاج.
+                    &copy; 2026 Phoenix AI SDK — بنية تحتية برمجية للذكاء الاصطناعي جاهزة للإنتاج.
                     {% else %}
-                    &copy; 2026 IRYM SDK — Production-ready AI infrastructure.
+                    &copy; 2026 Phoenix AI SDK — Production-ready AI infrastructure.
                     {% endif %}
                 </div>
                 <div class="col-md-6 text-md-end text-muted">
@@ -448,7 +448,7 @@
 
         const applyTheme = (theme) => {
             html.setAttribute('data-bs-theme', theme);
-            localStorage.setItem('irym-theme', theme);
+            localStorage.setItem('Phoenix AI-theme', theme);
             themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
             const mTheme = theme === 'dark' ? 'dark' : 'default';
             mermaid.initialize({ startOnLoad: false, theme: mTheme, securityLevel: 'loose' });
@@ -460,7 +460,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             cacheMermaidSources();
-            const saved = localStorage.getItem('irym-theme') || 'dark';
+            const saved = localStorage.getItem('Phoenix AI-theme') || 'dark';
             applyTheme(saved);
         });
 

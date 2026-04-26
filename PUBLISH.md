@@ -1,6 +1,6 @@
 # 🚀 Publishing to PyPI
 
-Follow these steps to make your SDK available via `pip install irym-sdk`.
+Follow these steps to make your SDK available via `pip install Phoenix AI-sdk`.
 
 ---
 
@@ -16,8 +16,8 @@ Run the following command in the root of your project:
 python -m build
 ```
 This will create a `dist/` folder containing two files:
-- `irym_sdk-1.0.0-py3-none-any.whl` (The compiled wheel)
-- `irym_sdk-1.0.0.tar.gz` (The source distribution)
+- `phoenix-1.0.0-py3-none-any.whl` (The compiled wheel)
+- `phoenix-1.0.0.tar.gz` (The source distribution)
 
 ## 3. Account Setup
 1. Create an account on [PyPI (Production)](https://pypi.org/account/register/).
@@ -35,7 +35,7 @@ When prompted:
 
 Test the installation:
 ```bash
-pip install --index-url https://test.pypi.org/simple/ --no-deps irym-sdk
+pip install --index-url https://test.pypi.org/simple/ --no-deps Phoenix AI-sdk
 ```
 
 ## 5. Upload to PyPI (Final)
@@ -48,6 +48,6 @@ Again, use `__token__` as the username and your production API Token as the pass
 ---
 
 ## 🔧 Troubleshooting
-- **Name Already Taken**: If `irym-sdk` is already taken on PyPI, you will need to change the `name` field in `pyproject.toml` to something unique (e.g., `irym-sdk-yourname`).
+- **Name Already Taken**: If `Phoenix AI-sdk` is already taken on PyPI, you will need to change the `name` field in `pyproject.toml` to something unique (e.g., `Phoenix AI-sdk-yourname`).
 - **Version Mismatch**: You cannot upload the same version twice. Increment the `version` in `pyproject.toml` for every update.
 - **Missing Files**: Check `MANIFEST.in` if your `templates/` or `static/` folders are missing after installation.

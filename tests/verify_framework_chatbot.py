@@ -1,16 +1,16 @@
 import asyncio
 import os
 import shutil
-from IRYM_sdk import ChatBot
+from phoenix import ChatBot
 
 async def verify_chatbot():
-    print("--- [IRYM Framework Verification] ---")
+    print("--- [Phoenix AI Framework Verification] ---")
     
     # 1. Setup sample data for RAG
     test_dir = "./test_framework_docs"
     os.makedirs(test_dir, exist_ok=True)
     with open(os.path.join(test_dir, "framework_info.txt"), "w") as f:
-        f.write("IRYM Framework allows building bots in one line.\n")
+        f.write("Phoenix AI Framework allows building bots in one line.\n")
         f.write("It supports Builder pattern with fluent API.\n")
 
     try:
@@ -25,7 +25,7 @@ async def verify_chatbot():
 
         # 3. Test Text Interaction (with RAG and Memory)
         print("\nTesting Text Interaction (RAG + Memory)...")
-        response = await bot.chat("How do I build bots in IRYM?")
+        response = await bot.chat("How do I build bots in Phoenix AI?")
         print(f"Bot (Text): {response['text'] if isinstance(response, dict) else response}")
 
         # 4. Test Second Interaction (Memory Check)

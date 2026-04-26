@@ -1,6 +1,6 @@
-# IRYM SDK: دليل المطور الكامل
+# Phoenix AI SDK: دليل المطور الكامل
 
-مرحباً بك في الدليل التفصيلي لـ IRYM SDK. يغطي هذا الدليل سيناريوهات الاستخدام المحددة وأنماط التكامل لبناء تطبيقات ذكاء اصطناعي جاهزة للإنتاج.
+مرحباً بك في الدليل التفصيلي لـ Phoenix AI SDK. يغطي هذا الدليل سيناريوهات الاستخدام المحددة وأنماط التكامل لبناء تطبيقات ذكاء اصطناعي جاهزة للإنتاج.
 
 ---
 
@@ -10,11 +10,11 @@
 خط إنتاج RAG هو قلب الذكاء المستند إلى المستندات. يدعم أنواع ملفات مختلفة ويعالج نسبة المصادر تلقائياً.
 
 ```python
-from IRYM_sdk import init_irym, startup_irym, get_rag_pipeline
+from phoenix import init_phoenix, startup_phoenix, get_rag_pipeline
 
 async def run_rag():
-    init_irym()
-    await startup_irym()
+    init_phoenix()
+    await startup_phoenix()
     # الاستعاب من مصادر متعددة
     await rag.ingest("./docs/")             # ملفات (PDF, MD, TXT, DOCX, XLSX)
     await rag.ingest_url("https://ai.com")  # كاشط الويب
@@ -41,7 +41,7 @@ async def run_rag():
 
 #### 🎙️ الخدمة المحلية
 ```python
-from IRYM_sdk.audio.local import LocalAudioService
+from phoenix.audio.local import LocalAudioService
 audio = LocalAudioService()
 await audio.init()
 text = await audio.stt("input.wav")
@@ -49,7 +49,7 @@ text = await audio.stt("input.wav")
 
 #### ☁️ خدمة OpenAI / السحابية
 ```python
-from IRYM_sdk.audio.openai import OpenAISTT, OpenAITTS
+from phoenix.audio.openai import OpenAISTT, OpenAITTS
 stt = OpenAISTT()
 tts = OpenAITTS()
 await stt.init()
@@ -60,10 +60,10 @@ text = await stt.transcribe("voice.mp3")
 قم بتحليل الصور باستخدام نماذج رؤية محلية أو متوافقة مع OpenAI. يعالج خط الإنتاج المتكامل **التخزين المؤقت** و**سياق الـ RAG** تلقائياً.
 
 ```python
-from IRYM_sdk import init_irym_full, get_vlm_pipeline
+from phoenix import init_phoenix_full, get_vlm_pipeline
 
 async def vision_demo():
-    await init_irym_full()
+    await init_phoenix_full()
     vlm = get_vlm_pipeline()
     
     # تكامل في 3 أسطر: النموذج + التخزين المؤقت + سياق RAG
@@ -76,21 +76,21 @@ async def vision_demo():
 ```
 
 ### 4. نظام الذاكرة (سياق المحادثة)
-يوحد نظام الذاكرة في IRYM بين **تاريخ المحادثة** (قصير المدى) و**الاسترجاع الدلالي** (طويل المدى) لجعل ذكائك الاصطناعي يتذكر السياق. يتم دمجه وتفعيله تلقائياً عند تمرير `session_id`.
+يوحد نظام الذاكرة في Phoenix AI بين **تاريخ المحادثة** (قصير المدى) و**الاسترجاع الدلالي** (طويل المدى) لجعل ذكائك الاصطناعي يتذكر السياق. يتم دمجه وتفعيله تلقائياً عند تمرير `session_id`.
 
 ```python
-from IRYM_sdk import init_irym_full, get_llm
+from phoenix import init_phoenix_full, get_llm
 
 async def memory_demo():
-    await init_irym_full()
+    await init_phoenix_full()
     llm = get_llm()
     
     # الجولة الأولى - يتم تخزين التفاعل تلقائياً
-    await llm.generate("مرحباً، أنا مطور أقوم ببناء IRYM.", session_id="user_123")
+    await llm.generate("مرحباً، أنا مطور أقوم ببناء Phoenix AI.", session_id="user_123")
     
     # الجولة الثانية - يتم استرجاع السياق تلقائياً
     response = await llm.generate("ماذا أبني؟", session_id="user_123")
-    print(response) # "أنت تبني IRYM!"
+    print(response) # "أنت تبني Phoenix AI!"
 
 ### 🚀 إطار عمل عالي المستوى: ChatBot
 فئة `ChatBot` هي الحل النهائي لبناء عملاء ذكاء اصطناعي متكاملين في سطر واحد. يقوم بتنظيم خدمات LLM و VLM و RAG والذاكرة والخدمات الصوتية تحت واجهة واحدة بسيطة.
@@ -98,7 +98,7 @@ async def memory_demo():
 #### 1. واجهة البناء (Builder API)
 قم بتكوين عميلك من خلال ربط الوظائف:
 ```python
-from IRYM_sdk import ChatBot
+from phoenix import ChatBot
 
 bot = (ChatBot(local=True, vlm=True, tts=True, stt=True)
        .with_rag("./docs")
@@ -117,7 +117,7 @@ bot = (ChatBot(local=True, vlm=True, tts=True, stt=True)
 ##### **أ. مثال بسيط بلغة بايثون (CLI)**
 ```python
 import asyncio
-from IRYM_sdk import ChatBot
+from phoenix import ChatBot
 
 async def main():
     bot = ChatBot(local=True).with_memory().build()
@@ -130,7 +130,7 @@ if __name__ == "__main__":
 ##### **ب. التكامل مع FastAPI**
 ```python
 from fastapi import FastAPI
-from IRYM_sdk import ChatBot
+from phoenix import ChatBot
 
 app = FastAPI()
 bot = ChatBot(vlm=True).with_rag("./data").build()
@@ -144,7 +144,7 @@ async def ask_ai(prompt: str, session: str = "user1"):
 ```python
 # views.py
 from django.http import JsonResponse
-from IRYM_sdk import ChatBot
+from phoenix import ChatBot
 import asyncio
 
 bot = ChatBot(local=False).with_openai("sk-...").build()
@@ -169,7 +169,7 @@ def ai_chat(request):
 > تشغيل موديلات كبيرة على أجهزة تعتمد على المعالج (CPU) فقط أو أجهزة ذات ذاكرة منخفضة قد يؤدي إلى بطء شديد أو انهيار النظام. سيطلب منك SDK التأكيد قبل تشغيل الموديلات المحلية ما لم يتم ضبط `AUTO_ACCEPT_FALLBACK=true`.
 
 ### التبديل التلقائي والتأكيد (Service Fallback)
-يعطي IRYM SDK الأولوية لمزوديك الأساسيين (OpenAI) ولكنه يتضمن تبديلاً قوياً للموديلات المحلية (Ollama/Transformers).
+يعطي Phoenix AI SDK الأولوية لمزوديك الأساسيين (OpenAI) ولكنه يتضمن تبديلاً قوياً للموديلات المحلية (Ollama/Transformers).
 
 افتراضياً، يتبع SDK مبدأ **السلامة أولاً**: سيطلب منك التأكيد في الوحدة الطرفية (terminal) قبل بدء تشغيل موديل محلي لتجنب استهلاك الموارد غير المتوقع.
 
@@ -187,7 +187,7 @@ AUTO_ACCEPT_FALLBACK=true  # التبديل تلقائياً للمحلي دون
 استخدم `LifecycleManager` لتسجيل المهام التي تعمل عند بدء تشغيل التطبيق أو إغلاقه. هذا مثالي لإدارة اتصالات قاعدة البيانات أو تحميل نماذج الذكاء الاصطناعي الثقيلة مرة واحدة.
 
 ```python
-from IRYM_sdk.core.lifecycle import lifecycle
+from phoenix.core.lifecycle import lifecycle
 
 async def my_startup_task():
     print("Pre-loading resources...")
@@ -202,7 +202,7 @@ await lifecycle.startup()
 تسجيل منظم مدمج لمراقبة خدمات الذكاء الاصطناعي الخاصة بك.
 
 ```python
-from IRYM_sdk.observability.logger import get_logger
+from phoenix.observability.logger import get_logger
 logger = get_logger("my_app")
 
 logger.info("بدء معالجة الذكاء الاصطناعي...")

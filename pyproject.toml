@@ -3,14 +3,14 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "irym-sdk"
+name = "phoenix-ai-sdk"
 version = "1.0.0"
 description = "A production-ready AI infrastructure SDK for RAG, LLM, Vector DB, and Audio."
 readme = "README.md"
 requires-python = ">=3.9"
 license = {text = "MIT"}
 authors = [
-    {name = "IRYM Team", email = "mathematecs1@gmail.com"}
+    {name = "Phoenix AI Team", email = "mathematecs1@gmail.com"}
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -57,12 +57,12 @@ rag = [
 ]
 
 [tool.setuptools]
-packages = ["IRYM_sdk"]
-package-dir = {"IRYM_sdk" = "."}
+packages = ["phoenix", "phoenix.core", "phoenix.framework", "phoenix.llm", "phoenix.rag", "phoenix.vector", "phoenix.audio", "phoenix.memory", "phoenix.insight", "phoenix.observability", "phoenix.queue", "phoenix.training", "phoenix.cache", "phoenix.db"]
+package-dir = {"" = "."}
 
 [tool.setuptools.package-data]
-"IRYM_sdk" = ["*.md", "LICENSE"]
-"IRYM_sdk.web" = ["templates/*", "static/*"]
+"phoenix" = ["*.md", "LICENSE"]
+"phoenix.web" = ["templates/*", "static/*"]
 
 [tool.setuptools.exclude-package-data]
-"IRYM_sdk" = ["web/db.sqlite3", "chroma_db/*"]
+"phoenix" = ["web/db.sqlite3", "chroma_db/*"]

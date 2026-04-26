@@ -1,0 +1,266 @@
+from typing import Any
+from phoenix.core.container import container
+from phoenix.core.config import config
+from phoenix.cache.redis_cache import RedisCache
+from phoenix.llm.openai import OpenAILLM
+from phoenix.llm.local import LocalLLM
+from phoenix.vector.chroma import ChromaVectorDB
+from phoenix.vector.qdrant import QdrantVectorDB
+from phoenix.vector.embeddings import SentenceTransformerEmbeddings
+from phoenix.llm.vlm_openai import OpenAIVLM
+from phoenix.llm.vlm_local import LocalVLM
+from phoenix.insight.vlm_pipeline import VLMPipeline
+from phoenix.insight.engine import InsightEngine
+from phoenix.rag.pipeline import RAGPipeline
+from phoenix.training.local_finetuner import LocalFineTuner
+from phoenix.training.openai_finetuner import OpenAIFineTuner
+from phoenix.memory.manager import MemoryManager
+from phoenix.audio.local import LocalSTT, LocalTTS
+from phoenix.audio.openai import OpenAISTT, OpenAITTS
+
+def init_phoenix(local: bool = False, vlm: bool = False):
+    # 0. Set local loading preferences
+    config.LOAD_LOCAL_LLM = local
+    config.LOAD_LOCAL_VLM = vlm
+
+    # 1. Register Cache
+    container.register("cache", RedisCache())
+    
+    # 2. Register LLM Providers
+    container.register("llm_openai", OpenAILLM())
+    container.register("llm_local", LocalLLM())
+    
+    # Compatibility mapping for generic 'llm'
+    # Prefer OpenAI when API key, base URL and model are provided; otherwise use local
+    try:
+        llm_openai = container.get("llm_openai")
+        llm_local = container.get("llm_local")
+        if llm_openai.is_available():
+            container.register("llm", llm_openai)
+        elif llm_local.is_available():
+            container.register("llm", llm_local)
+        else:
+            # Fallback to whatever was registered first
+            container.register("llm", container.get("llm_local"))
+    except Exception:
+        container.register("llm", container.get("llm_local"))
+
+    # 3. Register Embeddings
+    embeddings = SentenceTransformerEmbeddings()
+    container.register("embeddings", embeddings)
+
+    # 4. Register VLM Providers
+    container.register("vlm_openai", OpenAIVLM())
+    container.register("vlm_local", LocalVLM())
+    
+    # Compatibility mapping for generic 'vlm'
+    # Prefer OpenAI VLM when API key/base URL/model are provided; otherwise use local
+    try:
+        vlm_openai = container.get("vlm_openai")
+        vlm_local = container.get("vlm_local")
+        if vlm_openai.is_available():
+            container.register("vlm", vlm_openai)
+        elif vlm_local.is_available():
+            container.register("vlm", vlm_local)
+        else:
+            container.register("vlm", container.get("vlm_local"))
+    except Exception:
+        container.register("vlm", container.get("vlm_local"))
+    
+    # 5. Register Vector DB based on config
+    if config.VECTOR_DB_TYPE == "chroma":
+        vector_db = ChromaVectorDB(embedding_service=embeddings)
+    elif config.VECTOR_DB_TYPE == "qdrant":
+        vector_db = QdrantVectorDB()
+    else:
+        raise ValueError(f"Unsupported vector DB type: {config.VECTOR_DB_TYPE}")
+    
+    container.register("vector_db", vector_db)
+
+    # 6. Register Fine-Tuning Services
+    container.register("finetune_local", LocalFineTuner())
+    container.register("finetune_openai", OpenAIFineTuner())
+
+    # 7. Register Memory Manager
+    container.register("memory", MemoryManager(container.get("vector_db")))
+
+    # 8. Register Audio Services
+    container.register("stt_local", LocalSTT())
+    container.register("stt_openai", OpenAISTT())
+    container.register("tts_local", LocalTTS())
+    container.register("tts_openai", OpenAITTS())
+
+async def startup_phoenix():
+    """
+    Asynchronously initializes all services registered in the container.
+    This includes Cache connections, Vector DB clients, and LLM pools.
+    """
+    # 1. Start Cache
+    cache = container.get("cache")
+    if hasattr(cache, "init"):
+        await cache.init()
+    
+    # 2. Start LLM Providers
+    llm_openai = container.get("llm_openai")
+    llm_local = container.get("llm_local")
+    if hasattr(llm_openai, "init"):
+        await llm_openai.init()
+    
+    if config.LOAD_LOCAL_LLM and hasattr(llm_local, "init"):
+        await llm_local.init()
+    elif not config.LOAD_LOCAL_LLM:
+        print("[!] Local LLM loading skipped (LOAD_LOCAL_LLM=False).")
+        
+    # 3. Start Vector DB
+    vector_db = container.get("vector_db")
+    if hasattr(vector_db, "init"):
+        await vector_db.init()
+    
+    # 4. Start VLM Providers
+    vlm_openai = container.get("vlm_openai")
+    vlm_local = container.get("vlm_local")
+    if hasattr(vlm_openai, "init"):
+        await vlm_openai.init()
+    
+    if config.LOAD_LOCAL_VLM and hasattr(vlm_local, "init"):
+        await vlm_local.init()
+    elif not config.LOAD_LOCAL_VLM:
+        print("[!] Local VLM loading skipped (LOAD_LOCAL_VLM=False).")
+    
+    # 5. Start Audio Services
+    for service_name in ["stt_local", "stt_openai", "tts_local", "tts_openai"]:
+        service = container.get(service_name)
+        if hasattr(service, "init"):
+            await service.init()
+    
+    print("[+] Phoenix AI SDK Services started successfully.")
+
+def get_rag_pipeline() -> RAGPipeline:
+    vector_db = container.get("vector_db")
+    primary = container.get("llm")
+    llm_openai = container.get("llm_openai")
+    llm_local = container.get("llm_local")
+    cache = container.get("cache")
+    
+    # Fallback should be the one NOT chosen as primary
+    fallback = llm_openai if primary == llm_local else llm_local
+    
+    return RAGPipeline(vector_db, primary=primary, fallback=fallback, cache=cache)
+
+def get_insight_engine(openai_model: str = None, local_model: str = None, prefer_local: bool = None) -> InsightEngine:
+    vector_db = container.get("vector_db")
+    llm_openai = container.get("llm_openai")
+    llm_local = container.get("llm_local")
+    cache = container.get("cache")
+    
+    if openai_model:
+        llm_openai.model = openai_model
+    if local_model:
+        llm_local.model = local_model
+        
+    if prefer_local is True:
+        return InsightEngine(vector_db, llm_local, llm_openai, cache)
+    elif prefer_local is False:
+        return InsightEngine(vector_db, llm_openai, llm_local, cache)
+        
+    # Default: use generic 'llm' as primary
+    primary = container.get("llm")
+    fallback = llm_openai if primary == llm_local else llm_local
+    return InsightEngine(vector_db, primary, fallback, cache)
+
+def get_vlm_pipeline(openai_model: str = None, local_model: str = None, prefer_local: bool = True) -> VLMPipeline:
+    vlm_openai = container.get("vlm_openai")
+    vlm_local = container.get("vlm_local")
+    vector_db = container.get("vector_db")
+    cache = container.get("cache")
+    
+    # Dynamic overrides
+    if openai_model:
+        vlm_openai.model = openai_model
+    if local_model:
+        vlm_local.model = local_model
+    
+    if prefer_local:
+        # Local is primary, OpenAI is fallback
+        return VLMPipeline(vlm_local, vlm_openai, vector_db, cache)
+    
+    return VLMPipeline(vlm_openai, vlm_local, vector_db, cache)
+
+def get_finetuner(provider: str = None) -> Any:
+    """
+    Returns the fine-tuning service based on provider ('local' or 'openai').
+    Defaults to config.FINETUNE_PROVIDER.
+    """
+    provider = provider or config.FINETUNE_PROVIDER
+    if provider == "openai":
+        return container.get("finetune_openai")
+    return container.get("finetune_local")
+
+def get_llm() -> Any:
+    return container.get("llm")
+
+def get_memory() -> MemoryManager:
+    return container.get("memory")
+
+async def init_phoenix_full(local: bool = False, vlm: bool = False):
+    """
+    Complete initialization:
+    1. init_phoenix (Registry)
+    2. startup_phoenix (Connections)
+    3. lifecycle.startup (Hooks)
+    """
+    from phoenix.core.lifecycle import lifecycle
+    init_phoenix(local=local, vlm=vlm)
+    await startup_phoenix()
+    await lifecycle.startup()
+    print("[+] Phoenix AI SDK initialized and lifecycle hooks executed.")
+
+
+def set_providers(llm_provider: str = None, vlm_provider: str = None) -> None:
+    """
+    Explicitly configure which provider to use for generic `llm` and `vlm`.
+
+    llm_provider, vlm_provider: one of 'openai', 'local', or 'auto' (default 'auto').
+    - 'openai' forces the OpenAI provider (may raise/print warnings if not available).
+    - 'local' forces the Local provider.
+    - 'auto' (or None) prefers OpenAI when available, otherwise local.
+
+    Call this after `init_phoenix()` and before `startup_phoenix()` to customize behaviour.
+    """
+    # Helper to resolve a provider choice
+    def resolve(choice, name_openai, name_local):
+        if choice == "openai":
+            return container.get(name_openai)
+        if choice == "local":
+            return container.get(name_local)
+        # auto or None
+        try:
+            openai = container.get(name_openai)
+            local = container.get(name_local)
+            if hasattr(openai, "is_available") and openai.is_available():
+                return openai
+            return local
+        except Exception:
+            return container.get(name_local)
+
+    if llm_provider is not None:
+        llm = resolve(llm_provider, "llm_openai", "llm_local")
+        container.register("llm", llm)
+
+    if vlm_provider is not None:
+        vlm = resolve(vlm_provider, "vlm_openai", "vlm_local")
+        container.register("vlm", vlm)
+
+
+def get_providers() -> dict:
+    """Return currently configured generic providers for `llm` and `vlm`."""
+    res = {}
+    try:
+        res["llm"] = container.get("llm")
+    except Exception:
+        res["llm"] = None
+    try:
+        res["vlm"] = container.get("vlm")
+    except Exception:
+        res["vlm"] = None
+    return res

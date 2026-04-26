@@ -1,8 +1,8 @@
-# 🧠 IRYM_sdk (I can Read Your Mind SDK)
+# 🧠 Phoenix AI (Advanced AI Infrastructure SDK)
 
 A production-ready, modular backend infrastructure SDK designed for AI-powered Python backend services. 
 
-Whether you are building with FastAPI, Django, or a custom event-driven service, **IRYM_sdk** eliminates repetitive backend setup. It provides a unified, interchangeable system for caching, database access, background jobs, LLM integrations, vector databases, and RAG pipelines.
+Whether you are building with FastAPI, Django, or a custom event-driven service, **Phoenix AI** eliminates repetitive backend setup.
 
 ## 🏗️ Architecture Flow
 
@@ -10,7 +10,7 @@ The entire SDK is built around an **Everything is a Service** and **Interface-Fi
 
 ```mermaid
 graph TD
-    APP["Host Application (FastAPI/Django)"] -->|"Initializes"| INIT("IRYM.py Initializer")
+    APP["Host Application (FastAPI/Django)"] -->|"Initializes"| INIT("Phoenix AI Initializer")
     APP -->|"Requests Service via get()"| DI{"DI Container"}
     INIT -->|"Registers Services"| DI
     
@@ -87,8 +87,8 @@ Choose the method that fits your workflow best.
 ### 1. Automated Installation (Recommended)
 Get everything ready in one command:
 ```bash
-git clone https://github.com/blackeagle686/IRYM_sdk.git
-cd IRYM_sdk
+git clone https://github.com/blackeagle686/phoenix.git
+cd phoenix
 ./install.sh
 ```
 
@@ -123,10 +123,10 @@ pip install ".[full]"
 
 ## 🚀 Framework Mode: High-Level ChatBot
 
-The IRYM SDK now includes a high-level **Framework Layer** that allows you to build complex AI agents with Vision, Speech, RAG, and Memory in just **one line of code**.
+The Phoenix AI SDK now includes a high-level **Framework Layer** that allows you to build complex AI agents with Vision, Speech, RAG, and Memory in just **one line of code**.
 
 ```python
-from IRYM_sdk import ChatBot
+from phoenix import ChatBot
 
 # Build the complete AI Agent with Security and Custom Config
 bot = (ChatBot(local=True, vlm=True)
@@ -152,18 +152,18 @@ The `RAGPipeline` is the highest-level service for handling document-based knowl
 
 ```python
 import asyncio
-from IRYM_sdk import init_irym, startup_irym, get_rag_pipeline
+from phoenix import init_phoenix, startup_phoenix, get_rag_pipeline
 
 async def rag_demo():
-    init_irym()
-    await startup_irym()
+    init_phoenix()
+    await startup_phoenix()
     rag = get_rag_pipeline()
 
     # 1. Ingest documents (Supports Docs + Source Code .py, .js, .go, .rs, etc.)
     await rag.ingest("./my_project")
 
     # 2. Ingest from GitHub Repository (Automated cloning & indexing)
-    await rag.ingest_github("https://github.com/blackeagle686/IRYM_sdk.git")
+    await rag.ingest_github("https://github.com/blackeagle686/phoenix.git")
 
     # 3. Ingest from Web URL
     await rag.ingest_url("https://example.com/docs/api")
@@ -187,7 +187,7 @@ If you plan to use local inference (Ollama or Transformers), please ensure your 
 
 ## 🏹 Dynamic Fallbacks & Native PyTorch
 
-IRYM_sdk includes a robust "fail-loud and recover gracefully" orchestration architecture for AI providers:
+phoenix includes a robust "fail-loud and recover gracefully" orchestration architecture for AI providers:
 
 ### 1. Interactive Provider Fallbacks
 If your primary provider (e.g. Local) fails to connect or crashes, the SDK's orchestration (`VLMPipeline` / `InsightEngine`) instantly intercepts the failure and prompts you to fallback to the secondary provider (e.g. OpenAI), bypassing pipeline crashes.
@@ -207,10 +207,10 @@ The `RAGPipeline.ingest()` method supports PDFs robustly by sequentially testing
 The `InsightEngine` performs full context retrieval, query rewriting, and LLM generation efficiently.
 
 ```python
-from IRYM_sdk import init_irym, get_insight_engine
+from phoenix import init_phoenix, get_insight_engine
 
 async def insight_demo():
-    init_irym()
+    init_phoenix()
     insight = get_insight_engine()
 
     # This invokes: Clean Query -> Vector Search -> Rerank -> LLM Generation
@@ -223,10 +223,10 @@ async def insight_demo():
 The `VLMPipeline` orchestrates vision tasks with automatic caching and RAG.
 
 ```python
-from IRYM_sdk import init_irym_full, get_vlm_pipeline
+from phoenix import init_phoenix_full, get_vlm_pipeline
 
 async def vision_demo():
-    await init_irym_full()
+    await init_phoenix_full()
     vlm = get_vlm_pipeline()
 
     # Integrated: Result Caching + RAG context injection

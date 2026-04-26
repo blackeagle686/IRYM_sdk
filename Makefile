@@ -24,10 +24,11 @@ setup-env:
 # Run all verification scripts
 verify:
 	@echo "Running all verification scripts..."
-	python3 verify_memory.py
-	python3 verify_rag.py
-	python3 verify_vlm.py
-	python3 verify_observability.py
+	python3 tests/verify_memory.py
+	python3 tests/verify_rag.py
+	python3 tests/verify_vlm.py
+	python3 tests/verify_observability.py
+	python3 tests/verify_framework_chatbot.py
 
 # Clean build artifacts
 clean:

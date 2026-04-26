@@ -1,10 +1,10 @@
 import asyncio
 import os
-from IRYM_sdk import init_irym_full, get_vlm_pipeline
+from phoenix import init_phoenix_full, get_vlm_pipeline
 
 async def main():
-    # 1. Initialize IRYM SDK (Connections, Models, Lifecycle)
-    await init_irym_full()
+    # 1. Initialize Phoenix AI SDK (Connections, Models, Lifecycle)
+    await init_phoenix_full()
     
     # 2. Get the VLM Pipeline (Orchestrates VLM + RAG + Cache)
     vlm = get_vlm_pipeline()

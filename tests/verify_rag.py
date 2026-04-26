@@ -1,10 +1,10 @@
 import asyncio
 import os
-from IRYM_sdk.IRYM import init_irym, get_rag_pipeline
+from phoenix.Phoenix AI import init_phoenix, get_rag_pipeline
 
 async def verify_rag():
-    print("Initializing IRYM...")
-    init_irym()
+    print("Initializing Phoenix AI...")
+    init_phoenix()
     
     rag = get_rag_pipeline()
     
@@ -12,7 +12,7 @@ async def verify_rag():
     test_dir = "./test_docs"
     os.makedirs(test_dir, exist_ok=True)
     with open(os.path.join(test_dir, "ai_info.txt"), "w") as f:
-        f.write("IRYM SDK is a powerful tool for building AI applications with RAG capabilities.\n")
+        f.write("Phoenix AI SDK is a powerful tool for building AI applications with RAG capabilities.\n")
         f.write("It supports ChromaDB and Qdrant as vector databases.\n")
     
     # 2. Ingest data
@@ -21,7 +21,7 @@ async def verify_rag():
     print("Ingestion complete.")
     
     # 3. Query data
-    question = "What vector databases does IRYM SDK support?"
+    question = "What vector databases does Phoenix AI SDK support?"
     print(f"Querying: {question}")
     response = await rag.query(question)
     print(f"Response: {response}")

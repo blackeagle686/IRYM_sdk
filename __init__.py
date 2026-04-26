@@ -1,7 +1,7 @@
-from .IRYM import (
-	init_irym,
-	startup_irym,
-	init_irym_full,
+from .phoenix import (
+	init_phoenix,
+	startup_phoenix,
+	init_phoenix_full,
 	get_rag_pipeline,
 	set_providers,
 	get_providers,
@@ -9,13 +9,13 @@ from .IRYM import (
 	get_vlm_pipeline,
 	get_llm,
 	get_memory,
+	ChatBot,
 )
-from .framework.chatbot import ChatBot
 
 __all__ = [
-	"init_irym",
-	"startup_irym",
-	"init_irym_full",
+	"init_phoenix",
+	"startup_phoenix",
+	"init_phoenix_full",
 	"get_rag_pipeline",
 	"set_providers",
 	"get_providers",

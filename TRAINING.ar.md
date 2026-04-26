@@ -11,10 +11,10 @@
 
 ### الاستخدام
 ```python
-from IRYM_sdk import init_irym_full, get_finetuner
+from phoenix import init_phoenix_full, get_finetuner
 
 async def train_locally():
-    await init_irym_full()
+    await init_phoenix_full()
     finetuner = get_finetuner(provider="local")
 
     # بدء التدريب باستخدام مجموعة بيانات JSONL
@@ -35,10 +35,10 @@ async def train_locally():
 
 ### الاستخدام
 ```python
-from IRYM_sdk import init_irym_full, get_finetuner
+from phoenix import init_phoenix_full, get_finetuner
 
 async def train_cloud():
-    await init_irym_full()
+    await init_phoenix_full()
     finetuner = get_finetuner(provider="openai")
 
     # بدء مهمة سحابية

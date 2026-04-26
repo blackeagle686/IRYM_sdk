@@ -37,7 +37,7 @@ await rag.ingest_github("https://github.com/user/repo", branch="develop")
 Convert any public website into knowledge chunks.
 
 ```python
-await rag.ingest_url("https://docs.irym.ai/intro")
+await rag.ingest_url("https://docs.Phoenix AI.ai/intro")
 ```
 
 ---

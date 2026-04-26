@@ -11,10 +11,10 @@ Efficiently train models on your own GPU using Parameter-Efficient Fine-Tuning (
 
 ### Usage
 ```python
-from IRYM_sdk import init_irym_full, get_finetuner
+from phoenix import init_phoenix_full, get_finetuner
 
 async def train_locally():
-    await init_irym_full()
+    await init_phoenix_full()
     finetuner = get_finetuner(provider="local")
 
     # Start training with a JSONL dataset
@@ -35,10 +35,10 @@ Adapt models in the cloud without needing local GPU resources.
 
 ### Usage
 ```python
-from IRYM_sdk import init_irym_full, get_finetuner
+from phoenix import init_phoenix_full, get_finetuner
 
 async def train_cloud():
-    await init_irym_full()
+    await init_phoenix_full()
     finetuner = get_finetuner(provider="openai")
 
     # Starts a cloud job

@@ -1,10 +1,10 @@
 import asyncio
 import os
 import sqlite3
-from IRYM_sdk import init_irym_full, get_rag_pipeline
+from phoenix import init_phoenix_full, get_rag_pipeline
 
 async def test_rag_expansion():
-    await init_irym_full()
+    await init_phoenix_full()
     rag = get_rag_pipeline()
     
     # 1. Test SQL Ingestion (using a temporary SQLite DB)
@@ -12,7 +12,7 @@ async def test_rag_expansion():
     db_path = "test_data.db"
     conn = sqlite3.connect(db_path)
     conn.execute("CREATE TABLE posts (id INTEGER PRIMARY KEY, content TEXT, category TEXT)")
-    conn.execute("INSERT INTO posts (content, category) VALUES ('The IRYM SDK now supports SQL ingestion.', 'news')")
+    conn.execute("INSERT INTO posts (content, category) VALUES ('The Phoenix AI SDK now supports SQL ingestion.', 'news')")
     conn.execute("INSERT INTO posts (content, category) VALUES ('This is another row in the database.', 'test')")
     conn.commit()
     conn.close()
@@ -34,7 +34,7 @@ async def test_rag_expansion():
     
     # 4. Query to verify data was indexed
     print("\n[*] Querying indexed SQL data...")
-    answer = await rag.query("What does the IRYM SDK now support?")
+    answer = await rag.query("What does the Phoenix AI SDK now support?")
     print(f"\n[+] AI Answer: {answer}")
     
     # Cleanup

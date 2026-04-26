@@ -1,13 +1,13 @@
 import asyncio
-from IRYM_sdk.IRYM import init_irym, get_vlm_pipeline, get_insight_engine
-from IRYM_sdk.observability.logger import get_logger
+from phoenix.Phoenix AI import init_phoenix, get_vlm_pipeline, get_insight_engine
+from phoenix.observability.logger import get_logger
 
 logger = get_logger("Verification.Observability")
 
 async def verify_observability():
     # 1. Initialize SDK
-    print("\n--- [1] Initializing IRYM SDK ---")
-    services = await init_irym()
+    print("\n--- [1] Initializing Phoenix AI SDK ---")
+    services = await init_phoenix()
     
     # 2. Test VLM Pipeline with Logging
     print("\n--- [2] Testing VLM Pipeline (Local/Mock) ---")

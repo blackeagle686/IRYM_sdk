@@ -1,17 +1,17 @@
 import asyncio
 import os
-from IRYM_sdk.IRYM import init_irym, startup_irym, get_rag_pipeline
+from phoenix.Phoenix AI import init_phoenix, startup_phoenix, get_rag_pipeline
 
 async def verify_github_ingestion():
     # 1. Initialize
-    print("\n--- [1] Initializing IRYM SDK ---")
-    init_irym()
-    await startup_irym()
+    print("\n--- [1] Initializing Phoenix AI SDK ---")
+    init_phoenix()
+    await startup_phoenix()
     rag = get_rag_pipeline()
 
     # 2. Ingest a public repository
     # Using a small repo for testing if possible, or just the current sdk for demo
-    repo_url = "https://github.com/blackeagle686/IRYM_sdk.git"
+    repo_url = "https://github.com/blackeagle686/phoenix.git"
     print(f"\n--- [2] Testing GitHub Ingestion: {repo_url} ---")
     try:
         await rag.ingest_github(repo_url, branch="main")

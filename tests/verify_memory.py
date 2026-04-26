@@ -1,11 +1,11 @@
 import asyncio
-from IRYM_sdk.IRYM import init_irym_full, container
-from IRYM_sdk.core.config import config
+from phoenix.Phoenix AI import init_phoenix_full, container
+from phoenix.core.config import config
 
 async def test_memory_flow():
-    # 1. Initialize IRYM Full
-    # Force mock mode for OpenAI if no key is set, but IRYM already handles it.
-    await init_irym_full()
+    # 1. Initialize Phoenix AI Full
+    # Force mock mode for OpenAI if no key is set, but Phoenix AI already handles it.
+    await init_phoenix_full()
     
     llm = container.get("llm")
     memory = container.get("memory")
@@ -14,7 +14,7 @@ async def test_memory_flow():
     print(f"\n[*] Starting Memory Verification for session: {session_id}")
     
     # --- Turn 1 ---
-    prompt1 = "Hi, my name is IRYM. Remember this."
+    prompt1 = "Hi, my name is Phoenix AI. Remember this."
     print(f"\n[Turn 1] User: {prompt1}")
     response1 = await llm.generate(prompt1, session_id=session_id)
     print(f"[Turn 1] Assistant: {response1}")
@@ -48,7 +48,7 @@ async def test_memory_flow():
     
     # --- RAG Integration Check ---
     print("\n[*] Testing RAG context refinement...")
-    from IRYM_sdk.IRYM import get_rag_pipeline
+    from phoenix.Phoenix AI import get_rag_pipeline
     rag = get_rag_pipeline()
     
     # This should trigger query refinement in the background
