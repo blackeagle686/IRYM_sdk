@@ -33,9 +33,9 @@ Quickstart
 <div class="container-xl my-5">
     <div class="row g-5">
 
-        <!-- Mobile Sidebar Toggle -->
+        <!-- Mobile Sidebar Toggle (Floating) -->
         <button class="btn btn-accent d-lg-none position-fixed bottom-0 end-0 m-4 rounded-circle shadow-lg z-3" 
-                id="sidebarToggle" style="width: 56px; height: 56px;">
+                id="sidebarToggleMobile" style="width: 56px; height: 56px;">
             <i class="bi bi-list fs-4"></i>
         </button>
 
@@ -97,6 +97,12 @@ Quickstart
         <div class="col-lg-9">
             <nav aria-label="breadcrumb" class="mb-4">
                 <ol class="breadcrumb" style="font-size:0.85rem;">
+                    <li class="breadcrumb-item">
+                        <button class="btn btn-sm btn-outline-accent me-3 rounded-pill border-0 d-flex align-items-center" id="sidebarToggleDesktop">
+                            <i class="bi bi-layout-sidebar-inset fs-6 me-1"></i>
+                            <span style="font-size: 0.75rem; font-weight: 700;">MENU</span>
+                        </button>
+                    </li>
                     <li class="breadcrumb-item">
                         <a href="{% url 'home' %}" class="text-decoration-none text-muted">
                             {% if LANGUAGE_CODE == 'ar' %}الرئيسية{% else %}Home{% endif %}
@@ -195,13 +201,35 @@ Quickstart
         const headings = document.querySelectorAll('.docs-body h2, .docs-body h3');
         const tocContainer = document.getElementById('toc-container');
         
-        // Style the auto-generated TOC
+        // Style and add collapse logic to the auto-generated TOC
         const tocUl = tocContainer.querySelector('ul');
         if (tocUl) {
             tocUl.classList.add('list-unstyled', 'ms-0');
-            tocUl.querySelectorAll('a').forEach(a => {
+            
+            // Add toggle buttons for parents
+            tocContainer.querySelectorAll('li').forEach(li => {
+                const subUl = li.querySelector('ul');
+                if (subUl) {
+                    li.classList.add('has-children');
+                    const toggle = document.createElement('span');
+                    toggle.className = 'toc-toggle';
+                    toggle.innerHTML = '<i class="bi bi-chevron-right"></i>';
+                    li.insertBefore(toggle, li.firstChild);
+
+                    toggle.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        li.classList.toggle('expanded');
+                    });
+                    
+                    // Auto-expand if active child
+                    if (li.querySelector('a[style*="var(--accent)"]')) {
+                        li.classList.add('expanded');
+                    }
+                }
+            });
+
+            tocContainer.querySelectorAll('a').forEach(a => {
                 a.classList.add('sidebar-link');
-                // The MD extension adds its own IDs, but we can sync them if needed
             });
         }
 
@@ -220,18 +248,23 @@ Quickstart
 
         headings.forEach(h => observer.observe(h));
 
-        // Sidebar Toggle Logic
-        const toggleBtn = document.getElementById('sidebarToggle');
+        // Sidebar Toggle Logic (Universal)
         const sidebarCol = document.getElementById('sidebarColumn');
+        const toggles = ['sidebarToggleMobile', 'sidebarToggleDesktop'];
         
-        if (toggleBtn) {
-            toggleBtn.addEventListener('click', () => {
-                sidebarCol.classList.toggle('active');
-                const icon = toggleBtn.querySelector('i');
-                icon.classList.toggle('bi-list');
-                icon.classList.toggle('bi-x-lg');
-            });
-        }
+        toggles.forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    sidebarCol.classList.toggle('active');
+                    if (id === 'sidebarToggleMobile') {
+                        const icon = btn.querySelector('i');
+                        icon.classList.toggle('bi-list');
+                        icon.classList.toggle('bi-x-lg');
+                    }
+                });
+            }
+        });
     });
 </script>
 
