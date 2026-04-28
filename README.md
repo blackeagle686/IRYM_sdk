@@ -188,6 +188,27 @@ async def agent_demo():
     print(f"Final Agent Output: {result}")
 ```
 
+### 🧰 Custom Tools & File I/O
+
+The Agent comes pre-configured with a powerful set of default tools, including `python_repl`, `web_search`, `file_read`, `file_write`, and `file_search`. 
+
+You can also easily create and inject your own custom tools using the `@tool` decorator:
+
+```python
+from phoenix.tools import tool
+
+# 1. Define your custom logic
+@tool(name="custom_math", description="Calculates the square of a given number. Input: 'number' (int).")
+def custom_math_tool(number: int):
+    return f"The square of {number} is {number ** 2}"
+
+# 2. Register it directly to the agent
+agent.register_tool(custom_math_tool)
+
+# 3. The agent can now autonomously use 'custom_math' in its planning!
+await agent.run("What is the square of 12?")
+```
+
 ## 📖 Quickstart: RAG Pipeline
 
 The `RAGPipeline` is the highest-level service for handling document-based knowledge.
