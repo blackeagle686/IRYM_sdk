@@ -54,8 +54,7 @@
                         {% csrf_token %}
                         <input name="next" type="hidden" value="{{ request.path }}">
                         <select name="language" onchange="this.form.submit()"
-                            class="btn btn-sm btn-outline-secondary rounded-pill px-2"
-                            style="font-size:0.75rem; background:var(--nav-bg); color:var(--bs-body-color);">
+                            class="btn btn-sm btn-outline-secondary rounded-pill px-2 language-selector">
                             {% get_available_languages as LANGUAGES %}
                             {% get_language_info_list for LANGUAGES as languages %}
                             {% for language in languages %}
