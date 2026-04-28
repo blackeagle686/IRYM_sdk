@@ -580,7 +580,7 @@ print(result) # Output: 1012</code></pre>
 
     // Modal Fallback Trigger
     document.querySelectorAll('.feature-card[data-bs-toggle="modal"]').forEach(card => {
-        card.addEventListener('click', function(e) {
+        card.addEventListener('mouseenter', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('data-bs-target');
             if (targetId) {
