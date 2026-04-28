@@ -4,7 +4,7 @@ from phoenix.vector.base import BaseVectorDB
 from phoenix.core.config import config
 
 class ChromaVectorDB(BaseVectorDB):
-    def __init__(self, collection_name: str = "Phoenix AI_collection", embedding_service=None):
+    def __init__(self, collection_name: str = "PhoenixAI_collection", embedding_service=None):
         self.persist_directory = config.CHROMA_PERSIST_DIR
         self.collection_name = collection_name
         self.embedding_service = embedding_service

@@ -18,11 +18,21 @@ client = OpenAI(api_key=api_key, base_url=BASE_URL, timeout=20.0)
 def run_command(command):
     """Runs a shell command and returns the output."""
     try:
-        result = subprocess.run(command, capture_output=True, text=True, check=True)
-        return result.stdout.strip()
-    except subprocess.CalledProcessError as e:
-        print(f"Error running command {' '.join(command)}: {e.stderr}")
-        return None
+        # Use UTF-8 with replacement to avoid UnicodeDecodeError on Windows/different locales
+        result = subprocess.run(
+            command, 
+            capture_output=True, 
+            text=True, 
+            check=True, 
+            encoding='utf-8', 
+            errors='replace'
+        )
+        return (result.stdout or "").strip()
+    except Exception as e:
+        stderr = getattr(e, 'stderr', str(e))
+        print(f"Error running command {' '.join(command)}: {stderr}")
+        return "" # Return empty string to prevent .strip() crashes in callers
+    
 
 def get_current_branch():
     return run_command(["git", "rev-parse", "--abbrev-ref", "HEAD"])

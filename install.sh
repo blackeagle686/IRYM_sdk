@@ -6,7 +6,7 @@
 set -e
 
 echo "------------------------------------------------"
-echo "🧠 Phoenix AI SDK - Automated Installer"
+echo "🐦‍🔥  Phoenix AI SDK - Automated Installer"
 echo "------------------------------------------------"
 
 # 1. Check Python version
