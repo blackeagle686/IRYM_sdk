@@ -702,7 +702,7 @@
 
         const applyTheme = (theme) => {
             html.setAttribute('data-bs-theme', theme);
-            localStorage.setItem('phoenix-theme', theme);
+            localStorage.setItem('phoenix-theme-v2', theme);
             themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
             const mTheme = theme === 'dark' ? 'dark' : 'default';
             mermaid.initialize({ startOnLoad: false, theme: mTheme, securityLevel: 'loose' });
@@ -741,7 +741,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             cacheMermaidSources();
             initCopyButtons();
-            const saved = localStorage.getItem('phoenix-theme') || 'dark';
+            const saved = localStorage.getItem('phoenix-theme-v2') || 'dark';
             applyTheme(saved);
         });
 
