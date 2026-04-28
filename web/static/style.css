@@ -902,7 +902,26 @@ pre.mermaid {
     letter-spacing: -0.5px;
 }
 
-.cta-desc {
-    max-width: 460px;
-    font-size: 1rem;
+/* ── Docs Page Specifics ────────────────────────────── */
+.docs-mobile-toggle {
+    width: 56px;
+    height: 56px;
+}
+
+.docs-divider {
+    opacity: 0.1;
+    margin: 1rem 0.5rem;
+}
+
+.docs-breadcrumb {
+    font-size: 0.85rem;
+}
+
+.docs-menu-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.docs-footer {
+    border-top: 1px solid var(--border-color);
 }
