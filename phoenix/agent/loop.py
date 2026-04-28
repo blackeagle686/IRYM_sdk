@@ -1,0 +1,58 @@
+from phoenix.cognition.thinker import Thinker
+from phoenix.cognition.planner import Planner
+from phoenix.cognition.reflector import Reflector
+from phoenix.execution.actor import Actor
+import asyncio
+
+class AgentLoop:
+    """Coordinates the Think -> Plan -> Act -> Reflect cycle."""
+    def __init__(self, thinker: Thinker, planner: Planner, actor: Actor, reflector: Reflector):
+        self.thinker = thinker
+        self.planner = planner
+        self.actor = actor
+        self.reflector = reflector
+
+    async def run(self, prompt: str, memory, session_id: str, max_iterations: int = 5) -> str:
+        # Step 1: Think (understand objective)
+        objective = await self.thinker.analyze(prompt, memory, session_id)
+        
+        # Store in session state
+        memory.session.set("current_objective", objective)
+        await memory.add_interaction(session_id, "system", f"Identified Objective: {objective}")
+
+        previous_results = ""
+        final_answer = ""
+
+        for i in range(max_iterations):
+            # Step 2: Plan (select action)
+            plan = await self.planner.plan(objective, previous_results)
+            
+            # Step 3: Act (execute tool)
+            if plan.get("tool") == "finish":
+                final_answer = previous_results or "Task completed without actions."
+                break
+                
+            action_result = await self.actor.execute(plan)
+            
+            # Step 4: Reflect (evaluate progress)
+            reflection = await self.reflector.reflect(objective, plan, action_result)
+            
+            # Update memory
+            memory.reflection.add_reflection(reflection["reflection"])
+            await memory.add_interaction(
+                session_id, 
+                "system", 
+                f"Action: {plan}\nResult: {action_result}\nReflection: {reflection['reflection']}"
+            )
+            
+            previous_results += f"\nAction: {plan}\nResult: {action_result}\n"
+            
+            if reflection["is_complete"]:
+                final_answer = action_result
+                break
+
+        if not final_answer:
+            final_answer = "Agent stopped after reaching maximum iterations without completing the objective."
+
+        await memory.add_interaction(session_id, "assistant", final_answer)
+        return final_answer
