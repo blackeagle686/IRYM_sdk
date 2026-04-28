@@ -639,28 +639,42 @@ pre.mermaid {
 }
 
 .sidebar-title {
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: 0.09em;
-    opacity: 0.4;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    padding: 8px 10px 3px;
+    color: var(--muted);
+    padding: 1.5rem 0.75rem 0.5rem;
+    opacity: 0.8;
 }
 
 .sidebar-link {
-    display: block;
-    padding: 5px 10px;
-    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.875rem;
     font-weight: 500;
     color: var(--muted);
-    border-radius: 6px;
+    border-radius: 8px;
     text-decoration: none;
-    transition: color 0.15s, background 0.15s;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    margin: 1px 0;
 }
 
 .sidebar-link:hover {
     color: var(--accent);
-    background: rgba(207, 10, 10, 0.06);
+    background: var(--accent-soft);
+    padding-left: 1rem;
+}
+
+.sidebar-link.active,
+.sidebar-link.is-active {
+    color: var(--accent);
+    background: var(--accent-soft);
+    font-weight: 600;
+    border-left: 2px solid var(--accent);
+    border-radius: 0 8px 8px 0;
 }
 
 /* ── Terminal Block ─────────────────────────────────── */
@@ -711,22 +725,49 @@ pre.mermaid {
 }
 
 /* ── TOC (Table of Contents) ────────────────────────── */
+.toc {
+    position: relative;
+}
+
+.toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
 .toc ul ul {
     display: none;
-    padding-left: 1.25rem;
+    padding-left: 1rem;
+    margin-left: 0.6rem;
     border-left: 1px solid var(--border-color);
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    transition: all 0.3s ease;
+}
+
+.toc li {
+    position: relative;
+    margin: 0;
 }
 
 .toc li.has-children > .toc-toggle {
+    position: absolute;
+    left: -1.2rem;
+    top: 0.5rem;
     cursor: pointer;
-    font-size: 0.7rem;
-    margin-right: 5px;
-    transition: transform 0.2s;
-    display: inline-block;
-    width: 12px;
+    font-size: 0.75rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
     color: var(--muted);
+    z-index: 2;
+}
+
+.toc li.has-children > .toc-toggle:hover {
+    color: var(--accent);
 }
 
 .toc li.expanded > ul {
@@ -735,6 +776,17 @@ pre.mermaid {
 
 .toc li.expanded > .toc-toggle {
     transform: rotate(90deg);
+    color: var(--accent);
+}
+
+.toc-container .sidebar-link {
+    font-size: 0.82rem;
+    padding: 0.35rem 0.75rem;
+}
+
+/* Vertical Guide Glow on Hover */
+.toc li:hover > ul {
+    border-left-color: var(--accent);
 }
 
 /* ── Docs Body ──────────────────────────────────────── */
