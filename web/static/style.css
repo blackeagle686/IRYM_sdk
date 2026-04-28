@@ -12,6 +12,12 @@
     --font-mono: 'JetBrains Mono', monospace;
 }
 
+[data-bs-theme="dark"] {
+    --nav-bg: rgba(13, 17, 23, 0.8);
+    --code-bg: #0d1117;
+    --card-bg: #161b22;
+    --border-color: rgba(255, 255, 255, 0.08);
+    --muted: rgba(255, 255, 255, 0.5);
     --body-bg: #010409;
     --modal-bg: rgba(11, 14, 20, 0.96);
     --modal-header-bg: linear-gradient(135deg, rgba(255, 77, 0, 0.07), transparent);
@@ -19,6 +25,12 @@
     --modal-code-bg: #080b10;
 }
 
+[data-bs-theme="light"] {
+    --nav-bg: rgba(255, 255, 255, 0.9);
+    --code-bg: #fffbf9;
+    --card-bg: #ffffff;
+    --border-color: rgba(255, 77, 0, 0.12);
+    --muted: #8c4a2b;
     --body-bg: #fffcfb;
     --bs-body-color: #3d1b0d;
     --modal-bg: rgba(255, 252, 251, 0.98);
