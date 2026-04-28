@@ -13,7 +13,7 @@ INTERVAL = 10  # Seconds
 load_dotenv()
 
 api_key = os.getenv("LONGCAT_API_KEY", DEFAULT_API_KEY)
-client = OpenAI(api_key=api_key, base_url=BASE_URL)
+client = OpenAI(api_key=api_key, base_url=BASE_URL, timeout=20.0)
 
 def run_command(command):
     """Runs a shell command and returns the output."""
@@ -39,28 +39,22 @@ def generate_commit_message(diff):
     if not diff:
         return None
     
-    prompt = f"""
-    Generate a concise, professional Git commit message based on the following diff. 
-    Focus on 'what' and 'why' changes were made. 
-    Format: A single line summary (max 50 chars), followed by a blank line and then bullet points if necessary.
-    
-    DIFF:
-    {diff[:4000]}  # Truncate if too long
-    """
-    
     try:
+        # Optimized for speed: Short system prompt, truncated diff, low max_tokens, temperature 0
         response = client.chat.completions.create(
-            model="LongCat-Flash-Lite",  # Using a generic model name if specific one isn't known
+            model="LongCat-Flash-Chat",
             messages=[
-                {"role": "system", "content": "You are a professional software engineer summarizing code changes into Git commit messages."},
-                {"role": "user", "content": prompt}
+                {"role": "system", "content": "Write a concise Git commit message. 1st line < 50 chars. Use bullets if needed."},
+                {"role": "user", "content": f"Diff:\n{diff[:3000]}"}
             ],
-            max_tokens=150
+            max_tokens=100,
+            temperature=0
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"LLM Error: {e}")
         return None
+
 
 def smart_sync():
     print(f"[*] Checking for changes at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}...")
