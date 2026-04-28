@@ -10,7 +10,7 @@ class LocalSTT(BaseSTT):
         import speech_recognition as sr
         self.recognizer = sr.Recognizer()
 
-    async def transcribe(self, audio_path: str) -> str:
+    async def transcribe(self, audio_path: str, lang: str = "en-US") -> str:
         if not self.recognizer:
             await self.init()
         
@@ -19,7 +19,7 @@ class LocalSTT(BaseSTT):
             with sr.AudioFile(audio_path) as source:
                 audio_data = self.recognizer.record(source)
                 # Using Google's free web search API for transcription
-                text = self.recognizer.recognize_google(audio_data)
+                text = self.recognizer.recognize_google(audio_data, language=lang)
                 return text
         except Exception as e:
             return f"Error transcribing audio: {str(e)}"
@@ -31,15 +31,16 @@ class LocalTTS(BaseTTS):
     async def init(self):
         self.initialized = True
 
-    async def synthesize(self, text: str, output_path: str) -> str:
+    async def synthesize(self, text: str, output_path: str, lang: str = "en") -> str:
         from gtts import gTTS
         try:
             # Generate speech using gTTS (Google Text-to-Speech)
-            tts = gTTS(text=text, lang='en')
+            tts = gTTS(text=text, lang=lang)
             # gTTS save is blocking, so run in executor if needed, 
             # but for simplicity in SDK we'll just call it.
             tts.save(output_path)
             return output_path
+
         except Exception as e:
             raise RuntimeError(f"TTS Synthesis failed: {e}")
 
