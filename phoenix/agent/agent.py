@@ -68,7 +68,7 @@ class Agent:
                 
         if actual_mode == "fast_ans":
             # Fast answer mode: bypass the agent loop and just use the LLM directly with memory context
-            context = self.memory.get_context(session_id, query=prompt)
+            context = await self.memory.get_full_context(session_id, query=prompt)
             fast_prompt = f"Context:\n{context}\n\nUser: {prompt}\nAnswer directly:"
             fast_answer = await self.llm.generate(fast_prompt, session_id=None)
             await self.memory.add_interaction(session_id, "assistant", fast_answer)
