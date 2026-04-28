@@ -23,6 +23,16 @@ def init_phoenix(local: bool = False, vlm: bool = False):
     config.LOAD_LOCAL_LLM = local
     config.LOAD_LOCAL_VLM = vlm
 
+    # Hardware check for local models
+    if local or vlm:
+        try:
+            from phoenix.core.hardware_check import HardwareChecker
+            HardwareChecker.check_all()
+        except ImportError:
+            # Fallback if psutil is not yet installed
+            pass
+
+
     # 1. Register Cache
     container.register("cache", RedisCache())
     

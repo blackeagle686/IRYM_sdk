@@ -12,6 +12,22 @@ echo "------------------------------------------------"
 # 1. Check Python version
 python3 --version || { echo "Error: Python 3 is required."; exit 1; }
 
+# 2. Hardware Pre-Check (Warning Only)
+echo "[*] Verifying hardware resources..."
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    TOTAL_RAM=$(free -g | awk '/^Mem:/{print $2}')
+    if [ "$TOTAL_RAM" -lt 8 ]; then
+        echo "------------------------------------------------"
+        echo "⚠️  WARNING: Low RAM detected (${TOTAL_RAM}GB)"
+        echo "Local LLM/VLM models require at least 8GB RAM (16GB+ recommended)."
+        echo "The SDK will install, but local execution might be unstable."
+        echo "Consider using remote providers (OpenAI/LongCat) instead."
+        echo "------------------------------------------------"
+        sleep 3
+    fi
+fi
+
+
 # 2. Create Virtual Environment
 if [ ! -d "venv" ]; then
     echo "[*] Creating virtual environment (venv)..."
