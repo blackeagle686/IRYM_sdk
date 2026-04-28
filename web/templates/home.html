@@ -199,6 +199,259 @@ print(result)</code></pre>
     </div>
 </section>
 
+<!-- Modals for Feature Cards -->
+<style>
+.feature-modal .modal-content {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+.feature-modal .modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+.feature-modal .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+[data-bs-theme="light"] .feature-modal .btn-close {
+    filter: none;
+}
+.feature-modal pre {
+    margin: 0;
+    border-radius: 8px;
+}
+</style>
+
+<!-- RAG Modal -->
+<div class="modal fade feature-modal" id="modal-rag" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="bi bi-lightning-charge-fill me-2 text-warning"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية استخدام RAG Pipeline{% else %}Using the RAG Pipeline{% endif %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+<pre><code class="language-python">from phoenix.rag import RAGPipeline
+
+# Initialize the pipeline
+pipeline = RAGPipeline()
+
+# Ingest documents automatically (PDF, CSV, TXT, HTML)
+await pipeline.ingest_document("data/knowledge_base.pdf")
+
+# Query with semantic search and generation
+response = await pipeline.query("What are the key policies in chapter 4?")
+print(response.answer)
+print(response.sources)</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Vector DB Modal -->
+<div class="modal fade feature-modal" id="modal-vectordb" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="bi bi-database-fill me-2 text-primary"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية استخدام Vector DB{% else %}Using Vector DB{% endif %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+<pre><code class="language-python">from phoenix.db.vector import VectorDatabase
+
+# Instantiates ChromaDB or Qdrant based on config
+db = VectorDatabase(collection_name="ai_docs")
+
+# Add plain text, embeddings are generated automatically
+await db.add_texts(["Phoenix AI is fast", "Agents use tools"])
+
+# Semantic Search
+results = await db.search("Speed of Phoenix AI", top_k=1)
+print(results[0].text) # Output: "Phoenix AI is fast"</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LLM Modal -->
+<div class="modal fade feature-modal" id="modal-llm" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="bi bi-chat-dots-fill me-2 text-success"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية استخدام LLM Integration{% else %}Using LLM Integration{% endif %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+<pre><code class="language-python">from phoenix.llm.openai import OpenAILLM
+
+# Uses OPENAI_API_KEY and OPENAI_BASE_URL from env
+llm = OpenAILLM(model="gpt-4o")
+
+# Generate a fast streaming or standard response
+response = await llm.generate("Explain quantum computing in one sentence.")
+print(response)</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Audio Modal -->
+<div class="modal fade feature-modal" id="modal-audio" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="bi bi-mic-fill me-2 text-danger"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية استخدام Audio Models{% else %}Using Audio Models{% endif %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+<pre><code class="language-python">from phoenix.audio import STTModel, TTSModel
+
+# Speech to Text
+stt = STTModel()
+transcript = await stt.transcribe("user_voice.wav")
+print(transcript)
+
+# Text to Speech
+tts = TTSModel()
+await tts.synthesize("Hello, I am Phoenix AI.", output_file="hello.mp3")</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Vision Modal -->
+<div class="modal fade feature-modal" id="modal-vision" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="bi bi-eye-fill me-2 text-info"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية استخدام VLM{% else %}Using Vision Models{% endif %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+<pre><code class="language-python">from phoenix.vision import VisionModel
+
+vision = VisionModel()
+
+# Analyze an image with a prompt
+description = await vision.analyze_image(
+    image_path="architecture.png",
+    prompt="Describe the system architecture shown in this diagram."
+)
+print(description)</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cache Modal -->
+<div class="modal fade feature-modal" id="modal-cache" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="bi bi-speedometer2 me-2 text-warning"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية استخدام Semantic Cache{% else %}Using Semantic Cache{% endif %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+<pre><code class="language-python">from phoenix.cache.semantic import SemanticCache
+
+cache = SemanticCache(threshold=0.85) # 85% similarity threshold
+
+# Look up an answer before calling the LLM
+cached_answer = await cache.get("How do I install Phoenix?")
+
+if not cached_answer:
+    # Expensive LLM Call
+    answer = await llm.generate("How to install Phoenix AI SDK?")
+    # Cache it for future similar questions!
+    await cache.set("How do I install Phoenix?", answer)</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lifecycle Modal -->
+<div class="modal fade feature-modal" id="modal-lifecycle" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="bi bi-arrow-repeat me-2 text-success"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية استخدام Lifecycle Management{% else %}Using Lifecycle Hooks{% endif %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+<pre><code class="language-python">from phoenix.core import Application
+
+app = Application()
+
+@app.on_startup
+async def init_databases():
+    await db.connect()
+    print("Databases warmed up!")
+
+@app.on_shutdown
+async def cleanup():
+    await db.close()
+    print("Clean shutdown completed.")
+
+# Run the app (usually handled by FastAPI/ASGI)
+await app.start()</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Observability Modal -->
+<div class="modal fade feature-modal" id="modal-observability" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="bi bi-graph-up-arrow me-2 text-info"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية استخدام المراقبة{% else %}Using Observability{% endif %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+<pre><code class="language-python">from phoenix.telemetry import Logger
+
+# Initialized with structured JSON logging
+logger = Logger(service_name="payment_agent")
+
+logger.info("Agent started", extra={"agent_id": "123"})
+try:
+    await do_risky_task()
+except Exception as e:
+    logger.error("Task failed", exc_info=e)</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Agents Modal -->
+<div class="modal fade feature-modal" id="modal-agents" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold"><i class="bi bi-robot me-2" style="color: var(--accent);"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية بناء الوكلاء المستقلين{% else %}Building Autonomous Agents{% endif %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+<pre><code class="language-python">from phoenix.agent import Agent
+from phoenix.tools import tool
+
+# 1. Define a tool
+@tool(name="calculator", description="Solves math")
+def calc(equation: str):
+    return eval(equation)
+
+# 2. Spin up the agent
+agent = Agent()
+agent.register_tool(calc)
+
+# 3. Watch it think, plan, and execute
+result = await agent.run("What is (500 * 2) + 12?", mode="plan")
+print(result) # Output: 1012</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
@@ -578,19 +831,23 @@ print(result) # Output: 1012</code></pre>
         });
     }
 
-    // Modal Fallback Trigger
+    // Modal Trigger (Hover & Click)
     document.querySelectorAll('.feature-card[data-bs-toggle="modal"]').forEach(card => {
-        card.addEventListener('mouseenter', function(e) {
+        const showModal = (e) => {
             e.preventDefault();
-            const targetId = this.getAttribute('data-bs-target');
+            const targetId = card.getAttribute('data-bs-target');
             if (targetId) {
                 const modalEl = document.querySelector(targetId);
                 if (modalEl && typeof bootstrap !== 'undefined') {
+                    // Prevent multiple instances
                     const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                     modal.show();
                 }
             }
-        });
+        };
+
+        card.addEventListener('mouseenter', showModal);
+        card.addEventListener('click', showModal);
     });
 </script>
 {% endblock %}
