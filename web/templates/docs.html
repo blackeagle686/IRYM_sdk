@@ -34,8 +34,8 @@ Quickstart
     <div class="row g-5">
 
         <!-- Mobile Sidebar Toggle (Floating) -->
-        <button class="btn btn-accent d-lg-none position-fixed bottom-0 end-0 m-4 rounded-circle shadow-lg z-3" 
-                id="sidebarToggleMobile" style="width: 56px; height: 56px;">
+        <button class="btn btn-accent d-lg-none position-fixed bottom-0 end-0 m-4 rounded-circle shadow-lg z-3 docs-mobile-toggle" 
+                id="sidebarToggleMobile">
             <i class="bi bi-list fs-4"></i>
         </button>
 
@@ -51,7 +51,7 @@ Quickstart
                     {{ toc|safe }}
                 </div>
 
-                <hr style="opacity:0.1; margin: 1rem 0.5rem;">
+                <hr class="docs-divider">
 
                 <div class="sidebar-title">
                     {% if LANGUAGE_CODE == 'ar' %}المصادر{% else %}Resources{% endif %}
@@ -96,11 +96,11 @@ Quickstart
         <!-- Main Content -->
         <div class="col-lg-9">
             <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb" style="font-size:0.85rem;">
+                <ol class="breadcrumb docs-breadcrumb">
                     <li class="breadcrumb-item">
                         <button class="btn btn-sm btn-outline-accent me-3 rounded-pill border-0 d-flex align-items-center" id="sidebarToggleDesktop">
                             <i class="bi bi-layout-sidebar-inset fs-6 me-1"></i>
-                            <span style="font-size: 0.75rem; font-weight: 700;">MENU</span>
+                            <span class="docs-menu-label">MENU</span>
                         </button>
                     </li>
                     <li class="breadcrumb-item">
@@ -144,7 +144,7 @@ Quickstart
             </article>
 
             <!-- Next page links -->
-            <div class="mt-5 pt-4" style="border-top: 1px solid var(--border-color);">
+            <div class="mt-5 pt-4 docs-footer">
 
                 {% if doc_name == 'GUIDE' %}
                 <a href="{% url 'docs_named' 'PIPELINES' %}" class="text-decoration-none float-end small">
@@ -196,76 +196,6 @@ Quickstart
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const headings = document.querySelectorAll('.docs-body h2, .docs-body h3');
-        const tocContainer = document.getElementById('toc-container');
-        
-        // Style and add collapse logic to the auto-generated TOC
-        const tocUl = tocContainer.querySelector('ul');
-        if (tocUl) {
-            tocUl.classList.add('list-unstyled', 'ms-0');
-            
-            // Add toggle buttons for parents
-            tocContainer.querySelectorAll('li').forEach(li => {
-                const subUl = li.querySelector('ul');
-                if (subUl) {
-                    li.classList.add('has-children');
-                    const toggle = document.createElement('span');
-                    toggle.className = 'toc-toggle';
-                    toggle.innerHTML = '<i class="bi bi-chevron-right"></i>';
-                    li.insertBefore(toggle, li.firstChild);
 
-                    toggle.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        li.classList.toggle('expanded');
-                    });
-                    
-                    // Auto-expand if active child
-                    if (li.querySelector('a[style*="var(--accent)"]')) {
-                        li.classList.add('expanded');
-                    }
-                }
-            });
-
-            tocContainer.querySelectorAll('a').forEach(a => {
-                a.classList.add('sidebar-link');
-            });
-        }
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => {
-                if (e.isIntersecting) {
-                    const id = e.target.id;
-                    const link = tocContainer.querySelector(`a[href="#${id}"]`);
-                    if (link) {
-                        tocContainer.querySelectorAll('a').forEach(l => l.style.color = '');
-                        link.style.color = 'var(--accent)';
-                    }
-                }
-            });
-        }, { rootMargin: '-20% 0px -70% 0px' });
-
-        headings.forEach(h => observer.observe(h));
-
-        // Sidebar Toggle Logic (Universal)
-        const sidebarCol = document.getElementById('sidebarColumn');
-        const toggles = ['sidebarToggleMobile', 'sidebarToggleDesktop'];
-        
-        toggles.forEach(id => {
-            const btn = document.getElementById(id);
-            if (btn) {
-                btn.addEventListener('click', () => {
-                    sidebarCol.classList.toggle('active');
-                    if (id === 'sidebarToggleMobile') {
-                        const icon = btn.querySelector('i');
-                        icon.classList.toggle('bi-list');
-                        icon.classList.toggle('bi-x-lg');
-                    }
-                });
-            }
-        });
-    });
-</script>
 
 {% endblock %}
