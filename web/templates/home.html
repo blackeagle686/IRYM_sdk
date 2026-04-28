@@ -575,23 +575,24 @@ print(result) # Output: 1012</code></pre>
         });
     }
 
-    // Modal Trigger
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.feature-card[data-bs-toggle="modal"]').forEach(card => {
-            const showModal = (e) => {
-                e.preventDefault();
-                const targetId = card.getAttribute('data-bs-target');
-                if (targetId) {
-                    const modalEl = document.querySelector(targetId);
-                    if (modalEl && typeof bootstrap !== 'undefined') {
-                        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                        modal.show();
-                    }
+    // Modal Trigger (Hover & Click)
+    document.querySelectorAll('.feature-card[data-bs-toggle="modal"]').forEach(card => {
+        const showModal = (e) => {
+            // Visual feedback
+            card.style.borderColor = 'var(--accent)';
+            setTimeout(() => card.style.borderColor = '', 1000);
+
+            const targetId = card.getAttribute('data-bs-target');
+            if (targetId) {
+                const modalEl = document.querySelector(targetId);
+                if (modalEl && typeof bootstrap !== 'undefined') {
+                    const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                    modal.show();
                 }
-            };
-            card.addEventListener('mouseenter', showModal);
-            card.addEventListener('click', showModal);
-        });
+            }
+        };
+        card.addEventListener('mouseenter', showModal);
+        card.addEventListener('click', showModal);
     });
 </script>
 {% endblock %}
