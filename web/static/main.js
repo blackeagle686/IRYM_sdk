@@ -210,3 +210,82 @@ function openCardModal(modalId) {
 }
 
 window.openCardModal = openCardModal;
+
+/* ══════════════════════════════════════════════════════
+   Docs Page — TOC & Sidebar Logic
+   ══════════════════════════════════════════════════════ */
+(function initDocsLogic() {
+    document.addEventListener('DOMContentLoaded', () => {
+        const tocContainer = document.getElementById('toc-container');
+        if (!tocContainer) return;
+
+        const headings = document.querySelectorAll('.docs-body h2, .docs-body h3');
+        
+        // Style and add collapse logic to the auto-generated TOC
+        const tocUl = tocContainer.querySelector('ul');
+        if (tocUl) {
+            tocUl.classList.add('list-unstyled', 'ms-0');
+            
+            // Add toggle buttons for parents
+            tocContainer.querySelectorAll('li').forEach(li => {
+                const subUl = li.querySelector('ul');
+                if (subUl) {
+                    li.classList.add('has-children');
+                    const toggle = document.createElement('span');
+                    toggle.className = 'toc-toggle';
+                    toggle.innerHTML = '<i class="bi bi-chevron-right"></i>';
+                    li.insertBefore(toggle, li.firstChild);
+
+                    toggle.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        li.classList.toggle('expanded');
+                    });
+                    
+                    // Auto-expand if active child
+                    if (li.querySelector('a[style*="var(--accent)"]')) {
+                        li.classList.add('expanded');
+                    }
+                }
+            });
+
+            tocContainer.querySelectorAll('a').forEach(a => {
+                a.classList.add('sidebar-link');
+            });
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const id = e.target.id;
+                    const link = tocContainer.querySelector(`a[href="#${id}"]`);
+                    if (link) {
+                        tocContainer.querySelectorAll('a').forEach(l => l.style.color = '');
+                        link.style.color = 'var(--accent)';
+                    }
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+
+        headings.forEach(h => observer.observe(h));
+
+        // Sidebar Toggle Logic (Universal)
+        const sidebarCol = document.getElementById('sidebarColumn');
+        const toggles = ['sidebarToggleMobile', 'sidebarToggleDesktop'];
+        
+        toggles.forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) {
+                btn.addEventListener('click', () => {
+                    if (sidebarCol) sidebarCol.classList.toggle('active');
+                    if (id === 'sidebarToggleMobile') {
+                        const icon = btn.querySelector('i');
+                        if (icon) {
+                            icon.classList.toggle('bi-list');
+                            icon.classList.toggle('bi-x-lg');
+                        }
+                    }
+                });
+            }
+        });
+    });
+})();
