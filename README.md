@@ -75,6 +75,20 @@ graph TD
         OBS -.->|"Monitors"| VDB
         OBS -.->|"Monitors"| MEMORY
     end
+    
+    subgraph Autonomous Agent
+        AGENT["Agent Core & Loop"]
+        COGNITION["Cognition (Thinker, Planner, Reflector)"]
+        EXEC["Execution (Actor, ToolManager)"]
+        TOOLS_REG["Tools (WebSearch, CodeExecution)"]
+        HYBRID_MEM["Hybrid Memory"]
+        
+        AGENT --> COGNITION
+        AGENT --> EXEC
+        AGENT --> HYBRID_MEM
+        EXEC --> TOOLS_REG
+        AGENT -.->|"Uses"| LLM
+    end
 ```
 
 ## 🐦‍🔥 Key Requirements & Core Features
@@ -149,6 +163,30 @@ print(response)
 ```
 > [!TIP]
 > Use `.set_session("user_123")` on the bot instance to switch between different users in production environments like FastAPI.
+
+## 🤖 Framework Mode: Autonomous Agent
+
+The Phoenix AI SDK now supports creating a fully autonomous agent that can think, plan, execute tools, and reflect on its progress with a single line of code! It comes with multi-layered memory (`ShortTerm`, `LongTerm`, `Session`, `Reflection`) and a dynamic tool registry.
+
+```python
+import asyncio
+from phoenix.agent import Agent
+from phoenix.llm.openai import OpenAILLM
+from phoenix.memory.hybrid import HybridMemory
+from phoenix.tools.registry import ToolRegistry
+
+async def agent_demo():
+    # Initialize Agent with default components
+    agent = Agent(
+        llm=OpenAILLM(), 
+        memory=HybridMemory(), 
+        tools=ToolRegistry.load_default()
+    )
+    
+    # Run an autonomous task
+    result = await agent.run("Analyze the latest news about Artificial Intelligence.")
+    print(f"Final Agent Output: {result}")
+```
 
 ## 📖 Quickstart: RAG Pipeline
 
