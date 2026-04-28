@@ -32,11 +32,27 @@ pip install --upgrade pip
 echo "[*] Installing Phoenix AI SDK with full dependencies..."
 pip install -e ".[full]"
 
-# 6. Check for Redis (System Dependency)
+# 6. Install and Start Redis (System Dependency)
+echo "[*] Setting up Redis server..."
 if ! command -v redis-server &> /dev/null; then
-    echo "[!] Warning: redis-server not found. Redis is required for persistent history/caching."
-    echo "    On Ubuntu/Debian: sudo apt install redis-server"
-    echo "    On macOS: brew install redis"
+    if command -v apt-get &> /dev/null; then
+        echo "[*] Installing redis-server via apt..."
+        apt-get update && apt-get install -y redis-server
+    elif command -v brew &> /dev/null; then
+        echo "[*] Installing redis via brew..."
+        brew install redis
+    else
+        echo "[!] Warning: redis-server not found and no known package manager detected."
+    fi
+else
+    echo "[*] redis-server already installed."
+fi
+
+# Ensure Redis is running
+if command -v redis-server &> /dev/null; then
+    echo "[*] Starting Redis server in daemon mode..."
+    redis-server --daemonize yes || echo "[!] Redis might already be running."
+    redis-cli ping || echo "[!] Redis-cli ping failed. Check redis status."
 fi
 
 # 7. Initialize .env if missing
