@@ -25,8 +25,16 @@ async def main():
     
     print("Agent Initialized. Running task...")
     
-    # 5. Run the Agent
-    result = await agent.run("Analyze the latest news about Artificial Intelligence.")
+    # 5. Run the Agent with a complex multi-step task
+    task_prompt = (
+        "Your task is to write a python script that solves a mathematical problem, save it, and test it. "
+        "Step 1: Write a python function that calculates the 10th number in the Fibonacci sequence. "
+        "Step 2: Save this code into a file named 'fibonacci_solver.py' using the python_repl tool. "
+        "Step 3: Read the file back to verify its contents. "
+        "Step 4: Execute the script or import it using the python_repl tool to get the 10th Fibonacci number and print the result. "
+        "Step 5: Review the output and confirm if the sequence calculation was successful."
+    )
+    result = await agent.run(task_prompt, max_iterations=8)
     
     print("\n--- Final Output ---")
     print(result)
