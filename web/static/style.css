@@ -809,3 +809,100 @@ pre.mermaid {
     padding: 1.75rem 0;
     font-size: 0.85rem;
 }
+
+/* ── Hero Canvas Overrides ─────────────────────────── */
+.hero-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.hero-container {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-title {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+}
+
+.hero-desc {
+    font-size: 1.1rem !important;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.hero-accent-strong {
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.hero-btn {
+    font-size: 0.95rem !important;
+}
+
+/* ── Terminal Dots ──────────────────────────────────── */
+.terminal-dot-red { background: #ff5f56; }
+.terminal-dot-yellow { background: #ffbd2e; }
+.terminal-dot-green { background: #27c93f; }
+
+/* ── Capabilities Section ────────────────────────────── */
+.features-section {
+    background: radial-gradient(circle at center, rgba(255, 77, 0, 0.04) 0%, transparent 70%);
+    position: relative;
+    z-index: 10;
+}
+
+.features-title {
+    font-size: 2rem !important;
+    letter-spacing: -0.5px;
+}
+
+.features-desc {
+    max-width: 560px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+/* ── Integration Section ───────────────────────────── */
+.integration-section {
+    background: var(--code-bg);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.integration-panel-filename {
+    margin-left: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+}
+
+/* ── CTA Section ────────────────────────────────────── */
+.cta-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-bg-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(255, 77, 0, 0.07) 0%, transparent 65%);
+    pointer-events: none;
+}
+
+.cta-title {
+    font-size: 2.1rem !important;
+    letter-spacing: -0.5px;
+}
+
+.cta-desc {
+    max-width: 460px;
+    font-size: 1rem;
+}
