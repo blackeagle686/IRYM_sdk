@@ -73,6 +73,19 @@ async def test_rag_sources_flow():
     except Exception as e:
         print(f"[!] GitHub Ingestion failed: {e}")
 
+    # 6. Query the Knowledge Base
+    print("\n[6/6] Querying Knowledge Base about Phoenix AI...")
+    question = "Provide a detailed technical overview of Phoenix AI, including its core services and how to initialize it."
+    print(f"[*] Question: {question}")
+    
+    try:
+        response = await rag.query(question)
+        print("\n" + "="*30 + " RAG RESPONSE " + "="*30)
+        print(response)
+        print("="*74)
+    except Exception as e:
+        print(f"[!] Query failed: {e}")
+
     # Cleanup local files
     print("\n[*] Cleaning up local test files...")
     import shutil
@@ -83,6 +96,7 @@ async def test_rag_sources_flow():
     print("\n" + "="*50)
     print("RAG DATA SOURCES TEST COMPLETE")
     print("="*50 + "\n")
+
 
 if __name__ == "__main__":
     asyncio.run(test_rag_sources_flow())
