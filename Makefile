@@ -1,12 +1,26 @@
-.PHONY: install install-full setup-env verify clean
+.PHONY: install install-full setup-env verify clean setup-redis
 
 # Standard installation
-install:
+install: setup-redis
 	pip install .
 
 # Installation with all extras
-install-full:
+install-full: setup-redis
 	pip install ".[full]"
+
+# Automation for Redis setup
+setup-redis:
+	@echo "[*] Setting up Redis server..."
+	@if command -v apt-get > /dev/null; then \
+		apt-get update && apt-get install -y redis-server; \
+		redis-server --daemonize yes; \
+		redis-cli ping; \
+	elif command -v brew > /dev/null; then \
+		brew install redis; \
+		brew services start redis; \
+	else \
+		echo "[!] Warning: Could not automate Redis install. Please install manually."; \
+	fi
 
 # Interactive .env setup
 setup-env:
