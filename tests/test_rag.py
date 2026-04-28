@@ -14,7 +14,7 @@ async def test_rag_flow():
 
     # 1. Initialization
     print("\n[1/4] Initializing Phoenix Services...")
-    init_phoenix(local=True) # Use local settings
+    init_phoenix(local=False) # Use remote settings
     await startup_phoenix()
     
     # 2. Get RAG Pipeline
