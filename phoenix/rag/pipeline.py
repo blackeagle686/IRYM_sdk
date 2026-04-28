@@ -325,7 +325,12 @@ class RAGPipeline:
                 return [text[i:i+size] for i in range(0, len(text), size - overlap)]
             
             sep = separators[0]
+            if sep == "":
+                # Character-level split fallback
+                return [text[i:i+size] for i in range(0, len(text), size - overlap)]
+            
             parts = text.split(sep)
+
             
             chunks = []
             current_chunk = ""
