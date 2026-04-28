@@ -242,7 +242,7 @@ window.openCardModal = openCardModal;
                     });
                     
                     // Auto-expand if active child
-                    if (li.querySelector('a[style*="var(--accent)"]')) {
+                    if (li.querySelector('a.is-active')) {
                         li.classList.add('expanded');
                     }
                 }
@@ -259,8 +259,15 @@ window.openCardModal = openCardModal;
                     const id = e.target.id;
                     const link = tocContainer.querySelector(`a[href="#${id}"]`);
                     if (link) {
-                        tocContainer.querySelectorAll('a').forEach(l => l.style.color = '');
-                        link.style.color = 'var(--accent)';
+                        tocContainer.querySelectorAll('a').forEach(l => l.classList.remove('is-active'));
+                        link.classList.add('is-active');
+                        
+                        // Ensure parent is expanded
+                        let parent = link.closest('li.has-children');
+                        while (parent) {
+                            parent.classList.add('expanded');
+                            parent = parent.parentElement.closest('li.has-children');
+                        }
                     }
                 }
             });
