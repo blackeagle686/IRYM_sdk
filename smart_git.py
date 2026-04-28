@@ -50,7 +50,7 @@ def generate_commit_message(diff):
     
     try:
         response = client.chat.completions.create(
-            model="gpt-4o",  # Using a generic model name if specific one isn't known
+            model="LongCat-Flash-Lite",  # Using a generic model name if specific one isn't known
             messages=[
                 {"role": "system", "content": "You are a professional software engineer summarizing code changes into Git commit messages."},
                 {"role": "user", "content": prompt}
