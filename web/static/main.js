@@ -183,48 +183,24 @@ document.getElementById('themeToggle').addEventListener('click', () => {
             ctx.arc(centerX, centerY, this.orbitRadius, 0, Math.PI * 2);
             ctx.stroke();
 
-            ctx.save();
-            ctx.translate(this.x, this.y);
-            // Rotate to face orbital direction
-            ctx.rotate(this.angle + (this.orbitSpeed > 0 ? Math.PI / 2 : -Math.PI / 2));
-            
-            const flap = Math.sin(Date.now() * 0.01 + this.orbitRadius) * 0.5;
+            // Planet Glow
+            ctx.shadowBlur = this.size * 2.5;
+            ctx.shadowColor = this.color;
             
             ctx.fillStyle = this.color;
-            ctx.shadowBlur = this.size * 3;
-            ctx.shadowColor = this.color;
-
-            // Stylized Phoenix Shape
-            // Body
             ctx.beginPath();
-            ctx.ellipse(0, 0, this.size * 1.5, this.size * 0.8, 0, 0, Math.PI * 2);
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();
-
-            // Wings (flapping)
-            ctx.beginPath();
-            ctx.moveTo(-this.size * 0.5, 0);
-            ctx.quadraticCurveTo(-this.size * 3, -this.size * (3 + flap * 2), -this.size * 0.2, -this.size * 0.5);
-            ctx.fill();
-
-            ctx.beginPath();
-            ctx.moveTo(this.size * 0.5, 0);
-            ctx.quadraticCurveTo(this.size * 3, -this.size * (3 + flap * 2), this.size * 0.2, -this.size * 0.5);
-            ctx.fill();
-
-            // Tail
-            ctx.beginPath();
-            ctx.moveTo(0, this.size * 0.5);
-            ctx.lineTo(-this.size, this.size * 2.5);
-            ctx.lineTo(this.size, this.size * 2.5);
-            ctx.closePath();
-            ctx.fill();
-
-            // Head
-            ctx.beginPath();
-            ctx.arc(0, -this.size * 1.2, this.size * 0.6, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.restore();
+            
+            // Planet Ring (like Saturn) for some planets
+            if (this.hasRing) {
+                ctx.strokeStyle = `rgba(255, 255, 255, 0.15)`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.ellipse(this.x, this.y, this.size * 2.2, this.size * 0.8, this.angle, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            
             ctx.shadowBlur = 0;
         }
     }
