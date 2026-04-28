@@ -187,6 +187,27 @@ async def agent_demo():
     print(f"المخرجات النهائية للوكيل: {result}")
 ```
 
+### 🧰 أدوات مخصصة وإدخال/إخراج الملفات
+
+يأتي الوكيل مزوداً مسبقاً بمجموعة قوية من الأدوات الافتراضية، بما في ذلك `python_repl`، `web_search`، `file_read`، `file_write`، و `file_search`.
+
+يمكنك أيضاً بسهولة إنشاء وحقن أدواتك المخصصة باستخدام المزخرف `@tool`:
+
+```python
+from phoenix.tools import tool
+
+# 1. تعريف منطق الأداة المخصصة
+@tool(name="custom_math", description="Calculates the square of a given number. Input: 'number' (int).")
+def custom_math_tool(number: int):
+    return f"The square of {number} is {number ** 2}"
+
+# 2. تسجيلها مباشرة إلى الوكيل
+agent.register_tool(custom_math_tool)
+
+# 3. يمكن للوكيل الآن استخدام 'custom_math' بشكل مستقل في تخطيطه!
+await agent.run("ما هو مربع العدد 12؟")
+```
+
 ## 📖 التشغيل السريع: RAG Pipeline
 
 نظام `RAGPipeline` هو أعلى مستوى خدمة للتعامل مع المعرفة القائمة على المستندات.
