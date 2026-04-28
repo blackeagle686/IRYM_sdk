@@ -202,23 +202,50 @@ print(result)</code></pre>
 <!-- Modals for Feature Cards -->
 <style>
 .feature-modal .modal-content {
-    background: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    background: rgba(13, 17, 23, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(255, 77, 0, 0.05);
+    overflow: hidden;
 }
 .feature-modal .modal-header {
-    border-bottom: 1px solid var(--border-color);
+    background: linear-gradient(to right, rgba(255, 77, 0, 0.1), transparent);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.5rem 2rem;
+}
+.feature-modal .modal-title {
+    font-size: 1.25rem;
+    letter-spacing: -0.5px;
 }
 .feature-modal .btn-close {
     filter: invert(1) grayscale(100%) brightness(200%);
+    opacity: 0.7;
+    transition: all 0.2s;
 }
-[data-bs-theme="light"] .feature-modal .btn-close {
-    filter: none;
+.feature-modal .btn-close:hover {
+    opacity: 1;
+    transform: rotate(90deg);
+}
+.feature-modal .modal-body {
+    padding: 2rem !important;
 }
 .feature-modal pre {
     margin: 0;
-    border-radius: 8px;
+    border-radius: 12px;
+    background: #0d1117 !important;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.3);
+}
+.feature-modal .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
 }
 </style>
 
@@ -227,22 +254,31 @@ print(result)</code></pre>
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title fw-bold"><i class="bi bi-lightning-charge-fill me-2 text-warning"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية استخدام RAG Pipeline{% else %}Using the RAG Pipeline{% endif %}</h5>
+        <h5 class="modal-title fw-bold text-white"><i class="bi bi-lightning-charge-fill me-2 text-warning"></i>{% if LANGUAGE_CODE == 'ar' %}تفعيل RAG Pipeline{% else %}The RAG Pipeline{% endif %}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body p-4">
-<pre><code class="language-python">from phoenix.rag import RAGPipeline
+      <div class="modal-body">
+        <div class="code-header">
+          <span>example_rag.py</span>
+          <span class="text-accent">Python SDK</span>
+        </div>
+<pre><code class="language-python">import asyncio
+from phoenix import init_phoenix, startup_phoenix, get_rag_pipeline
 
-# Initialize the pipeline
-pipeline = RAGPipeline()
+async def rag_demo():
+    init_phoenix()
+    await startup_phoenix()
+    rag = get_rag_pipeline()
 
-# Ingest documents automatically (PDF, CSV, TXT, HTML)
-await pipeline.ingest_document("data/knowledge_base.pdf")
+    # 1. Ingest documents (Docs + Source Code .py, .js, etc.)
+    await rag.ingest("./my_project")
 
-# Query with semantic search and generation
-response = await pipeline.query("What are the key policies in chapter 4?")
-print(response.answer)
-print(response.sources)</code></pre>
+    # 2. Ingest from GitHub Repository (Automated indexing)
+    await rag.ingest_github("https://github.com/blackeagle686/phoenix-ai.git")
+
+    # 3. Query with automatic Citations
+    answer = await rag.query("How do I extend the cache layer?")
+    print(f"AI Answer: {answer}")</code></pre>
       </div>
     </div>
   </div>
@@ -278,17 +314,26 @@ print(results[0].text) # Output: "Phoenix AI is fast"</code></pre>
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title fw-bold"><i class="bi bi-chat-dots-fill me-2 text-success"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية استخدام LLM Integration{% else %}Using LLM Integration{% endif %}</h5>
+        <h5 class="modal-title fw-bold text-white"><i class="bi bi-chat-dots-fill me-2 text-success"></i>{% if LANGUAGE_CODE == 'ar' %}تكامل نماذج اللغة{% else %}LLM Orchestration{% endif %}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body p-4">
-<pre><code class="language-python">from phoenix.llm.openai import OpenAILLM
+      <div class="modal-body">
+        <div class="code-header">
+          <span>chatbot_framework.py</span>
+          <span class="text-accent">High-Level API</span>
+        </div>
+<pre><code class="language-python">from phoenix import ChatBot
 
-# Uses OPENAI_API_KEY and OPENAI_BASE_URL from env
-llm = OpenAILLM(model="gpt-4o")
+# Build the complete AI Agent in just a few lines
+bot = (ChatBot(local=True)
+       .with_rag(["./docs"])                # Knowledge injection
+       .with_memory()                       # Enable session memory
+       .with_security(mode="strict")        # Prompt injection protection
+       .with_system_prompt("Expert Dev")    # Behavior guide
+       .build())
 
-# Generate a fast streaming or standard response
-response = await llm.generate("Explain quantum computing in one sentence.")
+# Generate response with integrated memory & RAG
+response = await bot.chat("How does DI work in Phoenix?")
 print(response)</code></pre>
       </div>
     </div>
@@ -324,20 +369,27 @@ await tts.synthesize("Hello, I am Phoenix AI.", output_file="hello.mp3")</code><
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title fw-bold"><i class="bi bi-eye-fill me-2 text-info"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية استخدام VLM{% else %}Using Vision Models{% endif %}</h5>
+        <h5 class="modal-title fw-bold text-white"><i class="bi bi-eye-fill me-2 text-info"></i>{% if LANGUAGE_CODE == 'ar' %}الرؤية الحاسوبية VLM{% else %}VLM (Vision) Pipeline{% endif %}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body p-4">
-<pre><code class="language-python">from phoenix.vision import VisionModel
+      <div class="modal-body">
+        <div class="code-header">
+          <span>vision_demo.py</span>
+          <span class="text-accent">Multi-modal</span>
+        </div>
+<pre><code class="language-python">from phoenix import init_phoenix_full, get_vlm_pipeline
 
-vision = VisionModel()
+async def vision_demo():
+    await init_phoenix_full()
+    vlm = get_vlm_pipeline()
 
-# Analyze an image with a prompt
-description = await vision.analyze_image(
-    image_path="architecture.png",
-    prompt="Describe the system architecture shown in this diagram."
-)
-print(description)</code></pre>
+    # Integrated: Result Caching + RAG context injection
+    answer = await vlm.ask(
+        "What is in this image?", 
+        "image.png", 
+        use_rag=True
+    )
+    print(answer)</code></pre>
       </div>
     </div>
   </div>
@@ -428,25 +480,32 @@ except Exception as e:
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title fw-bold"><i class="bi bi-robot me-2" style="color: var(--accent);"></i>{% if LANGUAGE_CODE == 'ar' %}كيفية بناء الوكلاء المستقلين{% else %}Building Autonomous Agents{% endif %}</h5>
+        <h5 class="modal-title fw-bold text-white"><i class="bi bi-robot me-2" style="color: var(--accent);"></i>{% if LANGUAGE_CODE == 'ar' %}بناء الوكلاء المستقلين{% else %}Autonomous Agent Loop{% endif %}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body p-4">
+      <div class="modal-body">
+        <div class="code-header">
+          <span>agent_loop.py</span>
+          <span class="text-accent">Autonomous Mode</span>
+        </div>
 <pre><code class="language-python">from phoenix.agent import Agent
-from phoenix.tools import tool
+from phoenix.llm.openai import OpenAILLM
+from phoenix.memory.hybrid import HybridMemory
+from phoenix.tools.registry import ToolRegistry
 
-# 1. Define a tool
-@tool(name="calculator", description="Solves math")
-def calc(equation: str):
-    return eval(equation)
+# Initialize Agent with default components
+agent = Agent(
+    llm=OpenAILLM(), 
+    memory=HybridMemory(), 
+    tools=ToolRegistry.load_default()
+)
 
-# 2. Spin up the agent
-agent = Agent()
-agent.register_tool(calc)
-
-# 3. Watch it think, plan, and execute
-result = await agent.run("What is (500 * 2) + 12?", mode="plan")
-print(result) # Output: 1012</code></pre>
+# Run an autonomous Think-Plan-Act task
+result = await agent.run(
+    "Analyze the latest AI news and save it to news.txt", 
+    mode="auto"
+)
+print(f"Agent Output: {result}")</code></pre>
       </div>
     </div>
   </div>
