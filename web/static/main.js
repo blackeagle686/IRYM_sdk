@@ -74,9 +74,10 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const particleCount = 120;
-    const connectionDistance = 150;
-    const mouse = { x: null, y: null, radius: 180 };
+    let stars = [];
+    const particleCount = 24; // Fewer, more distinct "planets"
+    const starCount = 100;    // Background stars
+    const mouse = { x: null, y: null, radius: 200 };
     let centerX, centerY;
 
     window.addEventListener('mousemove', (e) => {
@@ -85,10 +86,7 @@ document.getElementById('themeToggle').addEventListener('click', () => {
         mouse.y = e.clientY - rect.top;
     });
 
-    window.addEventListener('mouseout', () => {
-        mouse.x = null; mouse.y = null;
-    });
-
+    window.addEventListener('mouseout', () => { mouse.x = null; mouse.y = null; });
     window.addEventListener('resize', () => resizeCanvas());
 
     function resizeCanvas() {
@@ -96,33 +94,50 @@ document.getElementById('themeToggle').addEventListener('click', () => {
         canvas.height = canvas.offsetHeight;
         centerX = canvas.width / 2;
         centerY = canvas.height / 2;
-        initParticles();
+        initCelestialBodies();
     }
 
-    class Particle {
+    class Star {
         constructor() {
-            this.init();
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 1.2;
+            this.opacity = Math.random();
+            this.blinkSpeed = 0.005 + Math.random() * 0.015;
+        }
+        draw() {
+            this.opacity += this.blinkSpeed;
+            if (this.opacity > 1 || this.opacity < 0.2) this.blinkSpeed *= -1;
+            ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    class Planet {
+        constructor(index) {
+            this.init(index);
         }
 
-        init() {
-            // Distance from center (orbit radius)
+        init(index) {
             const minDim = Math.min(canvas.width, canvas.height);
-            this.orbitRadius = 80 + Math.random() * (minDim / 2 - 40);
+            // Evenly spaced orbits
+            this.orbitRadius = 100 + (index * (minDim / 2.5 / particleCount)) + (Math.random() * 20);
             this.angle = Math.random() * Math.PI * 2;
-            this.orbitSpeed = (0.001 + Math.random() * 0.003) * (Math.random() > 0.5 ? 1 : -1);
             
-            this.size = Math.random() * 2 + 0.5;
+            // Kepler's law simplification: closer is faster
+            this.orbitSpeed = (0.015 / Math.sqrt(this.orbitRadius)) * (Math.random() > 0.5 ? 1 : -0.8);
+            
+            this.size = 1 + Math.random() * 4;
             const colors = [
-                'rgba(255, 77, 0, 0.8)',
-                'rgba(255, 138, 0, 0.7)',
-                'rgba(255, 180, 0, 0.6)'
+                '#FF4D00', '#FF8A00', '#FFB400', '#FFD700', '#E6E6FA', '#87CEEB'
             ];
             this.color = colors[Math.floor(Math.random() * colors.length)];
             
-            // For mouse interaction drift
             this.driftX = 0;
             this.driftY = 0;
-            
+            this.hasRing = Math.random() > 0.8;
             this.updateCoords();
         }
 
@@ -137,62 +152,78 @@ document.getElementById('themeToggle').addEventListener('click', () => {
             if (mouse.x != null && mouse.y != null) {
                 const dx = mouse.x - this.x;
                 const dy = mouse.y - this.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < mouse.radius) {
-                    const force = (mouse.radius - distance) / mouse.radius;
-                    this.driftX -= dx * force * 0.05;
-                    this.driftY -= dy * force * 0.05;
-                } else {
-                    this.driftX *= 0.95;
-                    this.driftY *= 0.95;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < mouse.radius) {
+                    const force = (mouse.radius - dist) / mouse.radius;
+                    this.driftX -= dx * force * 0.04;
+                    this.driftY -= dy * force * 0.04;
                 }
-            } else {
-                this.driftX *= 0.98;
-                this.driftY *= 0.98;
             }
-
+            this.driftX *= 0.96;
+            this.driftY *= 0.96;
             this.updateCoords();
         }
 
         draw() {
+            // Draw Orbit Ring
+            ctx.strokeStyle = 'rgba(255, 77, 0, 0.04)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, this.orbitRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Planet Glow
+            ctx.shadowBlur = this.size * 2;
+            ctx.shadowColor = this.color;
+            
             ctx.fillStyle = this.color;
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();
             
-            // Subtle core glow
-            if (this.size > 1.5) {
-                ctx.shadowBlur = 8;
-                ctx.shadowColor = this.color;
-                ctx.fill();
-                ctx.shadowBlur = 0;
+            // Planet Ring (like Saturn)
+            if (this.hasRing) {
+                ctx.strokeStyle = `rgba(255, 255, 255, 0.2)`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.ellipse(this.x, this.y, this.size * 2.2, this.size * 0.8, this.angle, 0, Math.PI * 2);
+                ctx.stroke();
             }
+            
+            ctx.shadowBlur = 0;
         }
     }
 
-    function initParticles() {
+    function initCelestialBodies() {
         particles = [];
-        for (let i = 0; i < particleCount; i++) {
-            particles.push(new Particle());
-        }
+        stars = [];
+        for (let i = 0; i < starCount; i++) stars.push(new Star());
+        for (let i = 0; i < particleCount; i++) particles.push(new Planet(i));
     }
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        for (let i = 0; i < particles.length; i++) {
-            particles[i].update();
-            particles[i].draw();
+        // Draw Stars
+        stars.forEach(s => s.draw());
 
+        // Update and Draw Planets
+        particles.forEach(p => {
+            p.update();
+            p.draw();
+        });
+
+        // Dynamic Connections (Constellations)
+        for (let i = 0; i < particles.length; i++) {
             for (let j = i + 1; j < particles.length; j++) {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
-                if (distance < connectionDistance) {
-                    const opacity = 0.4 * (1 - distance / connectionDistance);
+                if (distance < 120) {
+                    const opacity = 0.15 * (1 - distance / 120);
                     ctx.strokeStyle = `rgba(255, 138, 0, ${opacity})`;
-                    ctx.lineWidth = 0.8;
+                    ctx.lineWidth = 0.5;
                     ctx.beginPath();
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
