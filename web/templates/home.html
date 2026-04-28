@@ -118,7 +118,8 @@ Production-ready AI Infrastructure
             {% if LANGUAGE_CODE == 'ar' %}عرض المثال{% else %}View Example{% endif %}
         </div>
       </div></div>
-      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-target="#modal-audio"><div class="feature-icon"><i class="bi bi-mic-fill"></i></div>
+      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-audio">
+        <div class="feature-icon"><i class="bi bi-mic-fill"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}الصوت (STT / TTS){% else %}Audio (STT / TTS){% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تحويل الكلام إلى نص وبالعكس، محلياً أو سحابياً. ابنِ منتجات صوتية في دقائق.{% else %}Local and cloud-based Speech-to-Text and Text-to-Speech. Build voice-first AI products in minutes.{% endif %}</p>
         <div class="card-example-btn">
