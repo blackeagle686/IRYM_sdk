@@ -12,23 +12,19 @@
     --font-mono: 'JetBrains Mono', monospace;
 }
 
-[data-bs-theme="dark"] {
-    --nav-bg: rgba(13, 17, 23, 0.8);
-    --code-bg: #0d1117;
-    --card-bg: #161b22;
-    --border-color: rgba(255, 255, 255, 0.08);
-    --muted: rgba(255, 255, 255, 0.5);
     --body-bg: #010409;
+    --modal-bg: rgba(11, 14, 20, 0.96);
+    --modal-header-bg: linear-gradient(135deg, rgba(255, 77, 0, 0.07), transparent);
+    --modal-border: rgba(255, 255, 255, 0.07);
+    --modal-code-bg: #080b10;
 }
 
-[data-bs-theme="light"] {
-    --nav-bg: rgba(255, 255, 255, 0.9);
-    --code-bg: #fffbf9;
-    --card-bg: #ffffff;
-    --border-color: rgba(255, 77, 0, 0.12);
-    --muted: #8c4a2b;
     --body-bg: #fffcfb;
     --bs-body-color: #3d1b0d;
+    --modal-bg: rgba(255, 252, 251, 0.98);
+    --modal-header-bg: linear-gradient(135deg, rgba(255, 77, 0, 0.04), transparent);
+    --modal-border: rgba(255, 77, 0, 0.15);
+    --modal-code-bg: #fffbf9;
 }
 
 /* ── Base ───────────────────────────────────────────── */
@@ -399,17 +395,17 @@ pre.mermaid {
 
 /* ── Feature Modal ──────────────────────────────────── */
 .feature-modal .modal-content {
-    background: rgba(11, 14, 20, 0.96);
+    background: var(--modal-bg);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    border: 1px solid var(--modal-border);
     border-radius: 20px;
     box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
 }
 
 .feature-modal .modal-header {
-    background: linear-gradient(135deg, rgba(255, 77, 0, 0.07), transparent);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--modal-header-bg);
+    border-bottom: 1px solid var(--modal-border);
     padding: 1.4rem 1.75rem;
 }
 
@@ -425,6 +421,11 @@ pre.mermaid {
     transition: all 0.2s;
 }
 
+[data-bs-theme="light"] .feature-modal .btn-close {
+    filter: none;
+    opacity: 0.5;
+}
+
 .feature-modal .btn-close:hover {
     opacity: 1;
     transform: rotate(90deg);
@@ -437,8 +438,8 @@ pre.mermaid {
 .feature-modal pre {
     margin: 0;
     border-radius: 12px;
-    background: #080b10 !important;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--modal-code-bg) !important;
+    border: 1px solid var(--modal-border);
     box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.5);
 }
 
