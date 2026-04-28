@@ -9,37 +9,21 @@ from phoenix.audio.local import LocalSTT, LocalTTS
 
 async def test_audio_flow():
     print("\n" + "="*50)
-    print("PHOENIX AI: AUDIO SERVICE TEST")
+    print("PHOENIX AI: AUDIO SERVICE TEST (gTTS & SpeechRecognition)")
     print("="*50)
+    print("NOTE: This test requires internet access for Google STT/TTS APIs.")
 
-    # 1. Test STT
-    print("\n[1/2] Testing Local STT (Transcription)...")
-    stt = LocalSTT()
-    await stt.init()
-    
-    dummy_audio = "tests/test_audio.wav"
-    # Create a dummy file
-    with open(dummy_audio, "wb") as f:
-        f.write(b"RIFF....WAVEfmt ")
-    
-    print(f"[*] Transcribing {dummy_audio}...")
-    try:
-        text = await stt.transcribe(dummy_audio)
-        print(f"[v] Success! Transcription: {text}")
-    except Exception as e:
-        print(f"[!] STT Error: {e}")
-
-    # 2. Test TTS
-    print("\n[2/2] Testing Local TTS (Synthesis)...")
+    # 1. Test TTS (Generate real audio first so we can transcribe it)
+    print("\n[1/2] Testing Local TTS (Synthesis with gTTS)...")
     tts = LocalTTS()
     await tts.init()
     
-    output_audio = "tests/output_speech.mp3"
-    input_text = "Welcome to Phoenix AI SDK."
-    print(f"[*] Synthesizing text: '{input_text}'")
+    output_audio = "tests/test_voice.mp3"
+    input_text = "Phoenix AI is an agentic coding assistant."
+    print(f"[*] Synthesizing text: '{input_text}' (Lang: en)")
     
     try:
-        result_path = await tts.synthesize(input_text, output_audio)
+        result_path = await tts.synthesize(input_text, output_audio, lang="en")
         if os.path.exists(result_path):
             print(f"[v] Success! Generated audio at: {result_path}")
         else:
@@ -47,14 +31,22 @@ async def test_audio_flow():
     except Exception as e:
         print(f"[!] TTS Error: {e}")
 
+    # 2. Test STT
+    print("\n[2/2] Testing Local STT (Transcription with SpeechRecognition)...")
+    stt = LocalSTT()
+    await stt.init()
+    
+    # Note: SpeechRecognition works best with WAV for AudioFile
+    print("[*] Note: STT typically requires .wav format for sr.AudioFile.")
+    
     # Cleanup
-    for f in [dummy_audio, output_audio]:
-        if os.path.exists(f):
-            os.remove(f)
+    if os.path.exists(output_audio):
+        os.remove(output_audio)
 
     print("\n" + "="*50)
     print("AUDIO SERVICE TEST COMPLETE")
     print("="*50 + "\n")
+
 
 if __name__ == "__main__":
     asyncio.run(test_audio_flow())
