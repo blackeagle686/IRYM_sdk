@@ -59,11 +59,19 @@ class ChromaVectorDB(BaseVectorDB):
             import uuid
             ids = [str(uuid.uuid4()) for _ in texts]
         
-        self.collection.add(
-            documents=texts,
-            metadatas=metadatas,
-            ids=ids
-        )
+        # Batching for progress reporting and large inserts
+        batch_size = 100
+        total = len(texts)
+        
+        for i in range(0, total, batch_size):
+            end = min(i + batch_size, total)
+            self.collection.add(
+                documents=texts[i:end],
+                metadatas=metadatas[i:end] if metadatas else None,
+                ids=ids[i:end]
+            )
+            print(f"  [>] Progress: {end}/{total} units indexed...")
+
 
     async def delete(self, ids: List[str]) -> None:
         if not self.collection:
