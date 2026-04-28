@@ -164,7 +164,7 @@ print(response)
 > [!TIP]
 > Use `.set_session("user_123")` on the bot instance to switch between different users in production environments like FastAPI.
 
-## 🤖 Framework Mode: Autonomous Agent
+## 🐦‍🔥 Framework Mode: Autonomous Agent
 
 The Phoenix AI SDK now supports creating a fully autonomous agent that can think, plan, execute tools, and reflect on its progress with a single line of code! It comes with multi-layered memory (`ShortTerm`, `LongTerm`, `Session`, `Reflection`) and a dynamic tool registry.
 
