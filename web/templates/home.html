@@ -30,7 +30,7 @@ Production-ready AI Infrastructure
             {% endif %}
         </div>
 
-        <h1 class="mb-4">
+        <h1 class="mb-3" style="font-size: 2.5rem; font-weight: 800;">
             {% if LANGUAGE_CODE == 'ar' %}
             هندسة الأنظمة المستقلة<br>
             <span class="gradient-text">فائقة الذكاء</span>
@@ -40,26 +40,26 @@ Production-ready AI Infrastructure
             {% endif %}
         </h1>
 
-        <p class="lead mb-5 hero-description">
+        <p class="mb-4 hero-description text-muted" style="font-size: 1.1rem; max-width: 700px; margin: 0 auto;">
             {% if LANGUAGE_CODE == 'ar' %}
-            <strong style="color: var(--accent); font-weight: 900; letter-spacing: -0.5px;">Phoenix AI</strong> 
+            <strong style="color: var(--accent); font-weight: 700; letter-spacing: -0.5px;">Phoenix AI</strong> 
             هو العمود الفقري لتنظيم الذكاء الاصطناعي للمطورين الذين يبنون وكلاء وأنظمة ذكاء اصطناعي مستقلة قابلة للتوسع.
-            ابنِ وكلاء بمستوى الإنتاج مع RAG فائق القابلية للتوسع، رؤية متعددة الوسائط، وذاكرة عصبية — مصمم للسيادة المعمارية الكاملة.
+            ابنِ وكلاء بمستوى الإنتاج مع RAG فائق القابلية للتوسع، رؤية متعددة الوسائط، وذاكرة عصبية.
             {% else %}
-            <strong style="color: var(--accent); font-weight: 900; letter-spacing: -0.5px;">Phoenix AI</strong> 
+            <strong style="color: var(--accent); font-weight: 700; letter-spacing: -0.5px;">Phoenix AI</strong> 
             is the elite orchestration backbone for developers engineering scalable, production-ready AI agents and autonomous systems. 
-            Deploy agentic architectures with hyper-scalable RAG, multi-modal vision, and neural memory—engineered for total architectural sovereignty.
+            Deploy agentic architectures with hyper-scalable RAG, multi-modal vision, and neural memory.
             {% endif %}
         </p>
 
-        <div class="d-flex justify-content-center flex-wrap gap-3">
-            <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent btn-lg px-5 rounded-pill">
-                <i class="bi bi-lightning-fill me-2"></i>
+        <div class="d-flex justify-content-center flex-wrap gap-2">
+            <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent px-4 py-2 rounded-pill shadow-sm" style="font-size: 0.95rem;">
+                <i class="bi bi-lightning-fill me-1"></i>
                 {% if LANGUAGE_CODE == 'ar' %}ابدأ الآن{% else %}Start Building{% endif %}
             </a>
 
-            <a href="https://github.com/blackeagle686/phoenix-ai.git" target="_blank" class="btn btn-outline-secondary btn-lg px-5 rounded-pill">
-                <i class="bi bi-github me-2"></i>
+            <a href="https://github.com/blackeagle686/phoenix-ai.git" target="_blank" class="btn btn-outline-secondary px-4 py-2 rounded-pill" style="font-size: 0.95rem;">
+                <i class="bi bi-github me-1"></i>
                 {% if LANGUAGE_CODE == 'ar' %}جيت هاب{% else %}Star on GitHub{% endif %}
             </a>
         </div>
@@ -84,11 +84,11 @@ Production-ready AI Infrastructure
     </div>
 </section>
 
-<section class="py-5" style="background: radial-gradient(circle at center, rgba(255, 77, 0, 0.03) 0%, transparent 70%);">
+<section class="py-4" style="background: radial-gradient(circle at center, rgba(255, 77, 0, 0.03) 0%, transparent 70%);">
   <div class="container-xl">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold mb-3" style="font-size: 2.2rem;">{% if LANGUAGE_CODE == 'ar' %}كل ما تحتاجه لبناء وكلاء ذكاء اصطناعي{% else %}Everything you need to ship AI Agents{% endif %}</h2>
-        <p class="text-muted mx-auto" style="max-width: 600px;">{% if LANGUAGE_CODE == 'ar' %}SDK واحد. صفر كود متكرر. بنية تحتية هندسية متكاملة.{% else %}One unified SDK. Zero boilerplate. The definitive engineering infrastructure for autonomous intelligence.{% endif %}</p>
+    <div class="text-center mb-4">
+        <h2 class="fw-bold mb-2" style="font-size: 1.8rem;">{% if LANGUAGE_CODE == 'ar' %}كل ما تحتاجه لبناء وكلاء ذكاء اصطناعي{% else %}Everything you need to ship AI Agents{% endif %}</h2>
+        <p class="text-muted mx-auto" style="max-width: 600px; font-size: 0.95rem;">{% if LANGUAGE_CODE == 'ar' %}SDK واحد. صفر كود متكرر. بنية تحتية هندسية متكاملة.{% else %}One unified SDK. Zero boilerplate. The definitive engineering infrastructure for autonomous intelligence.{% endif %}</p>
     </div>
     <div class="row g-4">
       <div class="col-md-4"><div class="feature-card"><div class="feature-icon"><i class="bi bi-lightning-charge-fill"></i></div>
@@ -206,14 +206,19 @@ print(result)</code></pre>
     const canvas = document.getElementById('networkCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const particleCount = 110;
-    const connectionDistance = 160;
-    const mouse = { x: null, y: null, radius: 180 };
+    const particleCount = 140; // Increased for a denser look
+    const connectionDistance = 140; // Tighter connections
+    const mouse = { x: null, y: null, radius: 150 };
 
     window.addEventListener('mousemove', (e) => {
         const rect = canvas.getBoundingClientRect();
         mouse.x = e.clientX - rect.left;
         mouse.y = e.clientY - rect.top;
+    });
+
+    window.addEventListener('mouseout', () => {
+        mouse.x = null;
+        mouse.y = null;
     });
 
     window.addEventListener('resize', () => {
@@ -230,10 +235,12 @@ print(result)</code></pre>
         constructor() {
             this.x = Math.random() * canvas.width;
             this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 1;
-            this.speedX = (Math.random() - 0.5) * 0.6;
-            this.speedY = (Math.random() - 0.5) * 0.6;
-            this.color = Math.random() > 0.5 ? '#FF4D00' : '#FF8A00'; // Multi-color
+            this.size = Math.random() * 1.5 + 0.5; // Slightly smaller dots
+            this.speedX = (Math.random() - 0.5) * 0.4; // Slightly slower, more elegant movement
+            this.speedY = (Math.random() - 0.5) * 0.4;
+            // Introduce a 3rd color for more high-tech look and add random opacity
+            const colors = ['rgba(255, 77, 0, 0.8)', 'rgba(255, 138, 0, 0.7)', 'rgba(255, 180, 0, 0.6)'];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
         }
 
         update() {
@@ -245,14 +252,17 @@ print(result)</code></pre>
             if (this.y > canvas.height) this.y = 0;
             if (this.y < 0) this.y = canvas.height;
 
-            // Soft attraction / repulsion
-            const dx = mouse.x - this.x;
-            const dy = mouse.y - this.y;
-            const distance = Math.sqrt(dx*dx + dy*dy);
-            if (distance < mouse.radius) {
-                const force = (mouse.radius - distance) / mouse.radius;
-                this.x += dx * force * 0.02;
-                this.y += dy * force * 0.02;
+            // Interactive attraction/repulsion
+            if (mouse.x != null && mouse.y != null) {
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                if (distance < mouse.radius) {
+                    const force = (mouse.radius - distance) / mouse.radius;
+                    // Move particles slightly towards the mouse
+                    this.x += dx * force * 0.03;
+                    this.y += dy * force * 0.03;
+                }
             }
         }
 
