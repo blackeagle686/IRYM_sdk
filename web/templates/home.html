@@ -91,15 +91,15 @@ Production-ready AI Infrastructure
         <p class="text-muted mx-auto" style="max-width: 600px; font-size: 0.95rem;">{% if LANGUAGE_CODE == 'ar' %}SDK واحد. صفر كود متكرر. بنية تحتية هندسية متكاملة.{% else %}One unified SDK. Zero boilerplate. The definitive engineering infrastructure for autonomous intelligence.{% endif %}</p>
     </div>
     <div class="row g-4">
-      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-target="#modal-rag"><div class="feature-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-rag"><div class="feature-icon"><i class="bi bi-lightning-charge-fill"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}خط إنتاج RAG{% else %}RAG Pipeline{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}استوعب ملفات PDF و Docs و CSV و JSON وصفحات الويب. تقسيم تلقائي، بحث دلالي، واستشهادات جاهزة.{% else %}Ingest PDFs, Docs, CSV, JSON, and web pages. Auto-chunking, semantic search, and citations out of the box.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-target="#modal-vectordb"><div class="feature-icon"><i class="bi bi-database-fill"></i></div>
+      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-vectordb"><div class="feature-icon"><i class="bi bi-database-fill"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}قاعدة بيانات متجهة{% else %}Vector DB{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}دعم ChromaDB أو Qdrant. نموذج تضمين واحد لعمليات CRUD كاملة. قم بتبديل المحرك عبر الإعدادات.{% else %}Persistent ChromaDB or Qdrant. Singleton embedding model with full CRUD. Swap backends via config.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-target="#modal-llm"><div class="feature-icon"><i class="bi bi-chat-dots-fill"></i></div>
+      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-llm"><div class="feature-icon"><i class="bi bi-chat-dots-fill"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}تكامل LLM{% else %}LLM Integration{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}عميل يتوافق مع OpenAI. يدعم النماذج المحلية والسحابية. محركات توليد قابلة للتوصيل.{% else %}OpenAI-compatible API client. Supports local and cloud models. Pluggable generation backends.{% endif %}</p>
       </div></div>
@@ -123,7 +123,7 @@ Production-ready AI Infrastructure
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}المراقبة والوضوح{% else %}Observability{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تسجيل منظم وهياكل تتبع مدمجة. راقب أداء وصحة خطوط إنتاج الذكاء الاصطناعي الخاصة بك.{% else %}Built-in structured logging and tracing skeletons. Monitor your AI service health and performance.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-target="#modal-agents"><div class="feature-icon"><i class="bi bi-robot"></i></div>
+      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-agents"><div class="feature-icon"><i class="bi bi-robot"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}الوكلاء المستقلون{% else %}Autonomous Agents{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}ابنِ وكلاء أذكياء يمكنهم التفكير، والتخطيط، واستخدام الأدوات في سطر واحد من الكود بفضل الذاكرة الهجينة.{% else %}Build intelligent agents that can think, plan, and use tools with a single line of code powered by hybrid memory.{% endif %}</p>
       </div></div>
@@ -575,17 +575,15 @@ print(result) # Output: 1012</code></pre>
         });
     }
 
-    // Modal Trigger (Hover & Click)
+    // Modal Trigger (Click Only)
     document.querySelectorAll('.feature-card').forEach(card => {
-        const handleTrigger = () => {
+        card.addEventListener('click', () => {
             const targetId = card.getAttribute('data-bs-target');
             const modalEl = document.querySelector(targetId);
             if (modalEl && typeof bootstrap !== 'undefined') {
                 bootstrap.Modal.getOrCreateInstance(modalEl).show();
             }
-        };
-        card.addEventListener('mouseenter', handleTrigger);
-        card.addEventListener('click', handleTrigger);
+        });
     });
 </script>
 {% endblock %}
