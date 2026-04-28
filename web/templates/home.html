@@ -14,8 +14,8 @@ Production-ready AI Infrastructure
 
 <!-- Hero -->
 <section class="hero-section">
-    <canvas id="networkCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;"></canvas>
-    <div class="container-xl text-center" style="position: relative; z-index: 1;">
+    <canvas id="networkCanvas" class="hero-canvas"></canvas>
+    <div class="container-xl text-center hero-container">
         <div class="mb-4 hero-logo-container">
             <img src="{% static 'images/phx-dark-circle.png' %}" alt="Phoenix AI" class="hero-logo-img theme-dark-only">
             <img src="{% static 'images/phx-light-circle.png' %}" alt="Phoenix AI" class="hero-logo-img theme-light-only">
@@ -30,7 +30,7 @@ Production-ready AI Infrastructure
             {% endif %}
         </div>
 
-        <h1 class="mb-3" style="font-size: 2.5rem; font-weight: 800;">
+        <h1 class="mb-3 hero-title">
             {% if LANGUAGE_CODE == 'ar' %}
             هندسة الأنظمة المستقلة<br>
             <span class="gradient-text">فائقة الذكاء</span>
@@ -40,9 +40,9 @@ Production-ready AI Infrastructure
             {% endif %}
         </h1>
 
-        <p class="mb-4 hero-description text-muted" style="font-size: 1.1rem; max-width: 700px; margin: 0 auto;">
+        <p class="mb-4 hero-description text-muted hero-desc">
             {% if LANGUAGE_CODE == 'ar' %}
-            <strong style="color: var(--accent); font-weight: 700; letter-spacing: -0.5px;">Phoenix AI</strong> 
+            <strong class="hero-accent-strong">Phoenix AI</strong> 
             هو العمود الفقري لتنظيم الذكاء الاصطناعي للمطورين الذين يبنون وكلاء وأنظمة ذكاء اصطناعي مستقلة قابلة للتوسع.
             ابنِ وكلاء بمستوى الإنتاج مع RAG فائق القابلية للتوسع، رؤية متعددة الوسائط، وذاكرة عصبية.
             {% else %}
@@ -53,12 +53,12 @@ Production-ready AI Infrastructure
         </p>
 
         <div class="d-flex justify-content-center flex-wrap gap-2">
-            <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent px-4 py-2 rounded-pill shadow-sm" style="font-size: 0.95rem;">
+            <a href="{% url 'docs_named' 'GUIDE' %}" class="btn btn-accent px-4 py-2 rounded-pill shadow-sm hero-btn">
                 <i class="bi bi-lightning-fill me-1"></i>
                 {% if LANGUAGE_CODE == 'ar' %}ابدأ الآن{% else %}Start Building{% endif %}
             </a>
 
-            <a href="https://github.com/blackeagle686/phoenix-ai.git" target="_blank" class="btn btn-outline-secondary px-4 py-2 rounded-pill" style="font-size: 0.95rem;">
+            <a href="https://github.com/blackeagle686/phoenix-ai.git" target="_blank" class="btn btn-outline-secondary px-4 py-2 rounded-pill hero-btn">
                 <i class="bi bi-github me-1"></i>
                 {% if LANGUAGE_CODE == 'ar' %}جيت هاب{% else %}Star on GitHub{% endif %}
             </a>
@@ -67,9 +67,9 @@ Production-ready AI Infrastructure
         <div class="terminal-block">
             <div class="terminal-header d-flex align-items-center justify-content-between">
                 <div class="d-flex gap-1">
-                    <div class="terminal-dot" style="background:#ff5f56;"></div>
-                    <div class="terminal-dot" style="background:#ffbd2e;"></div>
-                    <div class="terminal-dot" style="background:#27c93f;"></div>
+                    <div class="terminal-dot terminal-dot-red"></div>
+                    <div class="terminal-dot terminal-dot-yellow"></div>
+                    <div class="terminal-dot terminal-dot-green"></div>
                 </div>
                 <button class="btn btn-link p-0 text-muted terminal-copy-btn" title="Copy Command">
                     <i class="bi bi-clipboard" id="terminalCopyIcon"></i>
@@ -91,12 +91,12 @@ Production-ready AI Infrastructure
     </div>
 </section>
 
-<section class="py-5" style="background: radial-gradient(circle at center, rgba(255, 77, 0, 0.04) 0%, transparent 70%); position: relative; z-index: 10;">
+<section class="py-5 features-section">
   <div class="container-xl">
     <div class="text-center mb-5">
         <div class="section-eyebrow"><i class="bi bi-grid-3x3-gap-fill"></i>&nbsp;{% if LANGUAGE_CODE == 'ar' %}الميزات{% else %}Core Capabilities{% endif %}</div>
-        <h2 class="fw-bold mb-2" style="font-size: 2rem; letter-spacing: -0.5px;">{% if LANGUAGE_CODE == 'ar' %}كل ما تحتاجه لبناء وكلاء ذكاء اصطناعي{% else %}Everything you need to ship AI Agents{% endif %}</h2>
-        <p class="text-muted mx-auto" style="max-width: 560px; font-size: 0.95rem; line-height: 1.7;">{% if LANGUAGE_CODE == 'ar' %}SDK واحد. صفر كود متكرر. بنية تحتية هندسية متكاملة.{% else %}One unified SDK. Zero boilerplate. The definitive engineering infrastructure for autonomous intelligence.{% endif %}</p>
+        <h2 class="fw-bold mb-2 features-title">{% if LANGUAGE_CODE == 'ar' %}كل ما تحتاجه لبناء وكلاء ذكاء اصطناعي{% else %}Everything you need to ship AI Agents{% endif %}</h2>
+        <p class="text-muted mx-auto features-desc">{% if LANGUAGE_CODE == 'ar' %}SDK واحد. صفر كود متكرر. بنية تحتية هندسية متكاملة.{% else %}One unified SDK. Zero boilerplate. The definitive engineering infrastructure for autonomous intelligence.{% endif %}</p>
     </div>
     <div class="row g-4">
 
@@ -214,7 +214,7 @@ Production-ready AI Infrastructure
 
 
 <!-- Integration -->
-<section class="py-5" style="background:var(--code-bg); border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color);">
+<section class="py-5 integration-section">
     <div class="container-xl">
         <div class="row align-items-center g-5">
 
@@ -244,10 +244,10 @@ Production-ready AI Infrastructure
             <div class="col-lg-7">
                 <div class="code-panel">
                     <div class="code-panel-header">
-                        <div class="code-panel-dot" style="background:#ff5f56;"></div>
-                        <div class="code-panel-dot" style="background:#ffbd2e;"></div>
-                        <div class="code-panel-dot" style="background:#27c93f;"></div>
-                        <span style="margin-left:8px; font-family:var(--font-mono); font-size:0.72rem; color:var(--muted);">agent_demo.py</span>
+                        <div class="code-panel-dot terminal-dot-red"></div>
+                        <div class="code-panel-dot terminal-dot-yellow"></div>
+                        <div class="code-panel-dot terminal-dot-green"></div>
+                        <span class="integration-panel-filename">agent_demo.py</span>
                     </div>
 <pre><code class="language-python">import asyncio
 from phoenix.agent import Agent
@@ -266,19 +266,19 @@ print(result)</code></pre>
 </section>
 
 <!-- CTA -->
-<section class="py-5 text-center" style="position:relative; overflow:hidden;">
-    <div style="position:absolute; inset:0; background:radial-gradient(ellipse at 50% 50%, rgba(255,77,0,0.07) 0%, transparent 65%); pointer-events:none;"></div>
+<section class="py-5 text-center cta-section">
+    <div class="cta-bg-glow"></div>
     <div class="container-xl" style="position:relative;">
 
         <div class="section-eyebrow mb-3">
             <i class="bi bi-rocket-takeoff-fill"></i>&nbsp;{% if LANGUAGE_CODE == 'ar' %}ابدأ الآن{% else %}Get Started{% endif %}
         </div>
 
-        <h2 class="fw-bold mb-3" style="font-size: 2.1rem; letter-spacing: -0.5px;">
+        <h2 class="fw-bold mb-3 cta-title">
             {% if LANGUAGE_CODE == 'ar' %}ابدأ الآن{% else %}Ready to build?{% endif %}
         </h2>
 
-        <p class="text-muted mb-4 mx-auto" style="max-width: 460px; font-size: 1rem;">
+        <p class="text-muted mb-4 mx-auto cta-desc">
             {% if LANGUAGE_CODE == 'ar' %}
             كل ما تحتاجه موجود في التوثيق.
             {% else %}
