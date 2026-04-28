@@ -3,7 +3,7 @@ import os
 import sys
 
 # Add project root to path
-sys.path.append(os.getcwd())
+sys.path.insert(0, os.getcwd())
 
 from phoenix.audio.local import LocalSTT, LocalTTS
 
