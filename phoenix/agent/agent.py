@@ -35,7 +35,11 @@ class Agent:
         """Helper to register a new tool to the agent's ToolRegistry."""
         self.tools.register(tool)
 
-    async def run(self, prompt: str, session_id: str = None, max_iterations: int = 15) -> str:
+    async def run(self, prompt: str, session_id: str = None, max_iterations: int = 15, mode: str = "auto") -> str:
+        """
+        Run the agent with the given prompt.
+        mode can be "auto", "plan", or "fast_ans".
+        """
         # Auto-initialize LLM if it's our OpenAILLM and hasn't been initialized
         if hasattr(self.llm, "client") and self.llm.client is None:
             if hasattr(self.llm, "init"):
@@ -47,5 +51,28 @@ class Agent:
         # Add user prompt to memory
         await self.memory.add_interaction(session_id, "user", prompt)
         
-        # Start execution loop
-        return await self.loop.run(prompt, self.memory, session_id, max_iterations=max_iterations)
+        # Decide mode if auto
+        actual_mode = mode
+        if mode == "auto":
+            classification_prompt = (
+                f"Analyze the following user prompt and decide if it requires using tools and multi-step planning (like writing files, searching the web, or complex logic), "
+                f"or if it is a simple question that can be answered immediately.\n\n"
+                f"Prompt: {prompt}\n\n"
+                f"Respond with exactly one word: 'PLAN' or 'FAST'."
+            )
+            classification = await self.llm.generate(classification_prompt, session_id=None)
+            if "PLAN" in classification.upper():
+                actual_mode = "plan"
+            else:
+                actual_mode = "fast_ans"
+                
+        if actual_mode == "fast_ans":
+            # Fast answer mode: bypass the agent loop and just use the LLM directly with memory context
+            context = self.memory.get_context(session_id, query=prompt)
+            fast_prompt = f"Context:\n{context}\n\nUser: {prompt}\nAnswer directly:"
+            fast_answer = await self.llm.generate(fast_prompt, session_id=None)
+            await self.memory.add_interaction(session_id, "assistant", fast_answer)
+            return fast_answer
+        else:
+            # Start execution loop
+            return await self.loop.run(prompt, self.memory, session_id, max_iterations=max_iterations)
