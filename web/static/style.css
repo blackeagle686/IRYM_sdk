@@ -283,7 +283,7 @@ pre.mermaid {
     border: 2px solid rgba(255, 77, 0, 0.3);
     filter: drop-shadow(0 0 35px rgba(255, 77, 0, 0.6))
             drop-shadow(0 0 70px rgba(255, 138, 0, 0.3));
-    animation: sun-pulse 6s ease-in-out infinite, float 8s ease-in-out infinite;
+    animation: sun-pulse 6s ease-in-out infinite;
     position: relative;
     z-index: 10;
     background: radial-gradient(circle, rgba(255, 77, 0, 0.2), transparent 70%);
