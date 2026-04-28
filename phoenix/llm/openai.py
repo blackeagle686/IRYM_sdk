@@ -25,9 +25,11 @@ class OpenAILLM(BaseLLM):
         if base_url and base_url.endswith("/"):
             base_url = base_url[:-1]
 
+        import httpx
         self.client = AsyncOpenAI(
             api_key=self.api_key,
             base_url=base_url if base_url else None,
+            timeout=httpx.Timeout(120.0, connect=60.0)
         )
 
     async def generate(self, prompt: str, session_id: Optional[str] = None) -> str:
