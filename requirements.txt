@@ -14,3 +14,6 @@ sqlalchemy>=2.0.0
 django>=5.0.0
 pandas
 openpyxl
+gTTS
+SpeechRecognition
+pydub
