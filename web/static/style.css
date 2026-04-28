@@ -178,7 +178,7 @@ code:not(pre code) {
     font-size: 0.7rem;
     font-weight: 700;
     color: var(--muted);
-    background: rgba(128, 128, 128, 0.1);
+    background: var(--nav-bg);
     border: 1px solid var(--border-color);
     border-radius: 6px;
     cursor: pointer;
@@ -190,6 +190,10 @@ code:not(pre code) {
     background: var(--accent);
     color: #fff;
     border-color: var(--accent);
+}
+
+[data-bs-theme="light"] .copy-btn {
+    background: rgba(255, 77, 0, 0.05);
 }
 
 .copy-btn.copied {
