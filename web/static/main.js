@@ -70,13 +70,14 @@ document.getElementById('themeToggle').addEventListener('click', () => {
    ══════════════════════════════════════════════════════ */
 (function initNetworkCanvas() {
     const canvas = document.getElementById('networkCanvas');
-    if (!canvas) return; // only runs on the home page
+    if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const particleCount      = 140;
-    const connectionDistance = 140;
-    const mouse = { x: null, y: null, radius: 150 };
+    const particleCount = 120;
+    const connectionDistance = 150;
+    const mouse = { x: null, y: null, radius: 180 };
+    let centerX, centerY;
 
     window.addEventListener('mousemove', (e) => {
         const rect = canvas.getBoundingClientRect();
@@ -85,52 +86,72 @@ document.getElementById('themeToggle').addEventListener('click', () => {
     });
 
     window.addEventListener('mouseout', () => {
-        mouse.x = null;
-        mouse.y = null;
+        mouse.x = null; mouse.y = null;
     });
 
     window.addEventListener('resize', () => resizeCanvas());
 
     function resizeCanvas() {
-        canvas.width  = canvas.offsetWidth;
+        canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
+        centerX = canvas.width / 2;
+        centerY = canvas.height / 2;
         initParticles();
     }
 
     class Particle {
         constructor() {
-            this.x      = Math.random() * canvas.width;
-            this.y      = Math.random() * canvas.height;
-            this.size   = Math.random() * 1.5 + 0.5;
-            this.speedX = (Math.random() - 0.5) * 0.4;
-            this.speedY = (Math.random() - 0.5) * 0.4;
+            this.init();
+        }
+
+        init() {
+            // Distance from center (orbit radius)
+            const minDim = Math.min(canvas.width, canvas.height);
+            this.orbitRadius = 80 + Math.random() * (minDim / 2 - 40);
+            this.angle = Math.random() * Math.PI * 2;
+            this.orbitSpeed = (0.001 + Math.random() * 0.003) * (Math.random() > 0.5 ? 1 : -1);
+            
+            this.size = Math.random() * 2 + 0.5;
             const colors = [
                 'rgba(255, 77, 0, 0.8)',
                 'rgba(255, 138, 0, 0.7)',
                 'rgba(255, 180, 0, 0.6)'
             ];
             this.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // For mouse interaction drift
+            this.driftX = 0;
+            this.driftY = 0;
+            
+            this.updateCoords();
+        }
+
+        updateCoords() {
+            this.x = centerX + Math.cos(this.angle) * this.orbitRadius + this.driftX;
+            this.y = centerY + Math.sin(this.angle) * this.orbitRadius + this.driftY;
         }
 
         update() {
-            this.x += this.speedX;
-            this.y += this.speedY;
-
-            if (this.x > canvas.width)  this.x = 0;
-            if (this.x < 0)             this.x = canvas.width;
-            if (this.y > canvas.height) this.y = 0;
-            if (this.y < 0)             this.y = canvas.height;
+            this.angle += this.orbitSpeed;
 
             if (mouse.x != null && mouse.y != null) {
-                const dx       = mouse.x - this.x;
-                const dy       = mouse.y - this.y;
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
                 if (distance < mouse.radius) {
                     const force = (mouse.radius - distance) / mouse.radius;
-                    this.x += dx * force * 0.03;
-                    this.y += dy * force * 0.03;
+                    this.driftX -= dx * force * 0.05;
+                    this.driftY -= dy * force * 0.05;
+                } else {
+                    this.driftX *= 0.95;
+                    this.driftY *= 0.95;
                 }
+            } else {
+                this.driftX *= 0.98;
+                this.driftY *= 0.98;
             }
+
+            this.updateCoords();
         }
 
         draw() {
@@ -138,6 +159,14 @@ document.getElementById('themeToggle').addEventListener('click', () => {
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
             ctx.fill();
+            
+            // Subtle core glow
+            if (this.size > 1.5) {
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = this.color;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
         }
     }
 
@@ -150,18 +179,20 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
         for (let i = 0; i < particles.length; i++) {
             particles[i].update();
             particles[i].draw();
 
-            for (let j = i; j < particles.length; j++) {
-                const dx       = particles[i].x - particles[j].x;
-                const dy       = particles[i].y - particles[j].y;
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
                 if (distance < connectionDistance) {
-                    ctx.strokeStyle = `rgba(255, 138, 0, ${0.4 * (1 - distance / connectionDistance)})`;
-                    ctx.lineWidth   = 0.8;
+                    const opacity = 0.4 * (1 - distance / connectionDistance);
+                    ctx.strokeStyle = `rgba(255, 138, 0, ${opacity})`;
+                    ctx.lineWidth = 0.8;
                     ctx.beginPath();
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
