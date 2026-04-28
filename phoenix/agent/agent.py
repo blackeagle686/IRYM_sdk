@@ -35,7 +35,7 @@ class Agent:
         """Helper to register a new tool to the agent's ToolRegistry."""
         self.tools.register(tool)
 
-    async def run(self, prompt: str, session_id: str = None, max_iterations: int = 5) -> str:
+    async def run(self, prompt: str, session_id: str = None, max_iterations: int = 15) -> str:
         # Auto-initialize LLM if it's our OpenAILLM and hasn't been initialized
         if hasattr(self.llm, "client") and self.llm.client is None:
             if hasattr(self.llm, "init"):
