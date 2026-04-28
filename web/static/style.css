@@ -925,3 +925,9 @@ pre.mermaid {
 .docs-footer {
     border-top: 1px solid var(--border-color);
 }
+
+.language-selector {
+    font-size: 0.75rem;
+    background: var(--nav-bg);
+    color: var(--bs-body-color);
+}
