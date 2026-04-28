@@ -132,6 +132,10 @@ body {
     box-shadow: 0 6px 20px rgba(255, 77, 0, 0.4);
 }
 
+.text-accent {
+    color: var(--accent) !important;
+}
+
 /* ── Code & Pre ─────────────────────────────────────── */
 pre {
     background: var(--code-bg) !important;
