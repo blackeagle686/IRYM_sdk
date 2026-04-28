@@ -1,5 +1,9 @@
 import asyncio
 import os
+import sys
+
+# Add the project root to sys.path so we can import 'phoenix'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from phoenix.agent import Agent
 from phoenix.llm.openai import OpenAILLM
 from phoenix.memory.hybrid import HybridMemory
