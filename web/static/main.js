@@ -215,6 +215,15 @@ document.getElementById('themeToggle').addEventListener('click', () => {
     function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
+        // Dynamic center tracking (in case of layout shifts)
+        const logo = document.querySelector('.hero-logo-img');
+        if (logo) {
+            const logoRect = logo.getBoundingClientRect();
+            const canvasRect = canvas.getBoundingClientRect();
+            centerX = (logoRect.left + logoRect.width / 2) - canvasRect.left;
+            centerY = (logoRect.top + logoRect.height / 2) - canvasRect.top;
+        }
+
         // Draw Stars
         stars.forEach(s => s.draw());
 
