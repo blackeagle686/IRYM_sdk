@@ -1,6 +1,6 @@
 import asyncio
 from typing import Optional, Union, List, Dict, Any
-from phoenix.Phoenix AI import (
+from phoenix.main import (
     init_phoenix, 
     startup_phoenix, 
     get_rag_pipeline, 
