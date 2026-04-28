@@ -92,8 +92,19 @@ document.getElementById('themeToggle').addEventListener('click', () => {
     function resizeCanvas() {
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
-        centerX = canvas.width / 2;
-        centerY = canvas.height / 2;
+        
+        // Center orbits around the logo image
+        const logo = document.querySelector('.hero-logo-img');
+        if (logo) {
+            const logoRect = logo.getBoundingClientRect();
+            const canvasRect = canvas.getBoundingClientRect();
+            centerX = (logoRect.left + logoRect.width / 2) - canvasRect.left;
+            centerY = (logoRect.top + logoRect.height / 2) - canvasRect.top;
+        } else {
+            centerX = canvas.width / 2;
+            centerY = canvas.height / 2;
+        }
+        
         initCelestialBodies();
     }
 
