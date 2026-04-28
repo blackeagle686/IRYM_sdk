@@ -57,30 +57,30 @@ Quickstart
                     {% if LANGUAGE_CODE == 'ar' %}المصادر{% else %}Resources{% endif %}
                 </div>
 
-                <a class="sidebar-link {% if doc_name != 'GUIDE' %}fw-semibold{% endif %}" href="{% url 'docs' %}">
+                <a class="sidebar-link {% if not doc_name or doc_name == 'QUICKSTART' %}active{% endif %}" href="{% url 'docs' %}">
                     <i class="bi bi-book me-1"></i>
                     {% if LANGUAGE_CODE == 'ar' %}البداية السريعة{% else %}Quickstart{% endif %}
                 </a>
 
-                <a class="sidebar-link {% if doc_name == 'GUIDE' %}fw-semibold{% endif %}"
+                <a class="sidebar-link {% if doc_name == 'GUIDE' %}active{% endif %}"
                     href="{% url 'docs_named' 'GUIDE' %}">
                     <i class="bi bi-journal-code me-1"></i>
                     {% if LANGUAGE_CODE == 'ar' %}دليل المطور{% else %}Developer Guide{% endif %}
                 </a>
 
-                <a class="sidebar-link {% if doc_name == 'PIPELINES' %}fw-semibold{% endif %}"
+                <a class="sidebar-link {% if doc_name == 'PIPELINES' %}active{% endif %}"
                     href="{% url 'docs_named' 'PIPELINES' %}">
                     <i class="bi bi-diagram-3 me-1"></i>
                     {% if LANGUAGE_CODE == 'ar' %}خطوط البيانات{% else %}Data Pipelines{% endif %}
                 </a>
 
-                <a class="sidebar-link {% if doc_name == 'TRAINING' %}fw-semibold{% endif %}"
+                <a class="sidebar-link {% if doc_name == 'TRAINING' %}active{% endif %}"
                     href="{% url 'docs_named' 'TRAINING' %}">
                     <i class="bi bi-cpu me-1"></i>
                     {% if LANGUAGE_CODE == 'ar' %}تدريب النماذج{% else %}Model Training{% endif %}
                 </a>
 
-                <a class="sidebar-link {% if doc_name == 'PUBLISH' %}fw-semibold{% endif %}"
+                <a class="sidebar-link {% if doc_name == 'PUBLISH' %}active{% endif %}"
                     href="{% url 'docs_named' 'PUBLISH' %}">
                     <i class="bi bi-rocket-takeoff me-1"></i>
                     {% if LANGUAGE_CODE == 'ar' %}نشر الخدمات{% else %}Publishing{% endif %}
