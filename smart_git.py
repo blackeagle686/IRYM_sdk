@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 # Configuration
 DEFAULT_API_KEY = "ak_2yp3Xw1Ny7ky2pF7er9x93ZO9jj6G"
 BASE_URL = "https://api.longcat.chat/openai"
-INTERVAL = 10  # Seconds
+INTERVAL = 5  # Seconds
 
 load_dotenv()
 

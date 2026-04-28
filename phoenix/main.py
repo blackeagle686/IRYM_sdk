@@ -202,7 +202,7 @@ def get_llm() -> Any:
 def get_memory() -> MemoryManager:
     return container.get("memory")
 
-async def init_phoenix_full(local: bool = False, vlm: bool = False):
+async def init_phoenix_full(local: bool = False, vlm: bool = False, parallel_hooks: bool = False):
     """
     Complete initialization:
     1. init_phoenix (Registry)
@@ -212,8 +212,9 @@ async def init_phoenix_full(local: bool = False, vlm: bool = False):
     from phoenix.core.lifecycle import lifecycle
     init_phoenix(local=local, vlm=vlm)
     await startup_phoenix()
-    await lifecycle.startup()
-    print("[+] Phoenix AI SDK initialized and lifecycle hooks executed.")
+    await lifecycle.startup(parallel=parallel_hooks)
+    print(f"[+] Phoenix AI SDK initialized (parallel_hooks={parallel_hooks}).")
+
 
 
 def set_providers(llm_provider: str = None, vlm_provider: str = None) -> None:
