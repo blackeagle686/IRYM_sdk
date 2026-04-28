@@ -71,6 +71,20 @@ graph TD
         OBS -.->|"يراقب"| VDB
         OBS -.->|"يراقب"| MEMORY
     end
+    
+    subgraph الوكيل المستقل (Autonomous Agent)
+        AGENT["Agent Core & Loop"]
+        COGNITION["الإدراك (Thinker, Planner, Reflector)"]
+        EXEC["التنفيذ (Actor, ToolManager)"]
+        TOOLS_REG["الأدوات (WebSearch, CodeExecution)"]
+        HYBRID_MEM["الذاكرة الهجينة"]
+        
+        AGENT --> COGNITION
+        AGENT --> EXEC
+        AGENT --> HYBRID_MEM
+        EXEC --> TOOLS_REG
+        AGENT -.->|"يستخدم"| LLM
+    end
 ```
 
 ## 🚀 المتطلبات الرئيسية والميزات
@@ -148,6 +162,30 @@ print(response)
 ```
 > [!TIP]
 > استخدم `.set_session("user_123")` على مثيل البوت للتبديل بين المستخدمين المختلفين في بيئات الإنتاج مثل FastAPI.
+
+## 🤖 وضع الإطار (Framework Mode): الوكيل المستقل (Autonomous Agent)
+
+يدعم Phoenix AI SDK الآن إنشاء وكيل مستقل بالكامل يمكنه التفكير، والتخطيط، وتنفيذ الأدوات، والتأمل في تقدمه باستخدام سطر واحد فقط من الكود! يأتي مزودًا بذاكرة متعددة الطبقات (قصيرة المدى، طويلة المدى، الجلسة، التأمل) وسجل أدوات ديناميكي.
+
+```python
+import asyncio
+from phoenix.agent import Agent
+from phoenix.llm.openai import OpenAILLM
+from phoenix.memory.hybrid import HybridMemory
+from phoenix.tools.registry import ToolRegistry
+
+async def agent_demo():
+    # تهيئة الوكيل باستخدام المكونات الافتراضية
+    agent = Agent(
+        llm=OpenAILLM(), 
+        memory=HybridMemory(), 
+        tools=ToolRegistry.load_default()
+    )
+    
+    # تشغيل مهمة مستقلة
+    result = await agent.run("قم بتحليل آخر الأخبار حول الذكاء الاصطناعي.")
+    print(f"المخرجات النهائية للوكيل: {result}")
+```
 
 ## 📖 التشغيل السريع: RAG Pipeline
 
