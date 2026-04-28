@@ -23,7 +23,16 @@ async def main():
     # 4. Instantiate Agent
     agent = Agent(llm=llm, memory=memory, tools=tools)
     
-    print("Agent Initialized. Running task...")
+    # 5. Define and register a custom tool using the @tool decorator
+    from phoenix.tools import tool
+    
+    @tool(name="custom_math", description="Calculates the square of a given number. Input: 'number' (int).")
+    def custom_math_tool(number: int):
+        return f"The square of {number} is {number ** 2}"
+        
+    agent.register_tool(custom_math_tool)
+    
+    print("Agent Initialized. Custom tools registered. Running task...")
     
     # 5. Run the Agent with a complex multi-step task
     task_prompt = (
