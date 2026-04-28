@@ -34,6 +34,38 @@ class VLMPipeline:
             # Fallback if file access fails
             return f"vlm_cache:{hashlib.md5((prompt + image_path).encode()).hexdigest()}"
 
+    def _preprocess_image(self, image_path: str, max_size: int = 1024, quality: int = 80) -> str:
+        """
+        Resizes and optimizes an image for VLM processing to save bandwidth and fit model constraints.
+        """
+        try:
+            from PIL import Image
+            import tempfile
+            
+            img = Image.open(image_path)
+            orig_w, orig_h = img.size
+            
+            # 1. Resize if too large
+            if orig_w > max_size or orig_h > max_size:
+                if orig_w > orig_h:
+                    new_w = max_size
+                    new_h = int(max_size * orig_h / orig_w)
+                else:
+                    new_h = max_size
+                    new_w = int(max_size * orig_w / orig_h)
+                
+                img = img.resize((new_w, new_h), Image.Resampling.LANCZOS)
+                logger.info(f"Image resized for VLM: {orig_w}x{orig_h} -> {new_w}x{new_h}")
+            
+            # 2. Save as optimized JPEG to a temporary file
+            temp_file = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
+            img.convert("RGB").save(temp_file.name, "JPEG", quality=quality, optimize=True)
+            return temp_file.name
+            
+        except Exception as e:
+            logger.warning(f"Image preprocessing skipped due to error: {e}")
+            return image_path
+
     async def ask(self, prompt: str, image_path: str, use_rag: bool = False, session_id: Optional[str] = None) -> str:
         """
         Ask a question about an image, optionally using RAG for context.
@@ -61,7 +93,6 @@ class VLMPipeline:
         final_prompt = prompt
         if use_rag and self.retriever:
             logger.info(f"Retrieving RAG context for prompt: {prompt[:50]}...")
-            # Retrieve text context relevant to the prompt
             docs = await self.retriever.retrieve(prompt)
             if docs:
                 context_parts = []
@@ -72,9 +103,12 @@ class VLMPipeline:
                 logger.info(f"Injected {len(docs)} documents into VLM prompt.")
                 final_prompt = f"Context from database:\n{context_str}\n\nUser Question: {prompt}"
 
-        # 4. VLM Generation (with runtime fallback)
+        # 4. Image Preprocessing
+        processed_image = self._preprocess_image(image_path)
+
+        # 5. VLM Generation
         try:
-            response = await provider.generate_with_image(final_prompt, image_path, session_id=session_id)
+            response = await provider.generate_with_image(final_prompt, processed_image, session_id=session_id)
         except Exception as e:
             logger.error(f"VLM provider failed: {e}")
             if provider == self.primary:
@@ -85,16 +119,24 @@ class VLMPipeline:
                     
                     logger.info("Retrying with secondary provider...")
                     try:
-                        response = await self.fallback.generate_with_image(final_prompt, image_path, session_id=session_id)
+                        response = await self.fallback.generate_with_image(final_prompt, processed_image, session_id=session_id)
                     except Exception as fallback_e:
                         return f"Error: Both primary and fallback providers failed.\nPrimary: {e}\nFallback: {fallback_e}"
                 else:
                     return f"Error: Primary VLM failed and fallback was rejected. Details: {e}"
             else:
                 raise e
+        finally:
+            # Cleanup temporary image if it was created
+            if processed_image != image_path and os.path.exists(processed_image):
+                try:
+                    os.remove(processed_image)
+                except Exception:
+                    pass
 
-        # 5. Save to Cache
+        # 6. Save to Cache
         if self.cache:
             await self.cache.set(cache_key, response, ttl=3600)
 
         return response
+
