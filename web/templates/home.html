@@ -91,15 +91,115 @@ Production-ready AI Infrastructure
         <p class="text-muted mx-auto" style="max-width: 600px; font-size: 0.95rem;">{% if LANGUAGE_CODE == 'ar' %}SDK واحد. صفر كود متكرر. بنية تحتية هندسية متكاملة.{% else %}One unified SDK. Zero boilerplate. The definitive engineering infrastructure for autonomous intelligence.{% endif %}</p>
     </div>
     <div class="row g-4">
-      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-agents">
-        <div class="feature-icon"><i class="bi bi-robot"></i></div>
-        <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}الوكلاء المستقلون{% else %}Autonomous Agents{% endif %}</h5>
-        <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}ابنِ وكلاء أذكياء يمكنهم التفكير، والتخطيط، واستخدام الأدوات في سطر واحد من الكود بفضل الذاكرة الهجينة.{% else %}Build intelligent agents that can think, plan, and use tools with a single line of code powered by hybrid memory.{% endif %}</p>
-        <div class="card-example-btn">
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-lightning-charge-fill"></i></div>
+          <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}خط إنتاج RAG{% else %}RAG Pipeline{% endif %}</h5>
+          <p class="small text-muted">{% if LANGUAGE_CODE == 'ar' %}استوعب ملفات PDF و Docs و CSV و JSON وصفحات الويب. تقسيم تلقائي، بحث دلالي، واستشهادات جاهزة.{% else %}Ingest PDFs, Docs, CSV, JSON, and web pages. Auto-chunking, semantic search, and citations out of the box.{% endif %}</p>
+          <button class="card-example-btn" onclick="openCardModal('modal-rag')">
             <i class="bi bi-code-slash"></i>
             {% if LANGUAGE_CODE == 'ar' %}عرض المثال{% else %}View Example{% endif %}
+          </button>
         </div>
-      </div></div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-database-fill"></i></div>
+          <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}قاعدة بيانات متجهة{% else %}Vector DB{% endif %}</h5>
+          <p class="small text-muted">{% if LANGUAGE_CODE == 'ar' %}دعم ChromaDB أو Qdrant. نموذج تضمين واحد لعمليات CRUD كاملة. قم بتبديل المحرك عبر الإعدادات.{% else %}Persistent ChromaDB or Qdrant. Singleton embedding model with full CRUD. Swap backends via config.{% endif %}</p>
+          <button class="card-example-btn" onclick="openCardModal('modal-vectordb')">
+            <i class="bi bi-code-slash"></i>
+            {% if LANGUAGE_CODE == 'ar' %}عرض المثال{% else %}View Example{% endif %}
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-chat-dots-fill"></i></div>
+          <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}تكامل LLM{% else %}LLM Integration{% endif %}</h5>
+          <p class="small text-muted">{% if LANGUAGE_CODE == 'ar' %}عميل يتوافق مع OpenAI. يدعم النماذج المحلية والسحابية. محركات توليد قابلة للتوصيل.{% else %}OpenAI-compatible API client. Supports local and cloud models. Pluggable generation backends.{% endif %}</p>
+          <button class="card-example-btn" onclick="openCardModal('modal-llm')">
+            <i class="bi bi-code-slash"></i>
+            {% if LANGUAGE_CODE == 'ar' %}عرض المثال{% else %}View Example{% endif %}
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-mic-fill"></i></div>
+          <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}الصوت (STT / TTS){% else %}Audio (STT / TTS){% endif %}</h5>
+          <p class="small text-muted">{% if LANGUAGE_CODE == 'ar' %}تحويل الكلام إلى نص وبالعكس، محلياً أو سحابياً. ابنِ منتجات صوتية في دقائق.{% else %}Local and cloud-based Speech-to-Text and Text-to-Speech. Build voice-first AI products in minutes.{% endif %}</p>
+          <button class="card-example-btn" onclick="openCardModal('modal-audio')">
+            <i class="bi bi-code-slash"></i>
+            {% if LANGUAGE_CODE == 'ar' %}عرض المثال{% else %}View Example{% endif %}
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-eye-fill"></i></div>
+          <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}VLM - الرؤية{% else %}VLM (Vision){% endif %}</h5>
+          <p class="small text-muted">{% if LANGUAGE_CODE == 'ar' %}حلل الصور باستخدام نماذج الرؤية المحلية أو المتوافقة مع OpenAI. متعدد الوسائط من اليوم الأول.{% else %}Analyze images using local or OpenAI-compatible Vision Language Models. Multimodal from day one.{% endif %}</p>
+          <button class="card-example-btn" onclick="openCardModal('modal-vision')">
+            <i class="bi bi-code-slash"></i>
+            {% if LANGUAGE_CODE == 'ar' %}عرض المثال{% else %}View Example{% endif %}
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-speedometer2"></i></div>
+          <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}طبقة التخزين المؤقت{% else %}Caching Layer{% endif %}</h5>
+          <p class="small text-muted">{% if LANGUAGE_CODE == 'ar' %}تخزين دلالي مدعوم بـ Redis. قلل تكاليف النماذج اللغوية بشكل كبير.{% else %}Redis-backed semantic caching. Dramatically reduce LLM costs by serving identical queries from cache.{% endif %}</p>
+          <button class="card-example-btn" onclick="openCardModal('modal-cache')">
+            <i class="bi bi-code-slash"></i>
+            {% if LANGUAGE_CODE == 'ar' %}عرض المثال{% else %}View Example{% endif %}
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-arrow-repeat"></i></div>
+          <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}إدارة دورة الحياة{% else %}Lifecycle Management{% endif %}</h5>
+          <p class="small text-muted">{% if LANGUAGE_CODE == 'ar' %}سجّل مهام البدء والإغلاق غير المتزامنة. أدر اتصالات قواعد البيانات وتحميل النماذج بذكاء.{% else %}Register async startup/shutdown hooks. Cleanly manage database pools and AI model pre-loading.{% endif %}</p>
+          <button class="card-example-btn" onclick="openCardModal('modal-lifecycle')">
+            <i class="bi bi-code-slash"></i>
+            {% if LANGUAGE_CODE == 'ar' %}عرض المثال{% else %}View Example{% endif %}
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-graph-up-arrow"></i></div>
+          <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}المراقبة والوضوح{% else %}Observability{% endif %}</h5>
+          <p class="small text-muted">{% if LANGUAGE_CODE == 'ar' %}تسجيل منظم وهياكل تتبع مدمجة. راقب أداء وصحة خطوط إنتاج الذكاء الاصطناعي الخاصة بك.{% else %}Built-in structured logging and tracing skeletons. Monitor your AI service health and performance.{% endif %}</p>
+          <button class="card-example-btn" onclick="openCardModal('modal-observability')">
+            <i class="bi bi-code-slash"></i>
+            {% if LANGUAGE_CODE == 'ar' %}عرض المثال{% else %}View Example{% endif %}
+          </button>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="bi bi-robot"></i></div>
+          <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}الوكلاء المستقلون{% else %}Autonomous Agents{% endif %}</h5>
+          <p class="small text-muted">{% if LANGUAGE_CODE == 'ar' %}ابنِ وكلاء أذكياء يمكنهم التفكير، والتخطيط، واستخدام الأدوات في سطر واحد من الكود بفضل الذاكرة الهجينة.{% else %}Build intelligent agents that can think, plan, and use tools with a single line of code powered by hybrid memory.{% endif %}</p>
+          <button class="card-example-btn" onclick="openCardModal('modal-agents')">
+            <i class="bi bi-code-slash"></i>
+            {% if LANGUAGE_CODE == 'ar' %}عرض المثال{% else %}View Example{% endif %}
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -662,21 +762,19 @@ print(f"Agent Output: {result}")</code></pre>
         });
     }
 
-    // Modal Trigger (Click Only)
-    document.querySelectorAll('.feature-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const targetId = card.getAttribute('data-bs-target');
-            const modalEl = document.querySelector(targetId);
-            if (modalEl && typeof bootstrap !== 'undefined') {
-                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                modal.show();
-                
-                // Re-trigger highlighting for the code inside the modal
-                modalEl.querySelectorAll('pre code').forEach((block) => {
-                    hljs.highlightElement(block);
-                });
-            }
-        });
-    });
+    // openCardModal: shows modal + applies syntax highlighting
+    function openCardModal(modalId) {
+        const modalEl = document.getElementById(modalId);
+        if (!modalEl || typeof bootstrap === 'undefined') return;
+        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+        modal.show();
+        modalEl.addEventListener('shown.bs.modal', function onShown() {
+            modalEl.querySelectorAll('pre code').forEach(block => {
+                if (typeof hljs !== 'undefined') hljs.highlightElement(block);
+            });
+            modalEl.removeEventListener('shown.bs.modal', onShown);
+        }, { once: true });
+    }
+    window.openCardModal = openCardModal;
 </script>
 {% endblock %}
