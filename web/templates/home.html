@@ -107,19 +107,19 @@ Production-ready AI Infrastructure
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}الصوت (STT / TTS){% else %}Audio (STT / TTS){% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تحويل الكلام إلى نص وبالعكس، محلياً أو سحابياً. ابنِ منتجات صوتية في دقائق.{% else %}Local and cloud-based Speech-to-Text and Text-to-Speech. Build voice-first AI products in minutes.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-target="#modal-vision"><div class="feature-icon"><i class="bi bi-eye-fill"></i></div>
+      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-vision"><div class="feature-icon"><i class="bi bi-eye-fill"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}VLM - الرؤية{% else %}VLM (Vision){% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}حلل الصور باستخدام نماذج الرؤية المحلية أو المتوافقة مع OpenAI. متعدد الوسائط من اليوم الأول.{% else %}Analyze images using local or OpenAI-compatible Vision Language Models. Multimodal from day one.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-target="#modal-cache"><div class="feature-icon"><i class="bi bi-speedometer2"></i></div>
+      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-cache"><div class="feature-icon"><i class="bi bi-speedometer2"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}طبقة التخزين المؤقت{% else %}Caching Layer{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تخزين دلالي مدعوم بـ Redis. قلل تكاليف النماذج اللغوية بشكل كبير.{% else %}Redis-backed semantic caching. Dramatically reduce LLM costs by serving identical queries from cache.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-target="#modal-lifecycle"><div class="feature-icon"><i class="bi bi-arrow-repeat"></i></div>
+      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-lifecycle"><div class="feature-icon"><i class="bi bi-arrow-repeat"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}إدارة دورة الحياة{% else %}Lifecycle Management{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}سجّل مهام البدء والإغلاق غير المتزامنة. أدر اتصالات قواعد البيانات وتحميل النماذج بذكاء.{% else %}Register async startup/shutdown hooks. Cleanly manage database pools and AI model pre-loading.{% endif %}</p>
       </div></div>
-      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-target="#modal-observability"><div class="feature-icon"><i class="bi bi-graph-up-arrow"></i></div>
+      <div class="col-md-4"><div class="feature-card" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#modal-observability"><div class="feature-icon"><i class="bi bi-graph-up-arrow"></i></div>
         <h5 class="fw-bold mb-2">{% if LANGUAGE_CODE == 'ar' %}المراقبة والوضوح{% else %}Observability{% endif %}</h5>
         <p class="small text-muted mb-0">{% if LANGUAGE_CODE == 'ar' %}تسجيل منظم وهياكل تتبع مدمجة. راقب أداء وصحة خطوط إنتاج الذكاء الاصطناعي الخاصة بك.{% else %}Built-in structured logging and tracing skeletons. Monitor your AI service health and performance.{% endif %}</p>
       </div></div>
