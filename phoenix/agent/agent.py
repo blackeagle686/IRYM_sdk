@@ -31,7 +31,7 @@ class Agent:
             reflector=self.reflector
         )
 
-    async def run(self, prompt: str, session_id: str = None) -> str:
+    async def run(self, prompt: str, session_id: str = None, max_iterations: int = 5) -> str:
         # Auto-initialize LLM if it's our OpenAILLM and hasn't been initialized
         if hasattr(self.llm, "client") and self.llm.client is None:
             if hasattr(self.llm, "init"):
@@ -44,4 +44,4 @@ class Agent:
         await self.memory.add_interaction(session_id, "user", prompt)
         
         # Start execution loop
-        return await self.loop.run(prompt, self.memory, session_id)
+        return await self.loop.run(prompt, self.memory, session_id, max_iterations=max_iterations)
