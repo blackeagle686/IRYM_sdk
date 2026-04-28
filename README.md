@@ -209,6 +209,21 @@ agent.register_tool(custom_math_tool)
 await agent.run("What is the square of 12?")
 ```
 
+### ⚡ Execution Modes (Auto-Routing)
+
+The Agent features intelligent routing to save time and API costs on simple tasks. By default, it runs in `mode="auto"`.
+- **`auto`**: The agent analyzes the prompt. If it's a simple question, it gives a direct answer. If it requires tools or multi-step logic, it spins up the planning loop.
+- **`fast_ans`**: Forces the agent to skip planning and answer immediately using memory context.
+- **`plan`**: Forces the agent into the rigorous `Think -> Plan -> Act -> Reflect` loop.
+
+```python
+# Forces a fast answer (Bypasses tool execution)
+await agent.run("Hi, who are you?", mode="fast_ans")
+
+# Forces complex planning
+await agent.run("Search the web for the latest Python release...", mode="plan")
+```
+
 ## 📖 Quickstart: RAG Pipeline
 
 The `RAGPipeline` is the highest-level service for handling document-based knowledge.
