@@ -188,7 +188,7 @@ async def agent_demo():
     print(f"Final Agent Output: {result}")
 ```
 
-### 🧰 Custom Tools & File I/O
+### 🐦‍🔥 Custom Tools & File I/O
 
 The Agent comes pre-configured with a powerful set of default tools, including `python_repl`, `web_search`, `file_read`, `file_write`, and `file_search`. 
 
