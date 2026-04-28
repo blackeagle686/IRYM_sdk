@@ -184,7 +184,7 @@ async def agent_demo():
     )
     
     # Run an autonomous task
-    result = await agent.run("Analyze the latest news about Artificial Intelligence.")
+    result = await agent.run("Analyze the latest news about Artificial Intelligence.", mode= )
     print(f"Final Agent Output: {result}")
 ```
 
