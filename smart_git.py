@@ -34,7 +34,7 @@ def has_changes():
 def get_diff():
     # We use --cached because we run 'git add .' before this
     return run_command(["git", "diff", "--cached"])
-
+# fix the long cat model
 def generate_commit_message(diff):
     if not diff:
         return None
