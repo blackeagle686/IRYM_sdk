@@ -12,15 +12,19 @@ class TestExecutionFamily(unittest.IsolatedAsyncioTestCase):
         self.actor = Actor(self.tool_manager)
 
     async def test_tool_manager_execution(self):
+        print("\n--- Testing ToolManager ---")
         mock_tool = MagicMock()
         mock_tool.execute = AsyncMock(return_value=ToolResult(success=True, output="Tool Success"))
         self.mock_registry.get_tool.return_value = mock_tool
         
+        print("[*] Executing 'test_tool'...")
         result = await self.tool_manager.execute_tool("test_tool", {"arg": 1})
+        print(f"[v] Tool Output: {result}")
         self.assertEqual(result, "Tool Success")
         mock_tool.execute.assert_called_with(arg=1)
 
     async def test_actor_parallel_execution(self):
+        print("\n--- Testing Actor (Parallel) ---")
         mock_tool_1 = MagicMock()
         mock_tool_1.execute = AsyncMock(return_value=ToolResult(success=True, output="Output 1"))
         mock_tool_2 = MagicMock()
@@ -39,14 +43,19 @@ class TestExecutionFamily(unittest.IsolatedAsyncioTestCase):
             ]
         }
         
+        print("[*] Executing multiple tools in parallel...")
         result = await self.actor.execute(plan)
+        print(f"[v] Actor Consolidated Result:\n{result}")
         self.assertIn("Output 1", result)
         self.assertIn("Output 2", result)
         self.assertIn("---", result) # Separator check
 
     async def test_actor_finish_handling(self):
+        print("\n--- Testing Actor (Finish) ---")
         plan = {"actions": [{"tool": "finish"}]}
+        print("[*] Handling 'finish' action...")
         result = await self.actor.execute(plan)
+        print(f"[v] Result: {result}")
         self.assertEqual(result, "Task marked as finished by Planner.")
 
 if __name__ == "__main__":
