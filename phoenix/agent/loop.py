@@ -53,14 +53,15 @@ class AgentLoop:
             # Step 5: Reflect (evaluate progress)
             reflection = await self.reflector.reflect(objective, plan, action_result)
             
-            # Update memory
+            # Parallel update of memory and reflection state
             memory.reflection.add_reflection(reflection["reflection"])
-            await memory.consolidate_reflections(self.reflector.llm)
-            
-            await memory.add_interaction(
-                session_id, 
-                "system", 
-                f"Action: {plan}\nResult: {action_result}\nReflection: {reflection['reflection']}"
+            await asyncio.gather(
+                memory.consolidate_reflections(self.reflector.llm),
+                memory.add_interaction(
+                    session_id, 
+                    "system", 
+                    f"Action: {plan}\nResult: {action_result}\nReflection: {reflection['reflection']}"
+                )
             )
             
             previous_results += f"\nAction: {plan}\nResult: {action_result}\n"
