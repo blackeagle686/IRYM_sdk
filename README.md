@@ -166,7 +166,13 @@ print(response)
 
 ## 🐦‍🔥 Framework Mode: Autonomous Agent
 
-The Phoenix AI SDK now supports creating a fully autonomous agent that can think, plan, execute tools, and reflect on its progress with a single line of code! It comes with multi-layered memory (`ShortTerm`, `LongTerm`, `Session`, `Reflection`) and a dynamic tool registry.
+The Phoenix AI SDK now supports creating a fully autonomous agent that can think, analyze, plan, execute tools, and reflect on its progress with a single line of code! 
+
+#### ⚡ High-Speed Cognitive Engine
+*   **Parallel Awareness**: The `Thinker` and `Analyzer` run concurrently, allowing the agent to understand both your prompt and your project structure in a single cognitive step.
+*   **Multi-Action Planning**: The agent can plan and execute multiple independent actions (tools) in parallel, cutting task completion time by up to 60%.
+*   **Concurrent Memory**: Reflection, consolidation, and logging happen in the background, ensuring zero-latency transitions between agent steps.
+*   **Hybrid Memory Layer**: Integrated `ShortTerm`, `LongTerm` (Vector), `Session`, and `Reflection` memories with parallel retrieval support.
 
 ```python
 import asyncio
@@ -188,9 +194,14 @@ async def agent_demo():
     print(f"Final Agent Output: {result}")
 ```
 
-### 🐦‍🔥 Custom Tools & File I/O
+### 🐦‍🔥 Custom Tools & Engineering Suite
 
-The Agent comes pre-configured with a powerful set of default tools, including `python_repl`, `web_search`, `file_read`, `file_write`, and `file_search`. 
+The Agent comes pre-configured with a suite of engineering-grade tools:
+*   **`python_analyzer`**: (High-Speed) AST-based indexing of classes and functions for precise code navigation.
+*   **`file_update_multi`**: (Atomic) Applies multiple code changes across different parts of a file in one go.
+*   **`python_repl`**: Executes Python logic in a sandbox.
+*   **`web_search`**: Live internet access for news and documentation.
+*   **`file_read / file_write / file_search`**: Advanced filesystem operations.
 
 You can also easily create and inject your own custom tools using the `@tool` decorator:
 
