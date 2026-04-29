@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "🐦‍🔥 Initializing Phoenix AI Installation..."
+echo "🐦🔥 Initializing Phoenix AI Installation..."
 
 # Install Python dependencies
 echo "📦 Installing Python dependencies..."

@@ -95,7 +95,7 @@ async def interactive_cli():
     await startup_phoenix()
     agent = Agent()
     
-    print("🐦‍🔥 Phoenix Agent CLI (type 'exit' to quit)")
+    print("🐦🔥 Phoenix Agent CLI (type 'exit' to quit)")
     while True:
         user_input = input("You: ")
         if user_input.lower() in ["exit", "quit"]:
@@ -186,8 +186,8 @@ from phoenix import init_phoenix, startup_phoenix
 from phoenix.agent import Agent
 
 # Page config
-st.set_page_config(page_title="Phoenix AI Agent", page_icon="🐦‍🔥")
-st.title("🐦‍🔥 Phoenix Autonomous Agent")
+st.set_page_config(page_title="Phoenix AI Agent", page_icon="🐦🔥")
+st.title("🐦🔥 Phoenix Autonomous Agent")
 
 # Initialize agent once
 if "agent" not in st.session_state:
