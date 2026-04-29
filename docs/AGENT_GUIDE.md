@@ -145,6 +145,9 @@ async def chat_with_agent(
 For Django, you can use `asyncio.run()` or build an `AsyncJsonWebsocketConsumer` for real-time streaming (recommended).
 
 #### Simple View Example:
+> [!IMPORTANT]
+> For production-grade Django setups using the **Singleton Pattern**, thread-safe initialization, and real-time WebSockets (Channels), see the full **[Django Integration Guide](./DJANGO_INTEGRATION.md)**.
+
 ```python
 # views.py
 from django.http import JsonResponse
