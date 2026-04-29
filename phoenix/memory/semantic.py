@@ -24,26 +24,29 @@ class SemanticMemory(BaseMemory):
         )
 
     async def get(self, session_id: str, limit: int = 10) -> List[Any]:
-        """Technically semantic memory doesn't just 'get' recent items in order, 
-        but we can filter by session_id in the vector store."""
+        """Retrieve items filtered by session_id."""
         if not self.vector_db:
             return []
             
-        # This depends on vector_db supporting collection-level or metadata filtering
-        # For now, we return empty or implement a search with empty query if supported.
-        return []
+        results = await self.vector_db.get_by_metadata(where={"session_id": session_id})
+        return results[:limit]
 
     async def clear(self, session_id: str) -> None:
-        # Vector DBs usually don't support deleting by metadata easily without collection support.
-        # This might be tricky depending on the implementation in phoenix.vector.
-        pass
+        """Clear all memory entries for a specific session."""
+        if not self.vector_db:
+            return
+            
+        results = await self.vector_db.get_by_metadata(where={"session_id": session_id})
+        ids = [res["id"] for res in results if isinstance(res, dict) and "id" in res]
+        
+        if ids:
+            await self.vector_db.delete(ids=ids)
 
     async def search(self, session_id: str, query: str, limit: int = 5) -> List[Any]:
+        """Search memory with session-specific filtering."""
         if not self.vector_db:
             return []
             
-        # Search across all memory for this session
-        results = await self.vector_db.search(query, limit=limit)
-        # Filter by session_id if metadata filtering is available in the vector db
-        # For now, we return all relevant hits.
+        # Filter by session_id
+        results = await self.vector_db.search(query, limit=limit, where={"session_id": session_id})
         return results
