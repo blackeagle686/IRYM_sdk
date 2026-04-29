@@ -24,11 +24,15 @@ class AgentLoop:
         final_answer = ""
 
         for i in range(max_iterations):
-            # Step 2: Plan (select action)
+            # Step 2: Plan (select actions)
             plan = await self.planner.plan(objective, previous_results)
             
-            # Step 3: Act (execute tool)
-            if plan.get("tool") == "finish":
+            # Step 3: Act (execute tools in parallel)
+            actions = plan.get("actions", [])
+            if not actions and "tool" in plan:
+                actions = [{"tool": plan["tool"]}]
+                
+            if any(a.get("tool") == "finish" for a in actions):
                 final_answer = previous_results or "Task completed without actions."
                 break
                 
