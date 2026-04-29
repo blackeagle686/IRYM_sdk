@@ -3,6 +3,7 @@ from phoenix.tools.base import BaseTool
 from phoenix.tools.search import WebSearchTool
 from phoenix.tools.code import CodeExecutionTool
 from phoenix.tools.io import FileReadTool, FileWriteTool, FileSearchTool
+from phoenix.tools.patch import MultiBlockUpdateTool
 
 class ToolRegistry:
     def __init__(self):
@@ -27,4 +28,5 @@ class ToolRegistry:
         registry.register(FileReadTool())
         registry.register(FileWriteTool())
         registry.register(FileSearchTool())
+        registry.register(MultiBlockUpdateTool())
         return registry
