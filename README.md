@@ -8,89 +8,6 @@ A production-ready, modular backend infrastructure SDK designed for AI-powered P
 
 Whether you are building with FastAPI, Django, or a custom event-driven service, **Phoenix AI** eliminates repetitive backend setup.
 
-## 🏗️ Architecture Flow
-
-The entire SDK is built around an **Everything is a Service** and **Interface-First** philosophy. Services are centrally managed by a Dependency Injection (DI) system, ensuring complete modularity and avoiding global state collision.
-
-```mermaid
-graph TD
-    APP["Host Application (FastAPI/Django)"] -->|"Initializes"| INIT("Phoenix AI Initializer")
-    APP -->|"Requests Service via get()"| DI{"DI Container"}
-    INIT -->|"Registers Services"| DI
-    
-    subgraph Core
-        DI
-        CONF["Config & Settings"]
-        LFC["Lifecycle Hooks"]
-    end
-    
-    subgraph General Infrastructure
-        DI -->|"Provides"| CACHE["Cache Service (RedisCache)"]
-        DI -->|"Provides"| DB["DB Service (SQLAlchemyDB)"]
-        DI -->|"Provides"| QUEUE["Queue Service (CeleryQueue)"]
-    end
-
-    subgraph Data Sources
-        DS_GITHUB["GitHub Repos"]
-        DS_WEB["Web Scraping"]
-        DS_SQL["SQL Databases"]
-        DS_API["External APIs"]
-        DS_FILE["Local Files & Code"]
-    end
-    
-    subgraph AI & Data Operations
-        DI -->|"Provides"| LLM["LLM Service (OpenAI/Local)"]
-        DI -->|"Provides"| VLM["VLM Service (OpenAI/Local)"]
-        DI -->|"Provides"| AUDIO["Audio Service (STT/TTS)"]
-        DI -->|"Provides"| VDB["Vector DB (QdrantVectorDB)"]
-        DI -->|"Provides"| RAG["RAG Pipeline"]
-        DI -->|"Provides"| INSIGHT["Insight Engine"]
-        DI -->|"Provides"| MEMORY["Memory Service (History & Semantic)"]
-        
-        RAG -->|"Retrieves context from"| VDB
-        RAG -->|"Generates answer via"| LLM
-        RAG -.->|"Refines query via"| MEMORY
-        
-        LLM -->|"Enriched by"| MEMORY
-        VLM -->|"Enriched by"| MEMORY
-        MEMORY -->|"Stores/Retrieves semantic facts"| VDB
-        
-        INSIGHT -->|"Retrieves"| VDB
-        INSIGHT -->|"Generates"| LLM
-        INSIGHT -.->|"Caches"| CACHE
-        
-        DS_GITHUB --> RAG
-        DS_WEB --> RAG
-        DS_SQL --> RAG
-        DS_API --> RAG
-        DS_FILE --> RAG
-    end
-    
-    subgraph Observability
-        OBS["Logger & Tracer"] -.->|"Monitors"| CACHE
-        OBS -.->|"Monitors"| DB
-        OBS -.->|"Monitors"| LLM
-        OBS -.->|"Monitors"| VLM
-        OBS -.->|"Monitors"| AUDIO
-        OBS -.->|"Monitors"| VDB
-        OBS -.->|"Monitors"| MEMORY
-    end
-    
-    subgraph Autonomous Agent
-        AGENT["Agent Core & Loop"]
-        COGNITION["Cognition (Thinker, Analyzer, Planner, Reflector)"]
-        EXEC["Execution (Actor, ToolManager)"]
-        TOOLS_REG["Tools (PythonAnalyzer, MultiBlockUpdate, etc.)"]
-        HYBRID_MEM["Hybrid Memory (Parallel Retrieval)"]
-        
-        AGENT --> COGNITION
-        AGENT --> EXEC
-        AGENT --> HYBRID_MEM
-        EXEC --> TOOLS_REG
-        AGENT -.->|"Uses"| LLM
-    end
-```
-
 ## 🐦‍🔥 Key Requirements & Core Features
 
 1. **Dependency Injection**: Central standard registry. No manual instantiation inside business logic.
@@ -125,10 +42,10 @@ make install
 
 ### 3. Pip Installation (Official)
 ```bash
-pip install phoenix-agent-ai
+pip install phx-ashborn
 
 # Or with full local model support
-pip install "phoenix-agent-ai[full]"
+pip install "phx-ashborn[full]"
 ```
 3. **Configure Environment Variables**:
    Copy the provided template and add your keys:
