@@ -5,7 +5,7 @@ import os
 import shutil
 from unittest.mock import MagicMock, AsyncMock
 from phoenix.agent import Agent
-from phoenix.llm.base import ToolResult
+from phoenix.tools.base import ToolResult
 from phoenix.memory.hybrid import HybridMemory
 
 class FullAgentWorkflowTest(unittest.IsolatedAsyncioTestCase):
