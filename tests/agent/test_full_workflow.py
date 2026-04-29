@@ -102,7 +102,7 @@ class FullAgentWorkflowTest(unittest.IsolatedAsyncioTestCase):
             if "Planner" in prompt:
                 # 1. Check if we've already written the file by looking at the interaction history
                 # We check for our specific success message from file_write
-                history = await self.memory.short_term.get_context()
+                history = self.memory.short_term.get_context()
                 if "Successfully wrote to" not in history:
                     return planner_resp_1
                 
