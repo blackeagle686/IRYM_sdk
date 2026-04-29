@@ -1,3 +1,4 @@
+from typing import Optional
 from phoenix.memory.short_term import ShortTermMemory
 from phoenix.memory.long_term import LongTermMemory
 from phoenix.memory.session import SessionMemory
