@@ -87,6 +87,8 @@ async def chat(
             "session_id": session_id or "new_session"
         }
         
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
