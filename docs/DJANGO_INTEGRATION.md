@@ -195,7 +195,7 @@ class AiCoreConfig(AppConfig):
     def ready(self):
         # Importing here triggers the singleton initialization
         from .services import phoenix_service
-        print("🐦🔥 Phoenix Agent Service Pre-loaded.")
+        print("🐦‍🔥 Phoenix Agent Service Pre-loaded.")
 ```
 
 ---
