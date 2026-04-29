@@ -34,6 +34,9 @@ class PhoenixApiTest(unittest.TestCase):
         # /chat uses Form data
         response = self.client.post("/chat", data=data)
         
+        if response.status_code == 500:
+            print(f"\n[!] 500 Error Detail: {response.json().get('detail')}")
+            
         self.assertEqual(response.status_code, 200)
         json_data = response.json()
         self.assertEqual(json_data["status"], "success")
