@@ -1,4 +1,4 @@
-# 🐦‍🔥 Phoenix AI (Advanced AI Infrastructure SDK)
+# 🐦🔥 Phoenix AI (Advanced AI Infrastructure SDK)
 
 <p align="center">
   <img src="./docs/statics/images/phx-light-circle.png" alt="Phoenix AI Logo" width="500">
@@ -91,7 +91,7 @@ graph TD
     end
 ```
 
-## 🐦‍🔥 Key Requirements & Core Features
+## 🐦🔥 Key Requirements & Core Features
 
 1. **Dependency Injection**: Central standard registry. No manual instantiation inside business logic.
 2. **Interface First**: Every module complies with an asynchronous base contract (`BaseCache`, `BaseLLM`, `BaseVectorDB`, etc.).
@@ -142,7 +142,7 @@ pip install ".[full]"
   - Ubuntu: `sudo apt install redis-server`
   - macOS: `brew install redis`
 
-## 🐦‍🔥 Framework Mode: High-Level ChatBot
+## 🐦🔥 Framework Mode: High-Level ChatBot
 
 The Phoenix AI SDK now includes a high-level **Framework Layer** that allows you to build complex AI agents with Vision, Speech, RAG, and Memory in just **one line of code**.
 
@@ -167,7 +167,7 @@ print(response)
 > [!TIP]
 > Use `.set_session("user_123")` on the bot instance to switch between different users in production environments like FastAPI.
 
-## 🐦‍🔥 Framework Mode: Autonomous Agent
+## 🐦🔥 Framework Mode: Autonomous Agent
 
 The Phoenix AI SDK now supports creating a fully autonomous agent that can think, analyze, plan, execute tools, and reflect on its progress with a single line of code! 
 
@@ -205,7 +205,7 @@ async def agent_demo():
     print(f"Agent Engineering Report: {result}")
 ```
 
-### 🐦‍🔥 Custom Tools & Engineering Suite
+### 🐦🔥 Custom Tools & Engineering Suite
 
 The Agent comes pre-configured with a suite of engineering-grade tools:
 *   **`python_analyzer`**: (High-Speed) AST-based indexing of classes and functions for precise code navigation.
@@ -273,7 +273,7 @@ async def rag_demo():
     print(f"AI Answer: {answer}")
 ```
 
-### 🐦‍🔥 Source Attribution
+### 🐦🔥 Source Attribution
 The SDK now automatically instructs the LLM to cite its sources. When you query the RAG pipeline, the response will often include markers like `[Source: cloud.pdf]` or `[Source: https://example.com]`.
 
 ## ⚠️ Local Model Hardware Requirements
@@ -285,7 +285,7 @@ If you plan to use local inference (Ollama or Transformers), please ensure your 
 > [!WARNING]
 > High-resource models may cause system instability on low-RAM or CPU-only devices. The SDK defaults to a safety-first approach and will prompt for confirmation before starting local providers.
 
-## 🐦‍🔥 Dynamic Fallbacks & Native PyTorch
+## 🐦🔥 Dynamic Fallbacks & Native PyTorch
 
 phoenix includes a robust "fail-loud and recover gracefully" orchestration architecture for AI providers:
 
@@ -302,7 +302,7 @@ To prevent `CUDA Out of Memory` (OOM) errors on smaller GPUs (like Colab T4s), t
 ### 4. Resilient RAG PDFs
 The `RAGPipeline.ingest()` method supports PDFs robustly by sequentially testing for parsing libraries: `pypdf`, `pymupdf` (`fitz`), `pdfplumber`, and `PyPDF2`. Simply install whichever you prefer (`pip install pymupdf` is recommended for speed) and it works flawlessly!
 
-## 🐦‍🔥 Advanced Usage: Insight Engine
+## 🐦🔥 Advanced Usage: Insight Engine
 
 The `InsightEngine` performs full context retrieval, query rewriting, and LLM generation efficiently.
 
