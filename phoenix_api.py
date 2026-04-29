@@ -62,6 +62,9 @@ async def chat(
                 shutil.copyfileobj(audio.file, buffer)
 
         # Set session if provided
+        if bot is None:
+            raise HTTPException(status_code=503, detail="Phoenix AI Bot not initialized. Check your API keys and environment.")
+
         if session_id:
             bot.set_session(session_id)
             
