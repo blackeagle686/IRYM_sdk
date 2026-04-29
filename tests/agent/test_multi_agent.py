@@ -1,12 +1,12 @@
 import unittest
 import asyncio
 import os
-from phoenix import get_llm, init_phoenix
+from phoenix.llm import OpenAILLM
 from phoenix.agent import Agent
 
 class MultiAgentCollaborationTest(unittest.IsolatedAsyncioTestCase):
     """
-    Tests the interaction between multiple Agent instances using real LLM services.
+    Tests the interaction between multiple Agent instances using OpenAI LLM.
     Simulates a 'Manager' and 'Worker' agent collaboration.
     """
     
@@ -16,11 +16,11 @@ class MultiAgentCollaborationTest(unittest.IsolatedAsyncioTestCase):
     
     async def test_multi_agent_collaboration(self):
         print("\n" + "="*60)
-        print("PHOENIX AI: REAL MULTI-AGENT COLLABORATION TEST")
+        print("PHOENIX AI: OPENAI MULTI-AGENT COLLABORATION TEST")
         print("="*60)
 
-        # 1. Setup two independent agents using the real LLM service
-        llm = get_llm()
+        # 1. Setup two independent agents using OpenAI LLM
+        llm = OpenAILLM()
         
         # We create two distinct agents. They share the LLM service but have 
         # isolated memory, session state, and cognitive context.
