@@ -174,6 +174,111 @@ def agent_view(request):
     return JsonResponse({"reply": response})
 ```
 
+### 🎨 GUI Integration (Desktop & Web)
+
+#### **A. Streamlit (Modern Web GUI)**
+Streamlit is the fastest way to build a web interface for your agent.
+
+```python
+import streamlit as st
+import asyncio
+from phoenix import init_phoenix, startup_phoenix
+from phoenix.agent import Agent
+
+# Page config
+st.set_page_config(page_title="Phoenix AI Agent", page_icon="🐦‍🔥")
+st.title("🐦‍🔥 Phoenix Autonomous Agent")
+
+# Initialize agent once
+if "agent" not in st.session_state:
+    with st.spinner("Initializing Phoenix Services..."):
+        init_phoenix()
+        # Use a bridge to run async startup in streamlit
+        loop = asyncio.new_event_loop()
+        loop.run_until_complete(startup_phoenix())
+        st.session_state.agent = Agent()
+
+# Chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display chat
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+# User input
+if prompt := st.chat_input("How can I help you today?"):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            loop = asyncio.new_event_loop()
+            response = loop.run_until_complete(st.session_state.agent.run(prompt))
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})
+```
+
+#### **B. Tkinter (Standard Desktop GUI)**
+For a lightweight desktop application.
+
+```python
+import tkinter as tk
+from tkinter import scrolledtext
+import asyncio
+import threading
+from phoenix import init_phoenix, startup_phoenix
+from phoenix.agent import Agent
+
+class PhoenixApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Phoenix AI Agent")
+        
+        # UI Elements
+        self.chat_area = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=50, height=20)
+        self.chat_area.pack(padx=10, pady=10)
+        
+        self.entry = tk.Entry(root, width=40)
+        self.entry.pack(side=tk.LEFT, padx=10, pady=10)
+        
+        self.send_btn = tk.Button(root, text="Send", command=self.send_message)
+        self.send_btn.pack(side=tk.RIGHT, padx=10, pady=10)
+
+        # Background Initialization
+        threading.Thread(target=self.init_agent, daemon=True).start()
+
+    def init_agent(self):
+        asyncio.run(self._async_init())
+        self.agent = Agent()
+        self.root.after(0, lambda: self.chat_area.insert(tk.END, "System: Phoenix AI Ready.\n\n"))
+
+    async def _async_init(self):
+        init_phoenix()
+        await startup_phoenix()
+
+    def send_message(self):
+        text = self.entry.get()
+        if not text: return
+        
+        self.chat_area.insert(tk.END, f"You: {text}\n")
+        self.entry.delete(0, tk.END)
+        
+        # Run agent in a separate thread to keep UI responsive
+        threading.Thread(target=self.run_agent, args=(text,), daemon=True).start()
+
+    def run_agent(self, prompt):
+        response = asyncio.run(self.agent.run(prompt))
+        self.root.after(0, lambda: self.chat_area.insert(tk.END, f"Phoenix: {response}\n\n"))
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = PhoenixApp(root)
+    root.mainloop()
+```
+
 ---
 
 ## 🧠 Advanced: Hybrid Memory
