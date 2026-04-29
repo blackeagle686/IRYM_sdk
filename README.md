@@ -123,18 +123,23 @@ make install-full
 make install
 ```
 
-### 3. Local Pip Installation
+### 3. Pip Installation (Official)
 ```bash
-pip install .
-# Or with extras
-pip install ".[full]"
+pip install phoenix-agent-ai
+
+# Or with full local model support
+pip install "phoenix-agent-ai[full]"
 ```
 3. **Configure Environment Variables**:
+   Copy the provided template and add your keys:
+   ```bash
+   cp .env.example .env
+   ```
+   Edit `.env` with your settings:
    ```env
    OPENAI_API_KEY="your_key"
-   VECTOR_DB_TYPE="chroma"             # "chroma" or "qdrant"
-   CHROMA_PERSIST_DIR="./chroma_db"
-   REDIS_URL="redis://localhost:6379/0" # Required for persistent Memory/Cache
+   REDIS_URL="redis://localhost:6379/0" 
+   # See .env.example for more advanced options
    ```
 
 ### 🛠️ System Dependencies
