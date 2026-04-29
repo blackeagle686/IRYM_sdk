@@ -1,10 +1,10 @@
-# 🐦‍🔥 Phoenix AI: Autonomous Agent Framework Guide
+# 🐦🔥 Phoenix AI: Autonomous Agent Framework Guide
 
 The Phoenix AI Agent Framework is a high-performance, modular system designed for building autonomous agents that can think, plan, and execute complex tasks. It moves beyond simple chat interfaces to create agents capable of engineering, research, and multi-step reasoning.
 
 ---
 
-## 🐦‍🔥 Cognitive Architecture
+## 🐦🔥 Cognitive Architecture
 
 The Phoenix Agent operates on a "Cognitive Loop" inspired by human problem-solving patterns. Each step of the loop is handled by a specialized module:
 
@@ -16,7 +16,7 @@ The Phoenix Agent operates on a "Cognitive Loop" inspired by human problem-solvi
 
 ---
 
-## 🐦‍🔥 Getting Started
+## 🐦🔥 Getting Started
 
 ### 1. Basic Initialization
 
@@ -95,7 +95,7 @@ async def interactive_cli():
     await startup_phoenix()
     agent = Agent()
     
-    print("🐦‍🔥 Phoenix Agent CLI (type 'exit' to quit)")
+    print("🐦🔥 Phoenix Agent CLI (type 'exit' to quit)")
     while True:
         user_input = input("You: ")
         if user_input.lower() in ["exit", "quit"]:
@@ -179,6 +179,9 @@ def agent_view(request):
 
 ### 🎨 GUI Integration (Desktop & Web)
 
+> [!TIP]
+> For a more detailed guide on professional GUI patterns (PyQt6, Threading, and advanced Streamlit), check out the **[GUI Integration Guide](./GUI_INTEGRATION.md)**.
+
 #### **A. Streamlit (Modern Web GUI)**
 Streamlit is the fastest way to build a web interface for your agent.
 
@@ -189,8 +192,8 @@ from phoenix import init_phoenix, startup_phoenix
 from phoenix.agent import Agent
 
 # Page config
-st.set_page_config(page_title="Phoenix AI Agent", page_icon="🐦‍🔥")
-st.title("🐦‍🔥 Phoenix Autonomous Agent")
+st.set_page_config(page_title="Phoenix AI Agent", page_icon="🐦🔥")
+st.title("🐦🔥 Phoenix Autonomous Agent")
 
 # Initialize agent once
 if "agent" not in st.session_state:
