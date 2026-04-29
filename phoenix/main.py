@@ -37,45 +37,34 @@ def init_phoenix(local: bool = False, vlm: bool = False):
     container.register("cache", RedisCache())
     
     # 2. Register LLM Providers
-    container.register("llm_openai", OpenAILLM())
-    container.register("llm_local", LocalLLM())
+    llm_openai = OpenAILLM()
+    llm_local = LocalLLM()
+    container.register("llm_openai", llm_openai)
+    container.register("llm_local", llm_local)
     
-    # Compatibility mapping for generic 'llm'
-    # Prefer OpenAI when API key, base URL and model are provided; otherwise use local
-    try:
-        llm_openai = container.get("llm_openai")
-        llm_local = container.get("llm_local")
-        if llm_openai.is_available():
-            container.register("llm", llm_openai)
-        elif llm_local.is_available():
-            container.register("llm", llm_local)
-        else:
-            # Fallback to whatever was registered first
-            container.register("llm", container.get("llm_local"))
-    except Exception:
-        container.register("llm", container.get("llm_local"))
+    # 2b. Generic 'llm' selection
+    if local:
+        container.register("llm", llm_local)
+    else:
+        # If not local, we MUST use OpenAI (or its mock/error state) 
+        # to avoid crashing on unloaded local models
+        container.register("llm", llm_openai)
 
     # 3. Register Embeddings
     embeddings = SentenceTransformerEmbeddings()
     container.register("embeddings", embeddings)
 
     # 4. Register VLM Providers
-    container.register("vlm_openai", OpenAIVLM())
-    container.register("vlm_local", LocalVLM())
+    vlm_openai = OpenAIVLM()
+    vlm_local = LocalVLM()
+    container.register("vlm_openai", vlm_openai)
+    container.register("vlm_local", vlm_local)
     
-    # Compatibility mapping for generic 'vlm'
-    # Prefer OpenAI VLM when API key/base URL/model are provided; otherwise use local
-    try:
-        vlm_openai = container.get("vlm_openai")
-        vlm_local = container.get("vlm_local")
-        if vlm_openai.is_available():
-            container.register("vlm", vlm_openai)
-        elif vlm_local.is_available():
-            container.register("vlm", vlm_local)
-        else:
-            container.register("vlm", container.get("vlm_local"))
-    except Exception:
-        container.register("vlm", container.get("vlm_local"))
+    # 4b. Generic 'vlm' selection
+    if vlm:
+        container.register("vlm", vlm_local)
+    else:
+        container.register("vlm", vlm_openai)
     
     # 5. Register Vector DB based on config
     if config.VECTOR_DB_TYPE == "chroma":
