@@ -29,27 +29,42 @@ class HybridMemory:
         await self.reflection.consolidate(llm)
 
     async def get_full_context(self, session_id: str, query: str = "") -> str:
-        """Assembles context from all memory layers."""
-        context_parts = []
+        """Assembles context from all memory layers in parallel for speed."""
+        import asyncio
+        
+        # Define async tasks for parallel execution
+        tasks = []
         
         # 1. Reflections (Lessons Learned)
-        reflections = self.reflection.get_reflections()
-        if reflections:
-            context_parts.append(reflections)
+        tasks.append(asyncio.to_thread(self.reflection.get_reflections))
             
         # 2. Session Variables
-        session_vars = self.session.get_all()
-        if session_vars:
-            context_parts.append(f"Session Variables:\n{session_vars}")
+        tasks.append(asyncio.to_thread(self.session.get_all))
             
         # 3. Long Term Memory (if query provided)
         if query:
-            ltm_results = await self.long_term.search(session_id, query)
-            if ltm_results:
-                context_parts.append(f"Relevant Past Knowledge:\n{ltm_results}")
+            tasks.append(self.long_term.search(session_id, query))
+        else:
+            tasks.append(asyncio.sleep(0, result="")) # Dummy task
                 
         # 4. Short Term Memory
-        stm_context = self.short_term.get_context()
+        tasks.append(asyncio.to_thread(self.short_term.get_context))
+        
+        # Run all retrieval tasks concurrently
+        results = await asyncio.gather(*tasks)
+        
+        reflections = results[0]
+        session_vars = results[1]
+        ltm_results = results[2]
+        stm_context = results[3]
+        
+        context_parts = []
+        if reflections:
+            context_parts.append(reflections)
+        if session_vars:
+            context_parts.append(f"Session Variables:\n{session_vars}")
+        if ltm_results:
+            context_parts.append(f"Relevant Past Knowledge:\n{ltm_results}")
         if stm_context:
             context_parts.append(f"Recent Conversation:\n{stm_context}")
             
