@@ -78,10 +78,10 @@ graph TD
     
     subgraph Autonomous Agent
         AGENT["Agent Core & Loop"]
-        COGNITION["Cognition (Thinker, Planner, Reflector)"]
+        COGNITION["Cognition (Thinker, Analyzer, Planner, Reflector)"]
         EXEC["Execution (Actor, ToolManager)"]
-        TOOLS_REG["Tools (WebSearch, CodeExecution)"]
-        HYBRID_MEM["Hybrid Memory"]
+        TOOLS_REG["Tools (PythonAnalyzer, MultiBlockUpdate, etc.)"]
+        HYBRID_MEM["Hybrid Memory (Parallel Retrieval)"]
         
         AGENT --> COGNITION
         AGENT --> EXEC
