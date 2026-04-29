@@ -6,14 +6,13 @@ from openai import OpenAI
 from dotenv import load_dotenv
 
 # Configuration
-DEFAULT_API_KEY = "ak_2yp3Xw1Ny7ky2pF7er9x93ZO9jj6G"
-BASE_URL = "https://api.longcat.chat/openai"
+load_dotenv()
+API_KEY = os.getenv("OPENAI_API_KEY", "")
+BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+MODEL = os.getenv("OPENAI_LLM_MODEL", "gpt-4o")
 INTERVAL = 5  # Seconds
 
-load_dotenv()
-
-api_key = os.getenv("LONGCAT_API_KEY", DEFAULT_API_KEY)
-client = OpenAI(api_key=api_key, base_url=BASE_URL, timeout=20.0)
+client = OpenAI(api_key=API_KEY, base_url=BASE_URL, timeout=20.0)
 
 def run_command(command):
     """Runs a shell command and returns the output."""
@@ -52,7 +51,7 @@ def generate_commit_message(diff):
     try:
         # Optimized for speed: Short system prompt, truncated diff, low max_tokens, temperature 0
         response = client.chat.completions.create(
-            model="LongCat-Flash-Chat",
+            model=MODEL,
             messages=[
                 {"role": "system", "content": "Write a concise Git commit message. 1st line < 50 chars. Use bullets if needed."},
                 {"role": "user", "content": f"Diff:\n{diff[:3000]}"}
