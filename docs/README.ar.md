@@ -165,10 +165,12 @@ print(response)
 
 ## 🤖 وضع الإطار (Framework Mode): الوكيل المستقل (Autonomous Agent)
 
-يدعم Phoenix AI SDK الآن إنشاء وكيل مستقل بالكامل يمكنه التفكير، والتخطيط، وتنفيذ الأدوات، والتأمل في تقدمه باستخدام سطر واحد فقط من الكود! يأتي مزودًا بذاكرة متعددة الطبقات (قصيرة المدى، طويلة المدى، الجلسة، التأمل) وسجل أدوات ديناميكي.
+يدعم Phoenix AI SDK الآن إنشاء وكيل مستقل بالكامل يمكنه التفكير، والتخطيط، وتنفيذ الأدوات، والتأمل في تقدمه باستخدام سطر واحد فقط من الكود! 
 
-```python
-import asyncio
+> [!TIP]
+> للحصول على تعمق في الهندسة المعمارية وأنماط التكامل (CLI, FastAPI, Django)، راجع **[دليل إطار عمل الوكيل](./docs/AGENT_GUIDE.md)** (متوفر باللغة الإنجليزية حالياً).
+
+#### ⚡ محرك إدراكي عالي السرعة
 from phoenix.agent import Agent
 from phoenix.llm.openai import OpenAILLM
 from phoenix.memory.hybrid import HybridMemory
