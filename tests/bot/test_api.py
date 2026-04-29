@@ -12,11 +12,13 @@ class PhoenixApiTest(unittest.TestCase):
     
     @classmethod
     def setUpClass(cls):
-        cls.client = TestClient(app)
-        # Note: app.on_event("startup") will be triggered by TestClient context manager
-        # or we can manually trigger it if needed.
-        # TestClient(app) automatically triggers startup/shutdown when used as a context manager
-        # or upon the first request.
+        # We use a context manager to ensure startup/shutdown events (like bot init) run
+        cls.client_ctx = TestClient(app)
+        cls.client = cls.client_ctx.__enter__()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.client_ctx.__exit__(None, None, None)
 
     def test_health_endpoint(self):
         """Test the /health heartbeat endpoint."""
