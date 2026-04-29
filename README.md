@@ -1,7 +1,7 @@
 # 🐦‍🔥 Phoenix AI (Advanced AI Infrastructure SDK)
 
 <p align="center">
-  <img src="./docs/statics/images/phx-light-circle.png" alt="Phoenix AI Logo" width="500">
+  <img src="https://raw.githubusercontent.com/blackeagle686/phoenix-ai/master/docs/statics/images/phx-light-circle.png" alt="Phoenix AI Logo" width="500">
 </p>
 
 A production-ready, modular backend infrastructure SDK designed for AI-powered Python backend services. 
@@ -94,7 +94,7 @@ print(response)
 The Phoenix AI SDK now supports creating a fully autonomous agent that can think, analyze, plan, execute tools, and reflect on its progress with a single line of code! 
 
 > [!TIP]
-> For a deep dive into the architecture and integration patterns, check out the **[Agent Framework Guide](./docs/AGENT_GUIDE.md)**, **[Django Integration Guide](./docs/DJANGO_INTEGRATION.md)**, **[GUI Integration Guide](./docs/GUI_INTEGRATION.md)**, or the **[API Integration Guide](./docs/API_INTEGRATION.md)**.
+> For a deep dive into the architecture and integration patterns, check out the **[Agent Framework Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/AGENT_GUIDE.md)**, **[Django Integration Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/DJANGO_INTEGRATION.md)**, **[GUI Integration Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/GUI_INTEGRATION.md)**, or the **[API Integration Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/API_INTEGRATION.md)**.
 
 #### ⚡ High-Speed Cognitive Engine
 *   **Parallel Awareness**: The `Thinker` and `Analyzer` run concurrently, allowing the agent to understand both your prompt and your project structure in a single cognitive step.
