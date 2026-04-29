@@ -13,13 +13,26 @@ class LongTermMemory:
         else:
             self._mock_storage.append(content)
 
+    async def clear(self, session_id: str):
+        if self.semantic:
+            await self.semantic.clear(session_id)
+        else:
+            self._mock_storage.clear()
+
     async def search(self, session_id: str, query: str, limit: int = 3) -> str:
         if self.semantic:
             results = await self.semantic.search(session_id, query, limit=limit)
             if not results:
                 return ""
-            return "\n".join([str(r.get("text", r)) if isinstance(r, dict) else str(r) for r in results])
+            # Handle results being a list of dicts from Chroma
+            formatted = []
+            for r in results:
+                if isinstance(r, dict):
+                    formatted.append(r.get("content", r.get("text", str(r))))
+                else:
+                    formatted.append(str(r))
+            return "\n".join(formatted)
         else:
             # Very basic mock search
-            results = [s for s in self._mock_storage if any(word in s for word in query.split())][:limit]
+            results = [s for s in self._mock_storage if any(word in s.lower() for word in query.lower().split())][:limit]
             return "\n".join(results)

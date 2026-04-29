@@ -39,6 +39,8 @@ class AgentLoop:
             
             # Update memory
             memory.reflection.add_reflection(reflection["reflection"])
+            await memory.consolidate_reflections(self.reflector.llm)
+            
             await memory.add_interaction(
                 session_id, 
                 "system", 
