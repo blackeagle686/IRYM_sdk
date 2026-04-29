@@ -14,23 +14,32 @@ class TestIOTools(unittest.IsolatedAsyncioTestCase):
             os.remove(self.test_file)
 
     async def test_file_read(self):
+        print("\n--- Testing FileReadTool ---")
         tool = FileReadTool()
+        print(f"[*] Reading {self.test_file}...")
         result = await tool.execute(file_path=self.test_file)
         self.assertTrue(result.success)
+        print(f"[v] Content Read: {result.output}")
         self.assertEqual(result.output, self.content)
 
     async def test_file_write(self):
+        print("\n--- Testing FileWriteTool ---")
         tool = FileWriteTool()
         new_file = "new_io_test.txt"
+        print(f"[*] Writing to {new_file}...")
         result = await tool.execute(file_path=new_file, content="new content")
         self.assertTrue(result.success)
         self.assertTrue(os.path.exists(new_file))
+        print("[v] File written and verified.")
         os.remove(new_file)
 
     async def test_file_search(self):
+        print("\n--- Testing FileSearchTool ---")
         tool = FileSearchTool()
+        print(f"[*] Searching for 'phoenix' in {self.test_file}...")
         result = await tool.execute(path=self.test_file, pattern="phoenix")
         self.assertTrue(result.success)
+        print(f"[v] Search Result: {result.output}")
         self.assertIn("io_test.txt:1: hello phoenix", result.output)
 
 if __name__ == "__main__":
