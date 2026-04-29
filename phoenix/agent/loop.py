@@ -45,7 +45,7 @@ class AgentLoop:
                 
             action_result = await self.actor.execute(plan)
             
-            # Step 4: Act (execute tools in parallel)
+            # Step 5: Reflect (evaluate progress)
             reflection = await self.reflector.reflect(objective, plan, action_result)
             
             # Update memory
