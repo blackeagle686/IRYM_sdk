@@ -16,7 +16,7 @@ The Phoenix Agent operates on a "Cognitive Loop" inspired by human problem-solvi
 
 ---
 
-## 🚀 Getting Started
+## 🐦‍🔥 Getting Started
 
 ### 1. Basic Initialization
 
