@@ -39,7 +39,14 @@ class MemoryManager:
             
         context = "\nRelevant past information:\n"
         for res in results:
-            # Assuming res has a 'text' or we cast to string if it's the chunk directly
-            content = res.get("text", str(res)) if isinstance(res, dict) else str(res)
+            if isinstance(res, dict):
+                content = res.get("content", res.get("text", str(res)))
+            else:
+                content = str(res)
             context += f"- {content}\n"
         return context
+
+    async def clear_session(self, session_id: str):
+        """Clears both short-term and semantic memory for a session."""
+        await self.history.clear(session_id)
+        await self.semantic.clear(session_id)
