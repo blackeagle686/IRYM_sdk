@@ -2,7 +2,7 @@ import unittest
 import asyncio
 import os
 import shutil
-from phoenix import init_phoenix
+from phoenix import init_phoenix, startup_phoenix
 from phoenix.llm import OpenAILLM
 from phoenix.agent import Agent
 from phoenix.memory.hybrid import HybridMemory
@@ -15,7 +15,8 @@ class FullAgentWorkflowTest(unittest.IsolatedAsyncioTestCase):
     
     async def asyncSetUp(self):
         # Initialize the Phoenix framework
-        await init_phoenix()
+        init_phoenix()
+        await startup_phoenix()
         
         # Create a test directory for file tools
         self.test_dir = "./test_agent_workspace"
