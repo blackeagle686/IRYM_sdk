@@ -15,17 +15,22 @@ class AgentLoop:
         self.analyzer = analyzer
 
     async def run(self, prompt: str, memory, session_id: str, max_iterations: int = 5) -> str:
-        # Step 1: Think (understand objective)
-        objective = await self.thinker.analyze(prompt, memory, session_id)
+        # Step 1 & 2: Parallel Awareness (Think + Analyze)
+        think_task = self.thinker.analyze(prompt, memory, session_id)
+        analyze_task = self.analyzer.analyze_workspace(prompt)
         
-        # Store in session state
+        # Concurrent execution of the initial cognitive steps
+        objective, analysis = await asyncio.gather(think_task, analyze_task)
+        
+        # Store results in session state
         memory.session.set("current_objective", objective)
-        await memory.add_interaction(session_id, "system", f"Identified Objective: {objective}")
-
-        # Step 2: Analyze (understand project structure)
-        analysis = await self.analyzer.analyze_workspace(prompt)
         memory.session.set("project_analysis", analysis)
-        await memory.add_interaction(session_id, "system", f"Project Analysis Complete: Identified tech stack as {analysis['tech_stack']}")
+        
+        # Concurrent system logging
+        await asyncio.gather(
+            memory.add_interaction(session_id, "system", f"Identified Objective: {objective}"),
+            memory.add_interaction(session_id, "system", f"Project Analysis: {analysis['tech_stack']}")
+        )
 
         previous_results = ""
         final_answer = ""
