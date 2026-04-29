@@ -103,11 +103,14 @@ graph TD
 Choose the method that fits your workflow best.
 
 ### 1. Automated Installation (Recommended)
-Get everything ready in one command:
+Get everything ready in one command (handles Python deps and Redis setup):
 ```bash
-git clone https://github.com/blackeagle686/phoenix-ai.git
-cd phoenix
+# For Linux/macOS/WSL
+chmod +x install.sh
 ./install.sh
+
+# For Windows
+install.bat
 ```
 
 ### 2. Manual Installation
