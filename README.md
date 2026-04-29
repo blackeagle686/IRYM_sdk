@@ -182,16 +182,21 @@ from phoenix.memory.hybrid import HybridMemory
 from phoenix.tools.registry import ToolRegistry
 
 async def agent_demo():
-    # Initialize Agent with default components
-    agent = Agent(
-        llm=OpenAILLM(), 
-        memory=HybridMemory(), 
-        tools=ToolRegistry.load_default()
-    )
+    # Initialize the high-speed Agent
+    agent = Agent() # Uses default OpenAILLM, HybridMemory, and Parallel Tools
     
-    # Run an autonomous task
-    result = await agent.run("Analyze the latest news about Artificial Intelligence.", mode="auto") # You can also use "plan" or "fast_ans"
-    print(f"Final Agent Output: {result}")
+    # Run a complex engineering task
+    # The agent will automatically:
+    # 1. Think: Deconstruct the prompt
+    # 2. Analyze: Scan the repo structure and tech stack
+    # 3. Plan: Create parallel steps for search and code analysis
+    # 4. Act: Execute tools concurrently (e.g. searching while analyzing code)
+    # 5. Reflect: Verify the fix and learn from the process
+    
+    prompt = "Find the redundant code in the memory module and optimize it using the new parallel patterns."
+    result = await agent.run(prompt, mode="plan")
+    
+    print(f"Agent Engineering Report: {result}")
 ```
 
 ### 🐦‍🔥 Custom Tools & Engineering Suite
