@@ -26,11 +26,15 @@ async def startup_event():
     print("🐦‍🔥 Initializing Phoenix AI Services...")
     await init_phoenix_full()
     
-    # Initialize the high-level ChatBot
-    bot = (ChatBot(local=False, vlm=True) # local=False assumes OpenAI by default
+    # Initialize the high-level ChatBot with explicit LongCat defaults
+    bot = (ChatBot(local=False, vlm=True)
+           .with_openai(
+               api_key="ak_2yp3Xw1Ny7ky2pF7er9x93ZO9jj6G", 
+               base_url="https://api.longcat.chat/openai"
+           )
            .with_memory()
            .build())
-    print("🐦‍🔥 Phoenix AI API is ready.")
+    print("🐦‍🔥 Phoenix AI API is ready using LongCat Engine.")
 
 @app.post("/chat")
 async def chat(
