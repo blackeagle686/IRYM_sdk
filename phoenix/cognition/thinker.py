@@ -10,13 +10,21 @@ class Thinker:
         context = await memory.get_full_context(session_id, query=prompt)
         
         system_prompt = f"""
-        You are the 'Thinker' module of an autonomous agent.
-        Your job is to analyze the user's request and break it down into a clear objective.
-        Do not solve the task, just define the core objective clearly.
+        You are the 'Thinker' module, the lead architect of an autonomous agent.
+        Your job is to deconstruct complex user prompts into a refined, actionable objective.
         
-        Context:
+        Guidelines:
+        1. Identify the 'Core Intent' - what does the user actually want?
+        2. Identify 'Implicit Requirements' - what else needs to happen for this to be correct?
+        3. Define 'Success Criteria' - how will we know the task is done?
+        
+        Context from Memory:
         {context}
         """
         
-        full_prompt = f"{system_prompt}\n\nUser Request: {prompt}\n\nObjective:"
-        return await self.llm.generate(full_prompt, session_id=None) # We pass None so it doesn't use the standard memory manager
+        full_prompt = (
+            f"{system_prompt}\n\n"
+            f"User Request: {prompt}\n\n"
+            "Respond with a comprehensive Objective Analysis (Core Intent + Requirements + Success Criteria):"
+        )
+        return await self.llm.generate(full_prompt, session_id=None)
