@@ -13,9 +13,20 @@ class HybridMemory:
         self.session = SessionMemory()
         self.reflection = ReflectionMemory()
 
-    async def add_interaction(self, session_id: str, role: str, content: str):
+    async def add_interaction(self, session_id: str, role: str, content: str, metadata: Optional[dict] = None):
         self.short_term.add(role, content)
         await self.long_term.add(session_id, f"{role.capitalize()}: {content}")
+
+    async def clear_session(self, session_id: str):
+        """Clears all memory layers for a specific session."""
+        self.short_term.clear()
+        self.session.clear()
+        self.reflection.clear()
+        await self.long_term.semantic.clear(session_id)
+
+    async def consolidate_reflections(self, llm):
+        """Triggers consolidation of lessons learned."""
+        await self.reflection.consolidate(llm)
 
     async def get_full_context(self, session_id: str, query: str = "") -> str:
         """Assembles context from all memory layers."""
