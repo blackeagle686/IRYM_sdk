@@ -36,6 +36,8 @@ class PhoenixApiTest(unittest.TestCase):
         
         if response.status_code == 500:
             print(f"\n[!] 500 Error Detail: {response.json().get('detail')}")
+        elif response.status_code == 503:
+            print(f"\n[!] 503 Initialization Error: {response.json().get('detail')}")
             
         self.assertEqual(response.status_code, 200)
         json_data = response.json()
@@ -61,6 +63,8 @@ class PhoenixApiTest(unittest.TestCase):
         
         if response.status_code == 500:
             print(f"\n[!] 500 Error Detail (Image): {response.json().get('detail')}")
+        elif response.status_code == 503:
+            print(f"\n[!] 503 Initialization Error (Image): {response.json().get('detail')}")
 
         self.assertEqual(response.status_code, 200)
         json_data = response.json()
