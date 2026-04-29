@@ -29,10 +29,13 @@ class Planner:
         
         You must respond with a JSON object strictly following this format:
         {{
-            "tool": "tool_name",
-            "kwargs": {{"arg1": "value1"}}
+            "actions": [
+                {{"tool": "tool_name", "kwargs": {{"arg1": "value1"}}}},
+                {{"tool": "tool_name", "kwargs": {{"arg1": "value1"}}}}
+            ]
         }}
         If you believe the task is complete, use "tool": "finish".
+        You can specify multiple independent actions if they can be performed simultaneously.
         """
         
         full_prompt = f"{system_prompt}\n\nObjective: {objective}\n\nPlan (JSON only):"
