@@ -171,6 +171,9 @@ print(response)
 > للحصول على تعمق في الهندسة المعمارية وأنماط التكامل (CLI, FastAPI, Django)، راجع **[دليل إطار عمل الوكيل](./docs/AGENT_GUIDE.md)** (متوفر باللغة الإنجليزية حالياً).
 
 #### ⚡ محرك إدراكي عالي السرعة
+
+```python
+import asyncio
 from phoenix.agent import Agent
 from phoenix.llm.openai import OpenAILLM
 from phoenix.memory.hybrid import HybridMemory
