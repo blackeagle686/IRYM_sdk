@@ -1,10 +1,10 @@
-# 🤖 Phoenix AI: Autonomous Agent Framework Guide
+# 🐦‍🔥 Phoenix AI: Autonomous Agent Framework Guide
 
 The Phoenix AI Agent Framework is a high-performance, modular system designed for building autonomous agents that can think, plan, and execute complex tasks. It moves beyond simple chat interfaces to create agents capable of engineering, research, and multi-step reasoning.
 
 ---
 
-## 🧠 Cognitive Architecture
+## 🐦‍🔥 Cognitive Architecture
 
 The Phoenix Agent operates on a "Cognitive Loop" inspired by human problem-solving patterns. Each step of the loop is handled by a specialized module:
 
