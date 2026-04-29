@@ -14,7 +14,7 @@ class TestCognitionFamily(unittest.IsolatedAsyncioTestCase):
         self.memory = HybridMemory()
 
     async def test_thinker_analyze(self):
-        thinker = Thinker(self.llm=self.mock_llm)
+        thinker = Thinker(llm=self.mock_llm)
         self.mock_llm.generate.return_value = "Core Intent: Test; Requirements: None; Success: Result"
         
         result = await thinker.analyze("Do something", self.memory, "session_1")
@@ -22,7 +22,7 @@ class TestCognitionFamily(unittest.IsolatedAsyncioTestCase):
         self.mock_llm.generate.assert_called()
 
     async def test_analyzer_workspace(self):
-        analyzer = Analyzer(self.llm=self.mock_llm)
+        analyzer = Analyzer(llm=self.mock_llm)
         self.mock_llm.generate.return_value = '{"relevant_files": ["main.py"], "tech_stack": "Python", "summary": "Test"}'
         
         result = await analyzer.analyze_workspace("Find main.py", root_dir=".")
@@ -32,7 +32,7 @@ class TestCognitionFamily(unittest.IsolatedAsyncioTestCase):
     async def test_planner_plan(self):
         mock_tools = MagicMock()
         mock_tools.get_all_tools_info.return_value = []
-        planner = Planner(self.llm=self.mock_llm, tools=mock_tools)
+        planner = Planner(llm=self.mock_llm, tools=mock_tools)
         
         self.mock_llm.generate.return_value = '{"actions": [{"tool": "test_tool", "kwargs": {}}]}'
         
