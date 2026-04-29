@@ -8,9 +8,13 @@ class Planner:
     def __init__(self, llm: BaseLLM, tools: ToolRegistry):
         self.llm = llm
         self.tools = tools
+        self._cached_tool_info = None
 
     async def plan(self, objective: str, previous_results: str = "") -> dict:
-        available_tools = json.dumps(self.tools.get_all_tools_info(), indent=2)
+        if self._cached_tool_info is None:
+            self._cached_tool_info = json.dumps(self.tools.get_all_tools_info(), indent=2)
+        
+        available_tools = self._cached_tool_info
         
         system_prompt = f"""
         You are the 'Planner' module of an autonomous agent.
