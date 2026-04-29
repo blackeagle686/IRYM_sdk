@@ -5,7 +5,9 @@ from phoenix.agent.loop import AgentLoop
 
 class TestAgentLoop(unittest.IsolatedAsyncioTestCase):
     async def test_loop_run(self):
+        print("\n--- Testing AgentLoop Integration ---")
         # Mocking all dependencies
+        print("[*] Setting up mocks for Thinker, Analyzer, Planner, Actor, Reflector...")
         thinker = MagicMock()
         thinker.analyze = AsyncMock(return_value="Objective")
         
@@ -24,8 +26,6 @@ class TestAgentLoop(unittest.IsolatedAsyncioTestCase):
         
         reflector = MagicMock()
         reflector.reflect = AsyncMock(return_value={"is_complete": False, "reflection": "More to do"})
-        # Update mock reflector to return complete on second call if needed, 
-        # but Planner 'finish' will also break the loop.
         
         loop = AgentLoop(thinker, planner, actor, reflector, analyzer)
         
@@ -35,12 +35,17 @@ class TestAgentLoop(unittest.IsolatedAsyncioTestCase):
         memory.add_interaction = AsyncMock()
         memory.consolidate_reflections = AsyncMock()
 
+        print("[*] Running AgentLoop for 2 iterations...")
         result = await loop.run("test prompt", memory, "session_1", max_iterations=2)
         
+        print(f"[v] Loop Result: {result}")
         self.assertEqual(result, "Action Success")
+        
+        print("[*] Verifying component calls...")
         thinker.analyze.assert_called_once()
         analyzer.analyze_workspace.assert_called_once()
         self.assertEqual(planner.plan.call_count, 2)
+        print("[v] All components invoked correctly.")
 
 if __name__ == "__main__":
     unittest.main()
