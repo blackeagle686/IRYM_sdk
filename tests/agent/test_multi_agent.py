@@ -12,8 +12,9 @@ class MultiAgentCollaborationTest(unittest.IsolatedAsyncioTestCase):
     """
     
     async def asyncSetUp(self):
-        # Initialize the Phoenix framework to ensure providers are ready
-        await init_phoenix()
+        # Initialize the Phoenix framework
+        init_phoenix()
+        await startup_phoenix()
     
     async def test_multi_agent_collaboration(self):
         print("\n" + "="*60)
