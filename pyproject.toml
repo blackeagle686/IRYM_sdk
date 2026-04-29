@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "phoenix-agent-ai"
-version = "0.1.0"
+version = "0.1.1"
 description = "Advanced AI Infrastructure SDK for Agentic Applications"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -40,5 +40,5 @@ full = [
     "bitsandbytes"
 ]
 
-[tool.setuptools]
-packages = ["phoenix"]
+[tool.setuptools.packages.find]
+include = ["phoenix*"]
