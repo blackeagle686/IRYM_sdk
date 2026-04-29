@@ -100,12 +100,17 @@ class FullAgentWorkflowTest(unittest.IsolatedAsyncioTestCase):
                     return reflector_resp_1
                 return reflector_resp_2
             if "Planner" in prompt:
-                # Alternate between planner responses
-                if "workflow_test.txt" not in await self.memory.long_term.search("", "workflow_test.txt"):
+                # 1. Check if we've already written the file by looking at the interaction history
+                # We check for our specific success message from file_write
+                history = await self.memory.short_term.get_context()
+                if "Successfully wrote to" not in history:
                     return planner_resp_1
-                # If file exists (simulated by search), return second plan or finish
+                
+                # 2. If file is written, check if we've already verified it (Reflector says complete)
                 if "verified successfully" in self.memory.reflection.get_reflections():
                     return finish_resp
+                
+                # 3. Otherwise, proceed to read/verify
                 return planner_resp_2
             return finish_resp
 
