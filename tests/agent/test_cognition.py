@@ -41,7 +41,7 @@ class TestCognitionFamily(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result["actions"][0]["tool"], "test_tool")
 
     async def test_reflector_reflect(self):
-        reflector = Reflector(self.llm=self.mock_llm)
+        reflector = Reflector(llm=self.mock_llm)
         self.mock_llm.generate.return_value = '{"is_complete": true, "reflection": "Task done"}'
         
         result = await reflector.reflect("objective", {"tool": "act"}, "result")
