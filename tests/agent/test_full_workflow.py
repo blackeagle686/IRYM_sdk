@@ -88,16 +88,28 @@ class FullAgentWorkflowTest(unittest.IsolatedAsyncioTestCase):
         # 7. Final response for 'finish'
         finish_resp = json.dumps({"actions": [{"tool": "finish"}]})
 
-        # Setup side effects for LLM generation calls
-        self.mock_llm.generate.side_effect = [
-            thinker_resp,    # Step 1: Think
-            analyzer_resp,   # Step 2: Analyze
-            planner_resp_1,  # Step 3: Plan Iteration 1
-            reflector_resp_1,# Step 4: Reflect Iteration 1
-            planner_resp_2,  # Step 5: Plan Iteration 2
-            reflector_resp_2, # Step 6: Reflect Iteration 2
-            finish_resp      # Step 7: Final check
-        ]
+        # Setup prompt-aware side effect for parallel calls
+        async def llm_side_effect(prompt, session_id=None):
+            if "Thinker" in prompt:
+                return thinker_resp
+            if "Analyzer" in prompt:
+                return analyzer_resp
+            if "Reflector" in prompt:
+                # Alternate between reflector responses
+                if "written the file" not in self.memory.reflection.get_reflections():
+                    return reflector_resp_1
+                return reflector_resp_2
+            if "Planner" in prompt:
+                # Alternate between planner responses
+                if "workflow_test.txt" not in await self.memory.long_term.search("", "workflow_test.txt"):
+                    return planner_resp_1
+                # If file exists (simulated by search), return second plan or finish
+                if "verified successfully" in self.memory.reflection.get_reflections():
+                    return finish_resp
+                return planner_resp_2
+            return finish_resp
+
+        self.mock_llm.generate.side_effect = llm_side_effect
 
         # --- STEP 2: RUN THE AGENT ---
         
