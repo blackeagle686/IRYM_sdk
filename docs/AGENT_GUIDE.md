@@ -16,7 +16,7 @@ The Phoenix Agent operates on a "Cognitive Loop" inspired by human problem-solvi
 
 ---
 
-## 🐦🔥 Getting Started
+## 🐦‍🔥 Getting Started
 
 ### 1. Basic Initialization
 
@@ -95,7 +95,7 @@ async def interactive_cli():
     await startup_phoenix()
     agent = Agent()
     
-    print("🐦🔥 Phoenix Agent CLI (type 'exit' to quit)")
+    print("🐦‍🔥 Phoenix Agent CLI (type 'exit' to quit)")
     while True:
         user_input = input("You: ")
         if user_input.lower() in ["exit", "quit"]:
@@ -192,8 +192,8 @@ from phoenix import init_phoenix, startup_phoenix
 from phoenix.agent import Agent
 
 # Page config
-st.set_page_config(page_title="Phoenix AI Agent", page_icon="🐦🔥")
-st.title("🐦🔥 Phoenix Autonomous Agent")
+st.set_page_config(page_title="Phoenix AI Agent", page_icon="🐦‍🔥")
+st.title("🐦‍🔥 Phoenix Autonomous Agent")
 
 # Initialize agent once
 if "agent" not in st.session_state:
@@ -241,7 +241,7 @@ from phoenix.agent import Agent
 class PhoenixApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Phoenix AI Agent")
+        self.root.title("🐦🔥 Phoenix AI Agent")
         
         # UI Elements
         self.chat_area = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=50, height=20)
