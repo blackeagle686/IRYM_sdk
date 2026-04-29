@@ -171,6 +171,9 @@ print(response)
 
 The Phoenix AI SDK now supports creating a fully autonomous agent that can think, analyze, plan, execute tools, and reflect on its progress with a single line of code! 
 
+> [!TIP]
+> For a deep dive into the architecture and integration patterns (CLI, FastAPI, Django), check out the **[Agent Framework Guide](./docs/AGENT_GUIDE.md)**.
+
 #### ⚡ High-Speed Cognitive Engine
 *   **Parallel Awareness**: The `Thinker` and `Analyzer` run concurrently, allowing the agent to understand both your prompt and your project structure in a single cognitive step.
 *   **Multi-Action Planning**: The agent can plan and execute multiple independent actions (tools) in parallel, cutting task completion time by up to 60%.
