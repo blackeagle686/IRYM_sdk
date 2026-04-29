@@ -74,7 +74,7 @@ async def chat(
             
         # Execute chat
         response = await bot.chat(
-            prompt=prompt,
+            text=prompt,
             image_path=image_path,
             audio_path=audio_path
         )
