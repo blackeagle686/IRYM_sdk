@@ -1,7 +1,7 @@
 from typing import Dict, List, Type
 from phoenix.tools.base import BaseTool
 from phoenix.tools.search import WebSearchTool
-from phoenix.tools.code import CodeExecutionTool
+from phoenix.tools.code import CodeExecutionTool, PythonAnalyzerTool
 from phoenix.tools.io import FileReadTool, FileWriteTool, FileSearchTool
 from phoenix.tools.patch import MultiBlockUpdateTool
 
@@ -25,6 +25,7 @@ class ToolRegistry:
         registry = cls()
         registry.register(WebSearchTool())
         registry.register(CodeExecutionTool())
+        registry.register(PythonAnalyzerTool())
         registry.register(FileReadTool())
         registry.register(FileWriteTool())
         registry.register(FileSearchTool())
