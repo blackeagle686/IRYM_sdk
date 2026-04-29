@@ -95,7 +95,7 @@ async def interactive_cli():
     await startup_phoenix()
     agent = Agent()
     
-    print("🐦🔥 Phoenix Agent CLI (type 'exit' to quit)")
+    print("🐦‍🔥 Phoenix Agent CLI (type 'exit' to quit)")
     while True:
         user_input = input("You: ")
         if user_input.lower() in ["exit", "quit"]:
