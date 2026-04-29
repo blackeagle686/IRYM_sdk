@@ -1,6 +1,7 @@
 import unittest
 import asyncio
 import os
+from phoenix import init_phoenix
 from phoenix.llm import OpenAILLM
 from phoenix.agent import Agent
 
