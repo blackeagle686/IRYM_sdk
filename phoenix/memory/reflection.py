@@ -14,8 +14,9 @@ class ReflectionMemory:
         return "Lessons Learned:\n" + "\n".join([f"- {r}" for r in self.reflections])
 
     async def consolidate(self, llm) -> None:
-        """Consolidates multiple reflections into a single, concise 'Lessons Learned' summary."""
-        if len(self.reflections) < 3:
+        """Consolidates multiple reflections into a single summary only when threshold is met."""
+        # Threshold set to 5 to avoid calling LLM on every agent loop step
+        if len(self.reflections) < 5:
             return
 
         reflections_text = "\n".join([f"- {r}" for r in self.reflections])
