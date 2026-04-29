@@ -1,7 +1,7 @@
 # 🐦‍🔥 Phoenix AI (Advanced AI Infrastructure SDK)
 
 <p align="center">
-  <img src="./docs/static/images/phx-light-circle.png" alt="Phoenix AI Logo" width="500">
+  <img src="./docs/statics/images/phx-light-circle.png" alt="Phoenix AI Logo" width="500">
 </p>
 
 A production-ready, modular backend infrastructure SDK designed for AI-powered Python backend services. 
