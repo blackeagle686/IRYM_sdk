@@ -14,7 +14,7 @@ class BaseVectorDB(BaseService):
     async def clear(self) -> None:
         raise NotImplementedError
     
-    async def get_all(self) -> List[Any]:
+    async def get_by_metadata(self, where: dict) -> List[Any]:
         raise NotImplementedError
 
     async def insert(self, vector: Any) -> None:
