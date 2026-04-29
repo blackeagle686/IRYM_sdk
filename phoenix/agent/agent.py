@@ -5,6 +5,7 @@ from phoenix.tools.registry import ToolRegistry
 from phoenix.cognition.thinker import Thinker
 from phoenix.cognition.planner import Planner
 from phoenix.cognition.reflector import Reflector
+from phoenix.cognition.analyzer import Analyzer
 from phoenix.execution.actor import Actor
 from phoenix.execution.tool_manager import ToolManager
 from phoenix.agent.loop import AgentLoop
@@ -23,12 +24,14 @@ class Agent:
         self.tool_manager = ToolManager(self.tools)
         self.actor = Actor(self.tool_manager)
         self.reflector = Reflector(self.llm)
+        self.analyzer = Analyzer(self.llm)
         
         self.loop = AgentLoop(
             thinker=self.thinker,
             planner=self.planner,
             actor=self.actor,
-            reflector=self.reflector
+            reflector=self.reflector,
+            analyzer=self.analyzer
         )
 
     def register_tool(self, tool):
