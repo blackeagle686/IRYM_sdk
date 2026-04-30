@@ -45,7 +45,7 @@
 from .base import BaseThinker
 from phoenix.llm import OpenAILLM
 
-thinker_llm = OpenAILLM
+thinker_llm = OpenAILLM()
 
 class Thinker(BaseThinker):
     def __init__(self, llm=thinker_llm):
