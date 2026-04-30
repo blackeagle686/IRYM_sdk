@@ -49,7 +49,8 @@ def generate_main_objective(prompt: str) -> str:
 
 def generate_sub_objectives(main_objective: str) -> list:
     """
-        from context memory 
+        from context memory extract the following:
+        
     """
     
 
