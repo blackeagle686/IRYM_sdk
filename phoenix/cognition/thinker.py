@@ -5,7 +5,7 @@ from phoenix.memory.hybrid import HybridMemory
 """
     Thinker must recongize all of the following from user prompt.
     semantic cache uset the main_objective to find relevant memory entries to pass back to thinker as context for better understanding of user prompt and workspace state.
-    Thinker in planning mode must generate a tasks files containe on: 
+    - Thinker in planning mode must generate a tasks files containe on: 
         {
             "task_id":{
                 "description": "what the task is about",
