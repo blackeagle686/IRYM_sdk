@@ -8,7 +8,9 @@ from phoenix.memory.hybrid import HybridMemory
     - semantic cache uset the main_objective to find relevant memory entries to pass back to thinker as context for better understanding of user prompt and workspace state.
     
     - Thinker in planning mode must generate a tasks files containe on: 
-        use uuid_task_file_date_time
+        use uuid_task_file_date_time as file name to avoid conflicts and make it unique.
+        for example: "2024-06-01T12-00-00Z_task_file.json"
+        the content of this file must be like this:
         {
             "task_id":{
                 "description": "what the task is about",
