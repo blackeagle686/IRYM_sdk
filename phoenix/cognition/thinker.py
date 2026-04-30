@@ -23,9 +23,6 @@ from phoenix.memory.hybrid import HybridMemory
                 "tools_required": ["tool_name"],
                 "periority": "high/medium/low"
             }
-        }, 
-        meta:{
-            
         }
     }
 
