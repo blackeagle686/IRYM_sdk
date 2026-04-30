@@ -93,7 +93,7 @@ def generate_sub_objectives(main_objective: str, memory_debth:int) -> list:
     
     pass 
 
-
+def generate_
     
     
 
