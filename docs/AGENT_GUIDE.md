@@ -4,15 +4,13 @@ The Phoenix AI Agent Framework is a high-performance, modular system designed fo
 
 ---
 
-## 🐦‍🔥 Cognitive Architecture
+The Phoenix Agent operates on an advanced "Cognitive Loop" designed for high-precision autonomous task execution. Each step is handled by a specialized submodule within the `cognition` module:
 
-The Phoenix Agent operates on a "Cognitive Loop" inspired by human problem-solving patterns. Each step of the loop is handled by a specialized module:
-
-1.  **Analyzer**: Concurrently scans the project structure, tech stack, and environment to provide the agent with "situational awareness."
-2.  **Thinker**: Deconstructs the user prompt into core objectives and constraints.
-3.  **Planner**: Generates a sequence of steps and selects the necessary tools to achieve the objectives.
-4.  **Actor**: Executes the planned actions, potentially in parallel, using the Tool Manager.
-5.  **Reflector**: Evaluates the outcome of actions, verifies results, and provides insights for the next iteration.
+1.  **Analyzer**: Concurrently scans the project structure and tech stack. It utilizes an **internal file cache** to avoid redundant workspace scanning.
+2.  **Thinker**: Deconstructs the user prompt into core objectives, leveraging **Short-Term Memory** for conversational context.
+3.  **Planner**: Generates a sequence of steps. It is now **Stateful**, utilizing a `task_file_id` to track and update task statuses across multiple iterations.
+4.  **Actor**: Executes the planned actions (parallel tool execution) via the centralized Tool Manager.
+5.  **Reflector**: Evaluates the outcome of actions and **persists insights to Long-Term Memory (LTM)**, ensuring the agent learns from its experiences.
 
 ---
 
@@ -207,13 +205,20 @@ This is designed for UI transparency (show users what the agent is planning befo
 
 ---
 
-## 🧠 Memory Customization (Latest)
+## 🧠 Memory Architecture (Latest)
 
-Phoenix now supports interactive memory workflows and custom user memory backends.
+Phoenix utilizes a deep, modular memory system located in `phoenix/memory/`, featuring structured **Memory Cells** for high-fidelity state management.
 
-### 1) Interactive Hybrid Memory APIs
+### 1. Memory Layers
+*   **Short-Term (STM)**: Managed by `ShortTermMemoryManager`, it tracks recent conversation turns using `ShortMemoryCell`.
+*   **Long-Term (LTM)**: Managed by `LongTermMemoryManager`, it stores persistent facts and reflections using `LongMemoryCell`.
+*   **Semantic**: High-performance `SemanticSearch` and `SemanticCache` for vector-based context retrieval.
+*   **Task Memory**: Dedicated tracking of task states (Pending, In-Progress, Done) to support stateful planning.
+*   **Hybrid**: The `HybridMemoryManager` orchestrates all layers using a **Hybrid Scoring System** (Relevance + Importance + Recency).
 
-`HybridMemory` now supports structured context operations in addition to plain chat turns:
+### 2. Interactive Memory APIs
+
+`HybridMemory` supports structured context operations:
 
 - `add_context_item(session_id, key, value, source="user")`
 - `get_context_bundle(session_id, query="")`
