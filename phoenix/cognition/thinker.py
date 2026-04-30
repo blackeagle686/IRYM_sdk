@@ -21,7 +21,7 @@ from phoenix.memory.hybrid import HybridMemory
             },
             
         }
-        task file 
+        task file must be updated by thinker and planner to update the status of each task and add new tasks if needed.
         
     - Thinker must return response like this: 
     { 
