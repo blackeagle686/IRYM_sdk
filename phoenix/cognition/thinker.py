@@ -71,7 +71,9 @@ def generate_sub_objectives(main_objective: str) -> list:
                         "periority": "high/medium/low"
                     }
                 }
-            }
+            }, 
+            planner:{}, 
+            analyser:{}
         }
         
     """
