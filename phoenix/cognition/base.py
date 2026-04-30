@@ -8,4 +8,10 @@ class BaseThinker():
     def generate_tasks(self):
         raise NotImplementedError
     
-    def generate_
+    def generate_sub_objectives(self):
+        raise NotImplementedError
+    
+    def generate_main_objective(self):
+        raise NotImplementedError
+    
+    def 
