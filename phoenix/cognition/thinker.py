@@ -37,6 +37,7 @@ def generate_task(description: str, dependencies: list = None, tools_required: l
         "priority": priority
     }
 
+def generate_file
 
 class Thinker:
     """Analyzes user prompts, breaks them down, and understands core objectives."""
