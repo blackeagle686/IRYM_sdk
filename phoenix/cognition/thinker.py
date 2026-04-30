@@ -48,6 +48,7 @@ def generate_main_objective(prompt: str) -> str:
     pass
 
 def generate_sub_objectives(main_objective: str, context_memory_last_main_objective:list) -> list:
+    
 
 class Thinker:
     """Analyzes user prompts, breaks them down, and understands core objectives."""
