@@ -48,7 +48,9 @@ def generate_main_objective(prompt: str) -> str:
     pass
 
 def generate_sub_objectives(main_objective: str) -> list:
-    
+    """
+        from mem
+    """
     
 
 class Thinker:
