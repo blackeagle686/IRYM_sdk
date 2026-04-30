@@ -9,7 +9,7 @@ from phoenix.memory.hybrid import HybridMemory
         "sub_objectives": [],
         "context_memory": [last_n relevant memory entries to the prompt],
         "files":{
-            "file_name_that_user_"
+            "file_name": 
         } 
     }
 
