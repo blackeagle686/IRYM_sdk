@@ -42,3 +42,5 @@
     }
 
 """
+from .base import BaseThinker
+
