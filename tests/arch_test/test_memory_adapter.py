@@ -18,6 +18,4 @@ def test_memory_adapter():
     
     print_step("Memory Adapter validation passed")
 
-if __name__ == "__main__":
-    import asyncio
-    asyncio.run(test_memory_adapter())
+    test_memory_adapter()
