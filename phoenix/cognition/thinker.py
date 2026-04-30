@@ -78,7 +78,7 @@ def generate_sub_objectives(main_objective: str, memory_debth:int) -> list:
             reflector:{},
             meta:{}
         }
-        we must extract the main_objective from memory_debth 
+        we must extract the main_objective from memory_debth number of memory entries and use them to generate sub_objectives for the current main objective.
     """
     
 
