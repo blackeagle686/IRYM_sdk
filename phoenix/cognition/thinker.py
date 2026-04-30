@@ -78,7 +78,7 @@ def generate_sub_objectives(main_objective: str) -> list:
             reflector:{},
             meta:{}
         }
-        we must extract the 
+        we must extract the main_objective from 
     """
     
 
