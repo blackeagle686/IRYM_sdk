@@ -1,6 +1,6 @@
 import asyncio
 from phoenix.cognition.analyzer.analyzer import Analyzer
-from tests.arch_test.helpers import print_step, MockLLM
+from helpers import print_step, MockLLM
 
 async def test_analyzer():
     print_step("Initializing Analyzer")
