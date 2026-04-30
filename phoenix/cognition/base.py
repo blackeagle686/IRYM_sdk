@@ -1,6 +1,6 @@
 class BaseThinker():
     def __init__(self, llm):
-        self.agent = agent
+        self.llm = llm
 
     def think(self):
         raise NotImplementedError
