@@ -17,6 +17,17 @@ class HybridMemory:
     async def add_interaction(self, session_id: str, role: str, content: str, metadata: Optional[dict] = None):
         self.short_term.add(role, content)
         await self.long_term.add(session_id, f"{role.capitalize()}: {content}")
+        if metadata:
+            for key, value in metadata.items():
+                self.session.set(key, value)
+
+    async def add_context_item(self, session_id: str, key: str, value, source: str = "user"):
+        """
+        Interactive context API: store structured session context that can be
+        reused by planner/thinker and surfaced in context bundles.
+        """
+        self.session.set(key, value)
+        await self.long_term.add(session_id, f"Context[{source}] {key}: {value}")
 
     async def clear_session(self, session_id: str):
         """Clears all memory layers for a specific session."""
@@ -70,3 +81,17 @@ class HybridMemory:
             context_parts.append(f"Recent Conversation:\n{stm_context}")
             
         return "\n\n".join(context_parts)
+
+    async def get_context_bundle(self, session_id: str, query: str = "") -> dict:
+        """
+        Returns an interactive structured context bundle for advanced UIs/custom loops.
+        """
+        full_text = await self.get_full_context(session_id, query=query)
+        return {
+            "session_id": session_id,
+            "query": query,
+            "session_variables": self.session.get_all(),
+            "reflections": self.reflection.get_reflections(),
+            "recent_conversation": self.short_term.get_context(),
+            "full_text": full_text,
+        }
