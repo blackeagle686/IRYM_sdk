@@ -30,7 +30,12 @@ from phoenix.memory.hybrid import HybridMemory
 """
 
 def generate_task(description: str, dependencies: list = None, tools_required: list = None, priority: str = "medium") -> dict:
-    
+    return {
+        "description": description,
+        "dependencies": dependencies or [],
+        "tools_required": tools_required or [],
+        "priority": priority
+    }
 
 
 class Thinker:
