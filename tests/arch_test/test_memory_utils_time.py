@@ -1,5 +1,5 @@
 from phoenix.memory.utils.time import current_timestamp, calculate_expiry, has_expired
-from tests.arch_test.helpers import print_step
+from helpers import print_step
 import time
 
 def test_time_utils():
