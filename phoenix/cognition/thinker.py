@@ -11,7 +11,7 @@ from phoenix.memory.hybrid import HybridMemory
         "files":{
             "file_name": {
                 "file_path": "path/to/file",
-                "
+                "opeartion": "edit/append/create",
             }
         } 
     }
