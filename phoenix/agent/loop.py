@@ -151,8 +151,8 @@ class AgentLoop:
 
             reflection = await self.reflector.reflect(objective, plan, action_result)
             memory.reflection.add_reflection(reflection["reflection"])
-            self._schedule_background(
-                asyncio.gather(
+            async def background_updates():
+                await asyncio.gather(
                     memory.consolidate_reflections(self.reflector.llm),
                     memory.add_interaction(
                         session_id,
@@ -160,7 +160,8 @@ class AgentLoop:
                         f"Action: {plan}\nResult: {action_result}\nReflection: {reflection['reflection']}"
                     )
                 )
-            )
+
+            self._schedule_background(background_updates())
 
             previous_results += f"\nAction: {plan}\nResult: {action_result}\n"
             if reflection["is_complete"]:

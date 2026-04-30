@@ -1,5 +1,10 @@
 import asyncio
+import os
+import sys
 from unittest.mock import AsyncMock, MagicMock
+
+# Ensure the project root is in the path so we use the local phoenix source
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
 from phoenix.agent.agent import Agent
 from phoenix.agent.loop import AgentLoop
