@@ -1,5 +1,5 @@
 from phoenix.memory.long_term.ltm_cell import LongMemoryCell
-from tests.arch_test.helpers import print_step
+from helpers import print_step
 
 def test_long_memory_cell():
     print_step("Initializing LongMemoryCell")
