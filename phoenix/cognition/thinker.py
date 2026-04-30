@@ -5,7 +5,8 @@ from phoenix.memory.hybrid import HybridMemory
 """
     Thinker must return response like this: 
     { 
-        "main_
+        "main_objective": "Refined main goal based on user prompt",
+        
     }
 
 """
