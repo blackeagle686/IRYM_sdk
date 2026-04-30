@@ -35,4 +35,4 @@ class BaseThinker(ABC):
             "task": task
         }
     
-        
+    def generate_llm_struc
