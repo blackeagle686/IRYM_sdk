@@ -45,4 +45,4 @@ class BaseThinker(ABC):
             "tasks": {}   # Placeholder for task-related details
         }
         
-    def genereate_
+    def genereate_llm_structured_input()
