@@ -30,6 +30,8 @@ from phoenix.memory.hybrid import HybridMemory
 """
 
 
+
+
 class Thinker:
     """Analyzes user prompts, breaks them down, and understands core objectives."""
     def __init__(self, llm: BaseLLM):
