@@ -80,7 +80,14 @@ def generate_sub_objectives(main_objective: str, memory_debth:int) -> list:
         }
         we must extract the main_objective from memory_debth number of n ceils extract the main_objective, summary_answer.
         in this shape {
-            
+            "sub_objective_1": {
+                "main_objective": "main objective related to this sub objective",
+                "summary_answer": "summary of what was done in this memory entry",
+            },
+            "sub_objective_2": {
+                "main_objective": "main objective related to this sub objective",
+                "summary_answer": "summary of what was done in this memory entry",
+            },
         }
     """
     
