@@ -1,10 +1,11 @@
-from typing import List, Optional, Dict
-from phoenix.memory.history import ConversationHistory
-from phoenix.memory.semantic import SemanticMemory
+from typing import List, Optional, Dict, Any
+from .short_term.stm_manager import ShortTermMemoryManager as ConversationHistory
+from .semantic.semantic_search import SemanticSearch as SemanticMemory
 
 class MemoryManager:
     """
     Unified manager for short-term and long-term memory.
+    Updated to use new modular components.
     """
     def __init__(self, vector_db=None):
         self.history = ConversationHistory()
@@ -12,24 +13,13 @@ class MemoryManager:
 
     async def add_interaction(self, session_id: str, prompt: str, response: str, metadata: Optional[Dict] = None):
         """Adds a full interaction to both history and semantic memory."""
-        # Add to short-term history
         await self.history.add(session_id, {"role": "user", "content": prompt}, metadata)
         await self.history.add(session_id, {"role": "assistant", "content": response}, metadata)
-        
-        # Add to long-term semantic memory
         await self.semantic.add(session_id, f"User: {prompt}\nAssistant: {response}", metadata)
 
     async def get_context(self, session_id: str, limit: int = 5) -> str:
         """Retrieves consolidated context for a given session."""
-        history = await self.history.get(session_id, limit=limit)
-        
-        context_str = ""
-        for item in history:
-            role = item["content"].get("role", "unknown")
-            content = item["content"].get("content", "")
-            context_str += f"{role.capitalize()}: {content}\n"
-            
-        return context_str.strip()
+        return await self.history.get_context_string(session_id)
 
     async def search_memory(self, session_id: str, query: str, limit: int = 3) -> str:
         """Searches semantic memory for relevant past facts."""
@@ -39,10 +29,7 @@ class MemoryManager:
             
         context = "\nRelevant past information:\n"
         for res in results:
-            if isinstance(res, dict):
-                content = res.get("content", res.get("text", str(res)))
-            else:
-                content = str(res)
+            content = res.get("content", res.get("text", str(res))) if isinstance(res, dict) else str(res)
             context += f"- {content}\n"
         return context
 
