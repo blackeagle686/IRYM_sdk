@@ -1,56 +1,38 @@
 import asyncio
-from phoenix.agent.agent import Agent
-from phoenix.llm.openai import OpenAILLM
-from phoenix import init_phoenix, startup_phoenix
+from phoenix.framework.chatbot import ChatBot
 import os
 
 class SVUBot:
     """
-    SVU Chatbot built using the Phoenix AI Framework.
+    SVU Chatbot built using the Phoenix AI Framework Builder.
     Supports RAG-based insights from the svu_bot/data directory.
+    Uses the official ChatBot high-level API.
     """
     def __init__(self):
-        # Configure the bot with LongCat LLM
-        self.llm = OpenAILLM(
-            api_key="ak_2yp3Xw1Ny7ky2pF7er9x93ZO9jj6G",
-            base_url="https://api.longcat.chat/openai",
-            model="LongCat-Flash-Lite"
+        # Configure the bot using the high-level Builder
+        self.bot_instance = (
+            ChatBot(local=False)
+            .with_openai(
+                api_key="ak_2yp3Xw1Ny7ky2pF7er9x93ZO9jj6G",
+                base_url="https://api.longcat.chat/openai"
+            )
+            .with_model(llm="LongCat-Flash-Lite")
+            .with_rag(data_to_insight_path="./svu_bot/data")
+            .with_memory()
+            .with_system_prompt("You are a helpful assistant for Syrian Virtual University (SVU) students.")
+            .build()
         )
-        self.agent = None
-
-    async def initialize(self):
-        print("Initializing SVU Bot services...")
-        init_phoenix()
-        await startup_phoenix()
-        
-        # Initialize Agent with our custom LLM
-        self.agent = Agent(llm=self.llm)
-        await self.llm.init()
-        print("SVU Bot is ready.")
 
     async def chat(self, prompt: str, session_id: str = "svu_session"):
         """Runs a chat interaction."""
-        if not self.agent:
-            await self.initialize()
-        
-        # The agent naturally uses its memory layers (STM/LTM) 
-        # which can be primed with data from the data/ folder.
-        return await self.agent.run(prompt, session_id=session_id)
-
-    async def stream_chat(self, prompt: str, session_id: str = "svu_session"):
-        """Streams a chat interaction."""
-        if not self.agent:
-            await self.initialize()
-            
-        async for event in self.agent.run_stream(prompt, session_id=session_id):
-            yield event
+        self.bot_instance.set_session(session_id)
+        return await self.bot_instance.chat(text=prompt)
 
 if __name__ == "__main__":
-    # Quick local test
     bot = SVUBot()
     async def run_test():
-        await bot.initialize()
-        response = await bot.chat("Hello SVU Bot!")
+        # ChatBotInstance handles startup internally during first chat
+        response = await bot.chat("Tell me about SVU programs.")
         print(f"Bot: {response}")
     
     asyncio.run(run_test())
