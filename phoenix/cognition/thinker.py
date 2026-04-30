@@ -14,7 +14,10 @@ from phoenix.memory.hybrid import HybridMemory
                 "task": "edit/append/create",
             }, 
             
-        } 
+        }, 
+        "tasks": {
+            
+        }
     }
 
 """
