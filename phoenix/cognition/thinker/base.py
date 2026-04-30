@@ -35,4 +35,14 @@ class BaseThinker(ABC):
             "task": task
         }
     
-    def generate_llm_struc
+    def generate_llm_structured_output(self, main_objective: str, sub_objectives: List[str], context_memory: List[str], summary_answer: str) -> Dict[str, Any]:
+        return {
+            "main_objective": main_objective,
+            "sub_objectives": sub_objectives,
+            "context_memory": context_memory,
+            "summary_answer": summary_answer,
+            "files": {},  # Placeholder for file-related tasks
+            "tasks": {}   # Placeholder for task-related details
+        }
+        
+    def genereate_
