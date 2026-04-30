@@ -3,7 +3,7 @@ from phoenix.memory.hybrid import HybridMemory
 
 
 """
-    Thinker must recongize all of the following from user prompt
+    Thinker must recongize all of the following from user prompt.
     semantic cache uset the main_objective to find relevant memory entries to pass back to thinker as context for better understanding of user prompt and workspace state.
     Thinker must return response like this: 
     { 
