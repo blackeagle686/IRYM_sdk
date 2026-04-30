@@ -1,5 +1,5 @@
 from phoenix.memory.short_term.stm_cell import ShortMemoryCell
-from tests.arch_test.helpers import print_step
+from helpers import print_step
 
 def test_short_memory_cell():
     print_step("Initializing ShortMemoryCell")
