@@ -99,7 +99,9 @@ class HybridMemory:
 
 
 """
+    short term
     Advanced MEMORY Structure
+    
     
     
 
