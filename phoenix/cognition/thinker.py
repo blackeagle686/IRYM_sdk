@@ -5,7 +5,7 @@ from phoenix.memory.hybrid import HybridMemory
 """
     Thinker must return response like this: 
     { 
-        
+        "main_
     }
 
 """
