@@ -3,7 +3,10 @@ from phoenix.memory.hybrid import HybridMemory
 
 
 """
-    Thinker must return 
+    Thinker must return response like this: 
+    { 
+        
+    }
 
 """
 
