@@ -1,18 +1,26 @@
 import asyncio
 from phoenix.agent.agent import Agent
+from phoenix.llm.openai import OpenAILLM
 from helpers import print_step
 
 async def test_agent_integration_real():
-    print_step("Initializing Agent with Real Services")
-    # By default, Agent() initializes with OpenAILLM and default ToolRegistry
-    agent = Agent()
+    print_step("Initializing Agent with Custom LongCat LLM")
     
-    # Initialize LLM if needed (handles API key loading etc)
-    if hasattr(agent.llm, "init"):
-        await agent.llm.init()
+    # Configure LLM with specific credentials for the test
+    custom_llm = OpenAILLM(
+        api_key="ak_2yp3Xw1Ny7ky2pF7er9x93ZO9jj6G",
+        base_url="https://api.longcat.chat/openai",
+        model="LongCat-Flash-Lite"
+    )
+    
+    # Initialize the Agent with the custom LLM
+    agent = Agent(llm=custom_llm)
+    
+    # Explicitly initialize the LLM client
+    await agent.llm.init()
     
     print_step("Running Agent with prompt: 'say hello'")
-    # Using a simple prompt to minimize API costs/tokens during test
+    # Using a simple prompt to minimize token usage
     result = await agent.run("say hello", session_id="real_test_session", max_iterations=2)
     
     print_step("Verifying final result")
