@@ -29,7 +29,7 @@ from phoenix.memory.hybrid import HybridMemory
 
 """
 
-
+def 
 
 
 class Thinker:
