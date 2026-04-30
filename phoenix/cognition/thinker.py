@@ -47,7 +47,24 @@ from phoenix.memory.hybrid import HybridMemory
 
 """
 
-def generate_task_file()
+def generate_task_file(tasks: dict) -> str:
+    """
+    Generates a unique task file name and returns the file path.
+    The content of the file will be the tasks dictionary in JSON format.
+    """
+    import json
+    import uuid
+    from datetime import datetime
+    
+    file_name = f"{datetime.utcnow().isoformat()}_{uuid.uuid4().hex}_task_file.json"
+    file_path = f"./tasks/{file_name}"
+    
+    os.makedirs(os.path.dirname(os.path.abspath(file_path)), exist_ok=True)
+    
+    with open(file_path, 'w', encoding='utf-8') as f:
+        json.dump(tasks, f, indent=4)
+    
+    return file_path
 
 
 def generate_task(description: str, dependencies: list = None, tools_required: list = None, priority: str = "medium") -> dict:
