@@ -376,8 +376,8 @@ class RAGPipeline:
                     # Simple query refinement: prepend last few turns to clarify context
                     context_snippet = ""
                     for item in history[-2:]:
-                        role = item["content"].get("role", "unknown")
-                        content = item["content"].get("content", "")
+                        role = item.role
+                        content = item.content
                         context_snippet += f"{role}: {content} "
                     
                     refined_question = f"Context: {context_snippet}\nQuestion: {question}"
