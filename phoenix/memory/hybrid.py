@@ -104,7 +104,25 @@ class HybridMemory:
     
     {
         "thinker": {
-            
+            "main_objective": "main objective related to this memory entry",
+            "sub_objectives": ["sub objective 1", "sub objective 2"],
+            "context_memory": [relevant memory entries to this sub objective],
+            "summary_answer": "summary of what was done in this memory entry",
+            "files":{
+                "file_name": {
+                    "file_path": "path/to/file",
+                    "task": "edit/append/create",
+                },  
+            }, 
+            "tasks": {
+                "task_name": {
+                    "description": "What the task is about",
+                    "dependencies": ["other_task_name"],
+                    "tools_required": ["tool_name"],
+                    "periority": "high/medium/low"
+                }
+            }
+        },
     }
     
 
