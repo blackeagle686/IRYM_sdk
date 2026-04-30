@@ -29,7 +29,8 @@ from phoenix.memory.hybrid import HybridMemory
 
 """
 
-def generate_task()
+def generate_task(description: str, dependencies: list = None, tools_required: list = None, priority: str = "medium") -> dict:
+    
 
 
 class Thinker:
