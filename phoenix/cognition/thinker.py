@@ -91,6 +91,7 @@ def generate_sub_objectives(main_objective: str, memory_debth:int) -> list:
         }
     """
     
+    
 
 class Thinker:
     """Analyzes user prompts, breaks them down, and understands core objectives."""
