@@ -20,4 +20,4 @@ class BaseThinker():
         """
         raise NotImplementedError
     
-    
+    def handle_
