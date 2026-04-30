@@ -43,7 +43,8 @@ def generate_file_task(file_path: str, task: str) -> dict:
         "task": task
     }
     
-def generate_main_
+def generate_main_objective(objective: str) -> str:
+    return objective.strip()
 
 class Thinker:
     """Analyzes user prompts, breaks them down, and understands core objectives."""
