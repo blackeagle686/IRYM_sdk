@@ -44,8 +44,8 @@ def generate_file_task(file_path: str, task: str) -> dict:
     }
     
 def generate_main_objective(prompt: str) -> str:
-    """ """
-    return objective.strip()
+    """Extracts the main objective from the user's prompt."""
+    
 
 class Thinker:
     """Analyzes user prompts, breaks them down, and understands core objectives."""
