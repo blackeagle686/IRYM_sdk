@@ -1,6 +1,6 @@
 import asyncio
 from phoenix.memory.short_term.stm_manager import ShortTermMemoryManager
-from tests.arch_test.helpers import print_step
+from helpers import print_step
 
 async def test_stm_manager():
     print_step("Initializing ShortTermMemoryManager with limit 2")
