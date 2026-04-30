@@ -34,7 +34,5 @@ class BaseThinker(ABC):
             "file_path": file_path,
             "task": task
         }
-        
-class TaskPlanner():
     
         
