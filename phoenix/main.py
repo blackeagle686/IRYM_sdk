@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Callable, Optional
 from phoenix.core.container import container
 from phoenix.core.config import config
 from phoenix.cache.redis_cache import RedisCache
@@ -94,7 +94,7 @@ def init_phoenix(local: bool = False, vlm: bool = False):
     container.register("tts_local", LocalTTS())
     container.register("tts_openai", OpenAITTS())
 
-async def startup_phoenix():
+async def startup_phoenix(on_progress: Optional[Callable[[float, str], Any]] = None):
     """
     Asynchronously initializes all services registered in the container.
     This includes Cache connections, Vector DB clients, and LLM pools.
@@ -140,7 +140,20 @@ async def startup_phoenix():
             init_tasks.append(service.init())
 
     if init_tasks:
-        await asyncio.gather(*init_tasks)
+        if on_progress:
+            total = len(init_tasks)
+            completed = 0
+            
+            async def wrapped_task(task):
+                nonlocal completed
+                await task
+                completed += 1
+                on_progress(completed / total, f"Started {completed}/{total} services...")
+            
+            await asyncio.gather(*(wrapped_task(t) for t in init_tasks))
+        else:
+            await asyncio.gather(*init_tasks)
+            
     logger.info("Phoenix AI SDK Services started successfully.")
 
 def get_rag_pipeline() -> RAGPipeline:
@@ -212,7 +225,7 @@ def get_llm() -> Any:
 def get_memory() -> MemoryManager:
     return container.get("memory")
 
-async def init_phoenix_full(local: bool = False, vlm: bool = False, parallel_hooks: bool = False):
+async def init_phoenix_full(local: bool = False, vlm: bool = False, parallel_hooks: bool = False, on_progress: Optional[Callable] = None):
     """
     Complete initialization:
     1. init_phoenix (Registry)
@@ -221,7 +234,7 @@ async def init_phoenix_full(local: bool = False, vlm: bool = False, parallel_hoo
     """
     from phoenix.core.lifecycle import lifecycle
     init_phoenix(local=local, vlm=vlm)
-    await startup_phoenix()
+    await startup_phoenix(on_progress=on_progress)
     await lifecycle.startup(parallel=parallel_hooks)
     logger.info(f"Phoenix AI SDK initialized (parallel_hooks={parallel_hooks}).")
 
