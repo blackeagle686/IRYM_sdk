@@ -55,6 +55,7 @@ def generate_task_file(tasks: dict) -> str:
     import json
     import uuid
     from datetime import datetime
+    import os
     
     file_name = f"{datetime.utcnow().isoformat()}_{uuid.uuid4().hex}_task_file.json"
     file_path = f"./tasks/{file_name}"
