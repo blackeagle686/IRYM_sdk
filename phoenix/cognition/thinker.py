@@ -3,7 +3,7 @@ from phoenix.memory.hybrid import HybridMemory
 
 
 """
-    Thinker must 
+    Thinker must recongize all of the 
     Thinker must return response like this: 
     { 
         "main_objective": "Refined main goal based on user prompt",
