@@ -15,6 +15,7 @@ class RAGPipeline:
         """
         Loads documents from path, chunks them, and stores in vector DB.
         """
+        print(f"[*] Starting Ingestion for path: {path}")
         if not os.path.exists(path):
             raise FileNotFoundError(f"Path {path} does not exist.")
 
@@ -42,7 +43,7 @@ class RAGPipeline:
 
         import uuid
         for doc_path in documents:
-            print(f"[*] Reading {doc_path}...")
+            print(f"[*] Reading and Indexing: {doc_path}...")
             content = self._read_file(doc_path)
             if not content:
                 print(f"[!] Warning: No content extracted from {doc_path}")
