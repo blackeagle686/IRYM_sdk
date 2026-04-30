@@ -11,6 +11,8 @@ from phoenix.memory.hybrid import HybridMemory
                 "description": "what the task is about",
                 "dependencies": ["other_task_id"],
                 "tools_required": ["tool_name"],
+                "priority": "high/medium/low"
+                "status": "pending/in_progress/done/field"
             }
         }
     Thinker must return response like this: 
