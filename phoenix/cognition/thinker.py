@@ -8,7 +8,9 @@ from phoenix.memory.hybrid import HybridMemory
     Thinker in planning mode must generate a tasks files containe on: 
         {
             "task_id":{
-                "desc
+                "description": "what the task is about",
+                "dependencies": ["other_task_id"],
+                "tools_required": ["tool_name"],
             }
         }
     Thinker must return response like this: 
