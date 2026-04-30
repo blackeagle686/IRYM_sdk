@@ -13,6 +13,21 @@ class AgentLoop:
         self.actor = actor
         self.reflector = reflector
         self.analyzer = analyzer
+        self._background_tasks = set()
+
+    def _schedule_background(self, coro):
+        task = asyncio.create_task(coro)
+        self._background_tasks.add(task)
+
+        def _on_done(t):
+            self._background_tasks.discard(t)
+            try:
+                _ = t.exception()
+            except Exception:
+                # Never let background housekeeping fail user-facing flow.
+                pass
+
+        task.add_done_callback(_on_done)
 
     async def run(self, prompt: str, memory, session_id: str, max_iterations: int = 5) -> str:
         # Step 1 & 2: Parallel Awareness (Think + Analyze)
@@ -63,12 +78,14 @@ class AgentLoop:
             
             # Parallel update of memory and reflection state
             memory.reflection.add_reflection(reflection["reflection"])
-            await asyncio.gather(
-                memory.consolidate_reflections(self.reflector.llm),
-                memory.add_interaction(
-                    session_id, 
-                    "system", 
-                    f"Action: {plan}\nResult: {action_result}\nReflection: {reflection['reflection']}"
+            self._schedule_background(
+                asyncio.gather(
+                    memory.consolidate_reflections(self.reflector.llm),
+                    memory.add_interaction(
+                        session_id,
+                        "system",
+                        f"Action: {plan}\nResult: {action_result}\nReflection: {reflection['reflection']}"
+                    )
                 )
             )
             
@@ -133,12 +150,14 @@ class AgentLoop:
 
             reflection = await self.reflector.reflect(objective, plan, action_result)
             memory.reflection.add_reflection(reflection["reflection"])
-            await asyncio.gather(
-                memory.consolidate_reflections(self.reflector.llm),
-                memory.add_interaction(
-                    session_id,
-                    "system",
-                    f"Action: {plan}\nResult: {action_result}\nReflection: {reflection['reflection']}"
+            self._schedule_background(
+                asyncio.gather(
+                    memory.consolidate_reflections(self.reflector.llm),
+                    memory.add_interaction(
+                        session_id,
+                        "system",
+                        f"Action: {plan}\nResult: {action_result}\nReflection: {reflection['reflection']}"
+                    )
                 )
             )
 
