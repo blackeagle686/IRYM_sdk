@@ -35,5 +35,5 @@ class BaseThinker(ABC):
             "task": task
         }
         
-
+class 
         
