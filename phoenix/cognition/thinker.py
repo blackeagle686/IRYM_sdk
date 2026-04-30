@@ -73,7 +73,8 @@ def generate_sub_objectives(main_objective: str) -> list:
                 }
             }, 
             planner:{}, 
-            analyser:{}
+            analyser:{}, 
+            
         }
         
     """
