@@ -2,6 +2,7 @@ import uuid
 from typing import Any, Callable, Dict, Optional, Type
 from phoenix.llm.openai import OpenAILLM
 from phoenix.memory.hybrid import HybridMemory
+from phoenix.memory.adapter import InteractiveMemoryAdapter
 from phoenix.tools.registry import ToolRegistry
 from phoenix.cognition.thinker import Thinker
 from phoenix.cognition.planner import Planner
@@ -30,7 +31,7 @@ class Agent:
     ):
         # Default LLM to OpenAILLM (using LongCat-Flash-Chat by default via its config fallback)
         self.llm = llm if llm is not None else OpenAILLM()
-        self.memory = memory if memory is not None else HybridMemory()
+        self.memory = self._prepare_memory(memory)
         self.tools = tools if tools is not None else ToolRegistry.load_default()
         self._factories = component_factories or {}
         self.loop_cls = loop_cls or AgentLoop
@@ -69,6 +70,19 @@ class Agent:
                 reflector=self.reflector,
                 analyzer=self.analyzer
             )
+
+    def _prepare_memory(self, memory):
+        if memory is None:
+            return HybridMemory()
+
+        required = ("add_interaction", "get_full_context")
+        has_required = all(hasattr(memory, name) for name in required)
+        has_layers = hasattr(memory, "session") and hasattr(memory, "reflection")
+
+        if has_required and has_layers:
+            return memory
+
+        return InteractiveMemoryAdapter(memory)
 
     def _build_component(self, name: str):
         """
