@@ -4,13 +4,23 @@ import re
 
 class FileReadTool(BaseTool):
     name = "file_read"
-    description = "Reads the content of a file. Input: 'file_path' (str)."
+    description = "Reads the content of a file. Input: 'file_path' (str). Optional: 'chunk_size' (int) to return a list of chunks."
 
-    async def execute(self, file_path: str, **kwargs) -> ToolResult:
+    async def execute(self, file_path: str, chunk_size: int = None, **kwargs) -> ToolResult:
         try:
             if not os.path.exists(file_path):
                 return ToolResult(success=False, output="", error=f"File not found: {file_path}")
-            
+            # If chunk_size is provided and > 0, read the file in successive chunks
+            if chunk_size and isinstance(chunk_size, int) and chunk_size > 0:
+                chunks = []
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    while True:
+                        part = f.read(chunk_size)
+                        if not part:
+                            break
+                        chunks.append(part)
+                return ToolResult(success=True, output=chunks)
+
             with open(file_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             return ToolResult(success=True, output=content)
