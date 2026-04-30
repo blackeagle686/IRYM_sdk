@@ -43,7 +43,8 @@
 
 """
 from .base import BaseThinker
-from phoenix.llm
+from phoenix.llm import OpenAILLM
+
 thinker_llm = 
 
 class Thinker(BaseThinker):
