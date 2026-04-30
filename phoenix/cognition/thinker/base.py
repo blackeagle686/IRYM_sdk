@@ -45,4 +45,6 @@ class BaseThinker(ABC):
             "tasks": {}   # Placeholder for task-related details
         }
         
-    def genereate_llm_structured_input()
+    def genereate_llm_structured_input(self, prompt: str, context_memory: List[str]) -> str:
+        context_str = "\n".join(context_memory)
+        return f"User Prompt: {prompt}\n\nRelevant Context:\n{context_str}\n\nPlease analyze and provide structured output."
