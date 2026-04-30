@@ -32,6 +32,74 @@ class FileWriteTool(BaseTool):
         except Exception as e:
             return ToolResult(success=False, output="", error=str(e))
 
+class FileAppendTool(BaseTool):
+    name = "file_append"
+    description = "Appends content to a file. Input: 'file_path' (str), 'content' (str)."
+
+    async def execute(self, file_path: str, content: str, **kwargs) -> ToolResult:
+        try:
+            os.makedirs(os.path.dirname(os.path.abspath(file_path)), exist_ok=True)
+            with open(file_path, 'a', encoding='utf-8') as f:
+                f.write(content)
+            return ToolResult(success=True, output=f"Successfully appended to {file_path}")
+        except Exception as e:
+            return ToolResult(success=False, output="", error=str(e))
+
+class FileEditTool(BaseTool):
+    name = "file_edit"
+    description = (
+        "Search-and-replace patching tool with upsert behavior. "
+        "Input: 'file_path' (str), 'edits' (list of {search, replace}), "
+        "'upsert' (bool, optional, default True)."
+    )
+
+    async def execute(self, file_path: str, edits: list, upsert: bool = True, **kwargs) -> ToolResult:
+        try:
+            os.makedirs(os.path.dirname(os.path.abspath(file_path)), exist_ok=True)
+            if not os.path.exists(file_path):
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    f.write("")
+
+            with open(file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+            updated = content
+            applied = 0
+            upserted = 0
+
+            for edit in edits:
+                search = edit.get("search", "")
+                replace = edit.get("replace", "")
+                if not search:
+                    continue
+
+                if search in updated:
+                    updated = updated.replace(search, replace)
+                    applied += 1
+                elif upsert:
+                    if updated and not updated.endswith("\n"):
+                        updated += "\n"
+                    updated += replace
+                    if replace and not replace.endswith("\n"):
+                        updated += "\n"
+                    upserted += 1
+                else:
+                    return ToolResult(
+                        success=False,
+                        output=f"Applied {applied}, upserted {upserted}.",
+                        error=f"Search text not found: {search[:80]}"
+                    )
+
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(updated)
+
+            return ToolResult(
+                success=True,
+                output=f"Successfully edited {file_path} (applied={applied}, upserted={upserted})"
+            )
+        except Exception as e:
+            return ToolResult(success=False, output="", error=str(e))
+
 class FileSearchTool(BaseTool):
     name = "file_search"
     description = "Searches for a specific string or regex pattern in a file or directory. Input: 'path' (str), 'pattern' (str), 'is_regex' (bool, optional)."

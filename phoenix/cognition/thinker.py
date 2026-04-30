@@ -27,4 +27,4 @@ class Thinker:
             f"User Request: {prompt}\n\n"
             "Respond with a comprehensive Objective Analysis (Core Intent + Requirements + Success Criteria):"
         )
-        return await self.llm.generate(full_prompt, session_id=None)
+        return await self.llm.generate(full_prompt, session_id=None, max_tokens=200)

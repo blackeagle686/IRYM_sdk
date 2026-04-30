@@ -2,6 +2,9 @@ from abc import ABC, abstractmethod
 from typing import List, Union, Optional
 import numpy as np
 from phoenix.core.config import config
+from phoenix.observability.logger import get_logger
+
+logger = get_logger("Phoenix AI.Embeddings")
 
 try:
     from sentence_transformers import SentenceTransformer
@@ -37,9 +40,9 @@ class SentenceTransformerEmbeddings(BaseEmbeddings):
                     "sentence-transformers is not installed. "
                     "Please install it using: pip install sentence-transformers"
                 )
-            print(f"[*] Initializing Embedding Model: {self.model_name}...")
+            logger.info(f"Initializing Embedding Model: {self.model_name}...")
             SentenceTransformerEmbeddings._model_cache[self.model_name] = SentenceTransformer(self.model_name)
-            print(f"[+] Embedding Model Loaded into cache.")
+            logger.info("Embedding Model loaded into cache.")
         
         self._model = SentenceTransformerEmbeddings._model_cache[self.model_name]
 

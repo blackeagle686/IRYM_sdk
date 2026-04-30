@@ -2,6 +2,9 @@ import chromadb
 from typing import Any, List, Optional
 from phoenix.vector.base import BaseVectorDB
 from phoenix.core.config import config
+from phoenix.observability.logger import get_logger
+
+logger = get_logger("Phoenix AI.Vector.Chroma")
 
 class ChromaVectorDB(BaseVectorDB):
     def __init__(self, collection_name: str = "PhoenixAI_collection", embedding_service=None):
@@ -70,7 +73,7 @@ class ChromaVectorDB(BaseVectorDB):
                 metadatas=metadatas[i:end] if metadatas else None,
                 ids=ids[i:end]
             )
-            print(f"  [>] Progress: {end}/{total} units indexed...")
+            logger.info(f"Progress: {end}/{total} units indexed...")
 
 
     async def delete(self, ids: List[str]) -> None:

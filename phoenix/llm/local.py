@@ -2,8 +2,11 @@ import httpx
 from phoenix.llm.base import BaseLLM
 from phoenix.core.config import config
 from phoenix.observability.tracing import tracer
+from phoenix.observability.logger import get_logger
 from phoenix.core.container import container
 from typing import Optional
+
+logger = get_logger("Phoenix AI.LLM.Local")
 
 class LocalLLM(BaseLLM):
     _model_cache = {}
@@ -23,11 +26,11 @@ class LocalLLM(BaseLLM):
             return
 
         if not config.LOAD_LOCAL_LLM:
-            print(f"[!] LocalLLM.init skipped for {self.model} because LOAD_LOCAL_LLM is False.")
+            logger.info(f"LocalLLM.init skipped for {self.model} because LOAD_LOCAL_LLM is False.")
             return
 
         if self.model not in LocalLLM._model_cache:
-            print(f"[*] Initializing Local LLM Model: {self.model}...")
+            logger.info(f"Initializing Local LLM Model: {self.model}...")
             try:
                 from transformers import AutoTokenizer, AutoModelForCausalLM
                 
@@ -35,7 +38,7 @@ class LocalLLM(BaseLLM):
                 try:
                     import bitsandbytes
                     quant_kwargs = {"load_in_4bit": True}
-                    print("[*] bitsandbytes available. Enabling 4-bit quantization for LLM...")
+                    logger.info("bitsandbytes available. Enabling 4-bit quantization for LLM...")
                 except ImportError:
                     pass
 
@@ -49,12 +52,12 @@ class LocalLLM(BaseLLM):
                     "tokenizer": tokenizer,
                     "type": "transformers"
                 }
-                print("[+] LLM Loaded into memory cache.")
+                logger.info("LLM loaded into memory cache.")
             except ImportError as ie:
-                print(f"[!] {ie}. Falling back to Ollama.")
+                logger.warning(f"{ie}. Falling back to Ollama.")
                 LocalLLM._model_cache[self.model] = {"type": "ollama"}
             except Exception as e:
-                print(f"[!] Failed to load LLM locally: {e}. Falling back to Ollama.")
+                logger.warning(f"Failed to load LLM locally: {e}. Falling back to Ollama.")
                 LocalLLM._model_cache[self.model] = {"type": "ollama"}
 
         cached = LocalLLM._model_cache[self.model]
@@ -67,11 +70,11 @@ class LocalLLM(BaseLLM):
                 async with httpx.AsyncClient() as client:
                     resp = await client.get(f"{self.base_url.replace('/api/generate', '')}/api/tags")
                     if resp.status_code != 200:
-                        print(f"Warning: Ollama not responding at {self.base_url}")
+                        logger.warning(f"Ollama not responding at {self.base_url}")
             except Exception:
-                print("Warning: Could not connect to local Ollama. Ensure it is running.")
+                logger.warning("Could not connect to local Ollama. Ensure it is running.")
 
-    async def generate(self, prompt: str, session_id: Optional[str] = None) -> str:
+    async def generate(self, prompt: str, session_id: Optional[str] = None, max_tokens: Optional[int] = None) -> str:
         if not self.hf_model and not self.is_ollama:
             if not config.LOAD_LOCAL_LLM:
                 raise RuntimeError(
@@ -119,7 +122,10 @@ class LocalLLM(BaseLLM):
                     ollama_prompt += f"{m['role'].capitalize()}: {m['content']}\n"
                 ollama_prompt += "Assistant:"
                 
-                response = await self._ollama_generate(ollama_prompt)
+                response = await self._ollama_generate(
+                    ollama_prompt,
+                    max_tokens=max_tokens or config.SECURITY_MAX_OUTPUT_LENGTH
+                )
                 # Estimate tokens for Ollama (approx. 1.3 tokens per word)
                 words = (len(ollama_prompt.split()) + len(response.split()))
                 usage = {"total_tokens": int(words * 1.3)}
@@ -140,7 +146,10 @@ class LocalLLM(BaseLLM):
                     inputs = self.tokenizer(plain_prompt, return_tensors="pt").to(self.hf_model.device)
                     
                 with torch.no_grad():
-                    generated_ids = self.hf_model.generate(**inputs, max_new_tokens=config.SECURITY_MAX_OUTPUT_LENGTH)
+                    generated_ids = self.hf_model.generate(
+                        **inputs,
+                        max_new_tokens=max_tokens or config.SECURITY_MAX_OUTPUT_LENGTH
+                    )
                     
                 generated_ids_trimmed = [out_ids[len(in_ids):] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)]
                 output = self.tokenizer.batch_decode(generated_ids_trimmed, skip_special_tokens=True)
@@ -164,11 +173,12 @@ class LocalLLM(BaseLLM):
             
         return response
 
-    async def _ollama_generate(self, prompt: str) -> str:
+    async def _ollama_generate(self, prompt: str, max_tokens: int) -> str:
         try:
             payload = {
                 "model": self.model,
                 "prompt": prompt,
+                "num_predict": max_tokens,
                 "stream": False
             }
             async with httpx.AsyncClient(timeout=120.0) as client:

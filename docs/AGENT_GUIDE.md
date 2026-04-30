@@ -43,6 +43,17 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
+### 1.1 Startup Performance Upgrades
+
+Phoenix startup now initializes core services concurrently. Heavy local models (like embeddings) still load lazily on first real use, so boot is fast while preserving full capability.
+
+```python
+from phoenix import init_phoenix, startup_phoenix
+
+init_phoenix(local=False, vlm=False)  # choose providers
+await startup_phoenix()               # parallel async startup
+```
+
 ### 2. Execution Modes
 
 The agent supports three execution modes via the `mode` parameter in `agent.run()`:
@@ -57,6 +68,22 @@ await agent.run("Refactor the memory module to support Redis.", mode="plan")
 
 # Quick greeting
 await agent.run("Who are you?", mode="fast_ans")
+```
+
+### 3. Streaming Mode (`run_stream`)
+
+Use `run_stream` to get event-based output:
+- `status` events for cognition/execution progress
+- `chunk` events for streamed text
+
+This now includes planner thinking text in planning mode.
+
+```python
+async for event in agent.run_stream("Refactor planner for reliability", mode="plan"):
+    if event["type"] == "status":
+        print(f"[status] {event['content']}")
+    elif event["type"] == "chunk":
+        print(event["content"], end="")
 ```
 
 ---
@@ -76,6 +103,107 @@ def weather_tool(city: str):
 # Register the tool to the agent
 agent.register_tool(weather_tool)
 ```
+
+### Built-in Engineering File Tools (Upgraded)
+
+- `file_read`: read file contents
+- `file_write`: full overwrite
+- `file_append`: additive writes (great for chunked generation)
+- `file_edit`: search/replace patch tool with upsert behavior
+- `file_update_multi`: multi-block in-place updates
+
+The planner is optimized to prefer precision loops (`file_read -> file_edit`) for existing files and chunked appends for large new files.
+
+---
+
+## 🔧 Extensibility: Bring Your Own Components
+
+You can replace any core cognition/execution module without forking Phoenix:
+- `thinker`
+- `planner`
+- `analyzer`
+- `actor`
+- `reflector`
+- `tool_manager`
+- `loop` (instance) or `loop_cls` (class)
+
+### A) Inject Custom Modules
+
+```python
+from phoenix.agent import Agent
+
+agent = Agent(
+    thinker=my_thinker,
+    planner=my_planner,
+    analyzer=my_analyzer,
+    actor=my_actor,
+    reflector=my_reflector,
+)
+```
+
+### B) Use a Custom Agent Loop
+
+```python
+class MyLoop:
+    def __init__(self, thinker, planner, actor, reflector, analyzer):
+        self.thinker = thinker
+        self.planner = planner
+        self.actor = actor
+        self.reflector = reflector
+        self.analyzer = analyzer
+
+    async def run(self, prompt, memory, session_id, max_iterations=5):
+        return "custom loop result"
+
+    async def run_stream(self, prompt, memory, session_id, max_iterations=5):
+        yield {"type": "status", "content": "custom thinking"}
+        yield {"type": "chunk", "content": "custom output\n"}
+
+agent = Agent(loop_cls=MyLoop)
+```
+
+### C) Runtime Replacement (Hot Swap)
+
+```python
+agent.set_component("planner", my_new_planner, rebuild_loop=True)
+agent.rebuild_loop()  # optional explicit refresh
+```
+
+### D) Factory-Based Construction
+
+```python
+agent = Agent(
+    component_factories={
+        "thinker": lambda **ctx: MyThinker(ctx["llm"]),
+        "planner": lambda **ctx: MyPlanner(ctx["llm"], ctx["tools"]),
+    }
+)
+```
+
+---
+
+## 🧠 Planner Thinking Visibility
+
+The planner now exposes streamed reasoning text during `run_stream` via `Planner.stream_thinking(...)`.  
+This is designed for UI transparency (show users what the agent is planning before tool actions run).
+
+---
+
+## ⚙️ LLM Controls & Reliability Upgrades
+
+- `max_tokens` is now supported in LLM generation calls.
+- Auto-mode classification is constrained for low-latency routing (`PLAN` vs `FAST`).
+- Cognitive modules use bounded output budgets to reduce rambling and latency.
+- Agent loop includes an anti-false-finish guard: planner cannot complete before meaningful actions are executed.
+
+---
+
+## 🚀 Semantic Insight Caching
+
+`InsightEngine` now supports semantic response caching using embeddings:
+- checks similar prior prompts before calling LLM
+- returns cached answer when similarity threshold is high
+- improves latency for repeated/rephrased questions
 
 ---
 

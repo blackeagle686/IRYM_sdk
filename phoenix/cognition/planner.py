@@ -10,16 +10,21 @@ class Planner:
         self.tools = tools
         self._cached_tool_info = None
 
-    async def plan(self, objective: str, previous_results: str = "") -> dict:
+    def _build_planner_prompt(self, objective: str, previous_results: str = "") -> str:
         if self._cached_tool_info is None:
             self._cached_tool_info = json.dumps(self.tools.get_all_tools_info(), indent=2)
-        
+
         available_tools = self._cached_tool_info
-        
+
         system_prompt = f"""
         You are the 'Planner' module of an autonomous agent.
         Based on the given objective, formulate the next action using one of the available tools.
         If the objective is already met based on previous results, you can use a 'finish' tool.
+        Rules:
+        1. Actions Over Talking: never claim completion unless verifiable action results show objective is complete.
+        2. Verify Completion: use 'finish' only after at least one concrete tool action, except for pure conversational asks.
+        3. Precision Editing: prefer file_read -> file_edit loops for existing files.
+        4. For new/large files, prefer chunked creation with file_append (imports -> structure -> implementation).
         
         Available Tools:
         {available_tools}
@@ -37,8 +42,39 @@ class Planner:
         If you believe the task is complete, use "tool": "finish".
         You can specify multiple independent actions if they can be performed simultaneously.
         """
-        
-        full_prompt = f"{system_prompt}\n\nObjective: {objective}\n\nPlan (JSON only):"
+        return f"{system_prompt}\n\nObjective: {objective}\n\nPlan (JSON only):"
+
+    async def stream_thinking(self, objective: str, previous_results: str = ""):
+        """
+        Streams planner reasoning text for UI visibility.
+        Falls back to chunking a normal response when model streaming is unavailable.
+        """
+        thinking_prompt = f"""
+        You are the Planner and must briefly explain your next-step reasoning before taking action.
+        Objective: {objective}
+        Previous results: {previous_results}
+
+        Produce concise thought text describing:
+        1) what you will do next
+        2) why it is the best next action
+        3) what success signal you expect
+        """
+
+        if hasattr(self.llm, "generate_stream"):
+            try:
+                async for chunk in self.llm.generate_stream(thinking_prompt, session_id=None, max_tokens=200):
+                    if chunk:
+                        yield str(chunk)
+                return
+            except Exception:
+                pass
+
+        text = await self.llm.generate(thinking_prompt, session_id=None, max_tokens=200)
+        for token in text.split():
+            yield token + " "
+
+    async def plan(self, objective: str, previous_results: str = "") -> dict:
+        full_prompt = self._build_planner_prompt(objective, previous_results)
         response = await self.llm.generate(full_prompt, session_id=None)
         
         # Clean up JSON if LLM added markdown formatting

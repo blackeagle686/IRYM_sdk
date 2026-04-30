@@ -43,7 +43,7 @@ class Analyzer:
         """
         
         full_prompt = f"{system_prompt}\n\nFiles in workspace:\n{files_str}\n\nUser Prompt: {prompt}\n\nAnalysis (JSON):"
-        response = await self.llm.generate(full_prompt, session_id=None)
+        response = await self.llm.generate(full_prompt, session_id=None, max_tokens=150)
         
         import json
         import re

@@ -2,7 +2,7 @@ from phoenix.tools.base import BaseTool, ToolResult, tool
 from phoenix.tools.registry import ToolRegistry
 from phoenix.tools.search import WebSearchTool
 from phoenix.tools.code import CodeExecutionTool
-from phoenix.tools.io import FileReadTool, FileWriteTool, FileSearchTool
+from phoenix.tools.io import FileReadTool, FileWriteTool, FileAppendTool, FileEditTool, FileSearchTool
 
 __all__ = [
     "BaseTool",
@@ -13,5 +13,7 @@ __all__ = [
     "CodeExecutionTool",
     "FileReadTool",
     "FileWriteTool",
+    "FileAppendTool",
+    "FileEditTool",
     "FileSearchTool"
 ]

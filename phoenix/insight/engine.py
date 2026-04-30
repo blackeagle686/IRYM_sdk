@@ -6,6 +6,7 @@ from typing import Optional
 from phoenix.core.config import config
 from phoenix.core.utils import async_confirm
 from phoenix.observability.logger import get_logger
+from phoenix.cache.semantic import SemanticCache
 
 logger = get_logger("Phoenix AI.Insight")
 
@@ -14,11 +15,12 @@ class InsightEngine(BaseInsightService):
     Main orchestration layer.
     Manages vector retrieval, prompt building, LLM generation, and cache checking.
     """
-    def __init__(self, vector_db, primary, fallback, cache=None):
+    def __init__(self, vector_db, primary, fallback, cache=None, semantic_cache: Optional[SemanticCache] = None):
         self.vector_db = vector_db
         self.primary = primary
         self.fallback = fallback
         self.cache = cache
+        self.semantic_cache = semantic_cache
         
         self.retriever = VectorRetriever(vector_db)
         self.composer = PromptComposer()
@@ -41,6 +43,12 @@ class InsightEngine(BaseInsightService):
             provider = self.fallback
 
         # 1. Cache check (Fast path)
+        if self.semantic_cache:
+            semantic_hit = await self.semantic_cache.get_similar(optimized_query)
+            if semantic_hit:
+                logger.info("Semantic cache hit (similarity threshold met).")
+                return semantic_hit
+
         cache_key = f"insight:{optimized_query}"
         if self.cache:
             cached = await self.cache.get(cache_key)
@@ -114,6 +122,8 @@ class InsightEngine(BaseInsightService):
                 raise e
 
         # 5. Response caching
+        if self.semantic_cache:
+            await self.semantic_cache.add(optimized_query, response)
         if self.cache:
             await self.cache.set(cache_key, response, ttl=300)
 

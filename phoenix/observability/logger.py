@@ -1,7 +1,6 @@
-import logging
-
 import json
 import logging
+import os
 from datetime import datetime
 
 class StructuredFormatter(logging.Formatter):
@@ -26,5 +25,7 @@ def get_logger(name: str) -> logging.Logger:
         handler = logging.StreamHandler()
         handler.setFormatter(StructuredFormatter())
         logger.addHandler(handler)
-        logger.setLevel(logging.INFO)
+    level_name = os.getenv("LOG_LEVEL", "INFO").upper()
+    level = getattr(logging, level_name, logging.INFO)
+    logger.setLevel(level)
     return logger

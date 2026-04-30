@@ -17,6 +17,11 @@ from phoenix.training.openai_finetuner import OpenAIFineTuner
 from phoenix.memory.manager import MemoryManager
 from phoenix.audio.local import LocalSTT, LocalTTS
 from phoenix.audio.openai import OpenAISTT, OpenAITTS
+from phoenix.observability.logger import get_logger
+from phoenix.cache.semantic import SemanticCache
+import asyncio
+
+logger = get_logger("Phoenix AI.Main")
 
 def init_phoenix(local: bool = False, vlm: bool = False):
     # 0. Set local loading preferences
@@ -94,45 +99,49 @@ async def startup_phoenix():
     Asynchronously initializes all services registered in the container.
     This includes Cache connections, Vector DB clients, and LLM pools.
     """
+    init_tasks = []
+
     # 1. Start Cache
     cache = container.get("cache")
     if hasattr(cache, "init"):
-        await cache.init()
+        init_tasks.append(cache.init())
     
     # 2. Start LLM Providers
     llm_openai = container.get("llm_openai")
     llm_local = container.get("llm_local")
     if hasattr(llm_openai, "init"):
-        await llm_openai.init()
+        init_tasks.append(llm_openai.init())
     
     if config.LOAD_LOCAL_LLM and hasattr(llm_local, "init"):
-        await llm_local.init()
+        init_tasks.append(llm_local.init())
     elif not config.LOAD_LOCAL_LLM:
-        print("[!] Local LLM loading skipped (LOAD_LOCAL_LLM=False).")
+        logger.info("Local LLM loading skipped (LOAD_LOCAL_LLM=False).")
         
     # 3. Start Vector DB
     vector_db = container.get("vector_db")
     if hasattr(vector_db, "init"):
-        await vector_db.init()
+        init_tasks.append(vector_db.init())
     
     # 4. Start VLM Providers
     vlm_openai = container.get("vlm_openai")
     vlm_local = container.get("vlm_local")
     if hasattr(vlm_openai, "init"):
-        await vlm_openai.init()
+        init_tasks.append(vlm_openai.init())
     
     if config.LOAD_LOCAL_VLM and hasattr(vlm_local, "init"):
-        await vlm_local.init()
+        init_tasks.append(vlm_local.init())
     elif not config.LOAD_LOCAL_VLM:
-        print("[!] Local VLM loading skipped (LOAD_LOCAL_VLM=False).")
+        logger.info("Local VLM loading skipped (LOAD_LOCAL_VLM=False).")
     
     # 5. Start Audio Services
     for service_name in ["stt_local", "stt_openai", "tts_local", "tts_openai"]:
         service = container.get(service_name)
         if hasattr(service, "init"):
-            await service.init()
-    
-    print("[+] Phoenix AI SDK Services started successfully.")
+            init_tasks.append(service.init())
+
+    if init_tasks:
+        await asyncio.gather(*init_tasks)
+    logger.info("Phoenix AI SDK Services started successfully.")
 
 def get_rag_pipeline() -> RAGPipeline:
     vector_db = container.get("vector_db")
@@ -151,6 +160,8 @@ def get_insight_engine(openai_model: str = None, local_model: str = None, prefer
     llm_openai = container.get("llm_openai")
     llm_local = container.get("llm_local")
     cache = container.get("cache")
+    embeddings = container.get("embeddings")
+    semantic_cache = SemanticCache(embeddings=embeddings, threshold=0.95)
     
     if openai_model:
         llm_openai.model = openai_model
@@ -158,14 +169,14 @@ def get_insight_engine(openai_model: str = None, local_model: str = None, prefer
         llm_local.model = local_model
         
     if prefer_local is True:
-        return InsightEngine(vector_db, llm_local, llm_openai, cache)
+        return InsightEngine(vector_db, llm_local, llm_openai, cache, semantic_cache=semantic_cache)
     elif prefer_local is False:
-        return InsightEngine(vector_db, llm_openai, llm_local, cache)
+        return InsightEngine(vector_db, llm_openai, llm_local, cache, semantic_cache=semantic_cache)
         
     # Default: use generic 'llm' as primary
     primary = container.get("llm")
     fallback = llm_openai if primary == llm_local else llm_local
-    return InsightEngine(vector_db, primary, fallback, cache)
+    return InsightEngine(vector_db, primary, fallback, cache, semantic_cache=semantic_cache)
 
 def get_vlm_pipeline(openai_model: str = None, local_model: str = None, prefer_local: bool = True) -> VLMPipeline:
     vlm_openai = container.get("vlm_openai")
@@ -212,7 +223,7 @@ async def init_phoenix_full(local: bool = False, vlm: bool = False, parallel_hoo
     init_phoenix(local=local, vlm=vlm)
     await startup_phoenix()
     await lifecycle.startup(parallel=parallel_hooks)
-    print(f"[+] Phoenix AI SDK initialized (parallel_hooks={parallel_hooks}).")
+    logger.info(f"Phoenix AI SDK initialized (parallel_hooks={parallel_hooks}).")
 
 
 

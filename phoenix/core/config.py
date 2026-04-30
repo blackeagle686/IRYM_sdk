@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 load_dotenv(override=True)
 
 class Config:
+    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
     REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
     
     # LLM Config

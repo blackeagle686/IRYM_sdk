@@ -2,9 +2,11 @@ from phoenix.llm.base import BaseLLM
 from phoenix.core.config import config
 from openai import AsyncOpenAI
 from phoenix.observability.tracing import tracer
+from phoenix.observability.logger import get_logger
 from phoenix.core.container import container
 from typing import Optional
 
+logger = get_logger("Phoenix AI.LLM.OpenAI")
 
 class OpenAILLM(BaseLLM):
     def __init__(self):
@@ -19,7 +21,7 @@ class OpenAILLM(BaseLLM):
     
     async def init(self):
         if not self.api_key:
-            print("Warning: OPENAI_API_KEY is missing. Operating in mock mode.")
+            logger.warning("OPENAI_API_KEY is missing. Operating in mock mode.")
 
         base_url = self.base_url
         if base_url and base_url.endswith("/"):
@@ -32,7 +34,7 @@ class OpenAILLM(BaseLLM):
             timeout=httpx.Timeout(120.0, connect=60.0)
         )
 
-    async def generate(self, prompt: str, session_id: Optional[str] = None) -> str:
+    async def generate(self, prompt: str, session_id: Optional[str] = None, max_tokens: Optional[int] = None) -> str:
         if not self.client:
             raise RuntimeError("OpenAILLM is not initialized.")
 
@@ -80,7 +82,7 @@ class OpenAILLM(BaseLLM):
             resp = await self.client.chat.completions.create(
                 model=self.model,
                 messages=current_messages,
-                max_tokens=config.SECURITY_MAX_OUTPUT_LENGTH
+                max_tokens=max_tokens or config.SECURITY_MAX_OUTPUT_LENGTH
             )
 
             # Safe extraction
