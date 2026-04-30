@@ -16,7 +16,11 @@ from phoenix.memory.hybrid import HybridMemory
             
         }, 
         "tasks": {
-            
+            "task_name": {
+                "description": "What the task is about",
+                "dependencies": ["other_task_name"],
+                "tools_required": ["tool_name"],
+            }
         }
     }
 
