@@ -9,10 +9,10 @@ from typing import Optional
 logger = get_logger("Phoenix AI.LLM.OpenAI")
 
 class OpenAILLM(BaseLLM):
-    def __init__(self):
-        self.api_key = getattr(config, "OPENAI_API_KEY", None)
-        self.base_url = getattr(config, "OPENAI_BASE_URL", None)
-        self.model = getattr(config, "OPENAI_LLM_MODEL", None) or "LongCat-Flash-Chat"
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None, model: Optional[str] = None):
+        self.api_key = api_key or getattr(config, "OPENAI_API_KEY", None)
+        self.base_url = base_url or getattr(config, "OPENAI_BASE_URL", None)
+        self.model = model or getattr(config, "OPENAI_LLM_MODEL", None) or "LongCat-Flash-Chat"
         self.client = None
 
     def is_available(self) -> bool:
