@@ -7,7 +7,9 @@ from phoenix.memory.hybrid import HybridMemory
     semantic cache uset the main_objective to find relevant memory entries to pass back to thinker as context for better understanding of user prompt and workspace state.
     Thinker in planning mode must generate a tasks files containe on: 
         {
-            "task_id":
+            "task_id":{
+                "desc
+            }
         }
     Thinker must return response like this: 
     { 
