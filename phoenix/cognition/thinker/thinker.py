@@ -48,8 +48,8 @@ from phoenix.llm import OpenAILLM
 thinker_llm = None 
 
 class Thinker(BaseThinker):
-    def __init__(self, llm):
-        self.
+    def __init__(self, llm=thinker_llm):
+        self.llm = llm 
         
     async def think(self, prompt: str) -> dict:
         main_objective = await self.generate_main_objective(prompt)
