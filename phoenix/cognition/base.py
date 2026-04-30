@@ -14,4 +14,7 @@ class BaseThinker():
     def generate_main_objective(self):
         raise NotImplementedError
     
-    def 
+    def generate_file_tasks(self, file_path: str, task: str) -> dict:
+        """
+        Generates a structured representation of a file-related task.
+        """
