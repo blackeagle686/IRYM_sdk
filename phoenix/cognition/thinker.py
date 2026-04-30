@@ -24,7 +24,9 @@ from phoenix.memory.hybrid import HybridMemory
                 "periority": "high/medium/low"
             }
         }, 
-        
+        meta:{
+            
+        }
     }
 
 """
