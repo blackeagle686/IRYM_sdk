@@ -2,7 +2,7 @@ from phoenix.cognition.thinker import Thinker
 from phoenix.cognition.planner import Planner
 from phoenix.cognition.reflector import Reflector
 from phoenix.cognition.analyzer import Analyzer
-from phoenix.execution.actor import Actor
+from phoenix.cognition.actor import Actor
 import asyncio
 
 class AgentLoop:
