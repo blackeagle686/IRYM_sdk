@@ -44,6 +44,8 @@
 """
 from .base import BaseThinker
 
+thinker_llm = 
+
 class Thinker(BaseThinker):
     def __init__(self, llm):
         super().__init__(llm)
