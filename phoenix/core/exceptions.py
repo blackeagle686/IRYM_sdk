@@ -1,4 +1,4 @@
-class Phoenix AIError(Exception):
+class PhoenixAIError(Exception):
     """Base exception for Phoenix AI SDK."""
     pass
 
