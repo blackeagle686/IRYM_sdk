@@ -5,4 +5,7 @@ class BaseThinker():
     def think(self):
         raise NotImplementedError
     
-    def generate_task
+    def generate_tasks(self):
+        raise NotImplementedError
+    
+    def generate_
