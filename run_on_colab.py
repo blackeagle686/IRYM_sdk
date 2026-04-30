@@ -5,7 +5,12 @@ import sys
 
 def install_dependencies():
     print("Installing required dependencies...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "pyngrok", "uvicorn", "fastapi", "python-multipart"])
+    # Install Redis server for caching
+    subprocess.check_call(["apt-get", "update"])
+    subprocess.check_call(["apt-get", "install", "-y", "redis-server"])
+    subprocess.check_call(["service", "redis-server", "start"])
+    
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "pyngrok", "uvicorn", "fastapi", "python-multipart", "redis"])
 
 def setup_ngrok(auth_token):
     from pyngrok import ngrok
