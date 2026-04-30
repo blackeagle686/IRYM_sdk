@@ -15,6 +15,7 @@ from phoenix.memory.hybrid import HybridMemory
                 "status": "pending/in_progress/done/field"
             }
         }
+        
     Thinker must return response like this: 
     { 
         "main_objective": "Refined main goal based on user prompt",
