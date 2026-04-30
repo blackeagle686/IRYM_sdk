@@ -47,6 +47,8 @@ def generate_main_objective(prompt: str) -> str:
     """Extracts the main objective from the user's prompt."""
     pass
 
+def generate_sub_objectives(main_objective: str, ) -> list:
+
 class Thinker:
     """Analyzes user prompts, breaks them down, and understands core objectives."""
     def __init__(self, llm: BaseLLM):
