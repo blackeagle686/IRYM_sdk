@@ -3,10 +3,9 @@ from svu_bot.bot import SVUBot
 
 async def main():
     bot = SVUBot()
-    await bot.initialize()
     
     print("\n" + "="*30)
-    print("Welcome to SVU Bot CLI")
+    print("Welcome to SVU Bot (Framework Mode)")
     print("Type 'exit' to quit")
     print("="*30 + "\n")
     
@@ -17,6 +16,7 @@ async def main():
                 break
             
             print("\nSVU Bot is thinking...", end="\r")
+            # The ChatBot framework handles its own lazy initialization
             response = await bot.chat(user_input)
             print(f"SVU Bot: {response}\n")
             
