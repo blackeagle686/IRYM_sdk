@@ -20,6 +20,7 @@ from phoenix.memory.hybrid import HybridMemory
                 "description": "What the task is about",
                 "dependencies": ["other_task_name"],
                 "tools_required": ["tool_name"],
+                "perior
             }
         }
     }
