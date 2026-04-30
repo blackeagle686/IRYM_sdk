@@ -1,5 +1,23 @@
+"""
+SVU BOT - NLP PIPELINE STEP 2: INTENT DETECTOR
+==============================================
+Purpose:
+    This module analyzes the cleaned user input to categorize the "Actionable Goal."
+    It allows the bot to decide how to route the query before it reaches the AI logic.
+
+Responsibilities (Member 2):
+    1. Identify greetings and social openers.
+    2. Detect academic-specific queries (Degrees, Master's, etc.).
+    3. Monitor for exam-related inquiries (Grades, Results).
+    4. Categorize registration and administrative requests (Fees, Enrollment).
+    5. Detect technical support issues (Portal login, Password reset).
+
+Returns:
+    A standardized string representing the intent (e.g., "EXAM_INQUIRY").
+"""
+
 class IntentDetector:
-    """Step 2: Handled by Member 2 of the NLP team. Categorizes user goals."""
+    """Handled by Member 2 of the NLP team. Categorizes user goals."""
     @staticmethod
     def process(text: str) -> str:
         text = text.lower()
