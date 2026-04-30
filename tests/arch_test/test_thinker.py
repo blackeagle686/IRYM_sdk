@@ -1,7 +1,7 @@
 import asyncio
 from phoenix.cognition.thinker.thinker import Thinker
 from phoenix.memory.hybrid.hybrid_manager import HybridMemoryManager
-from tests.arch_test.helpers import print_step, MockLLM
+from helpers import print_step, MockLLM
 
 async def test_thinker():
     print_step("Initializing Thinker with MockLLM")
