@@ -7,7 +7,8 @@ from phoenix.memory.hybrid import HybridMemory
     { 
         "main_objective": "Refined main goal based on user prompt",
         "sub_objectives": [],
-        "context_memory": [last_n relevant memory entries to the prompt], 
+        "context_memory": [last_n relevant memory entries to the prompt],
+        "files" 
     }
 
 """
