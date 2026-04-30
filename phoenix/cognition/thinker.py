@@ -47,7 +47,7 @@ def generate_main_objective(prompt: str) -> str:
     """Extracts the main objective from the user's prompt."""
     pass
 
-def generate_sub_objectives(main_objective: str, context_memory_last_main_objective:list) -> list:
+def generate_sub_objectives(main_objective: str) -> list:
     
 
 class Thinker:
