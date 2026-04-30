@@ -49,7 +49,7 @@ thinker_llm = None
 
 class Thinker(BaseThinker):
     def __init__(self, llm):
-        super().__init__(llm)
+        self.
         
     async def think(self, prompt: str) -> dict:
         main_objective = await self.generate_main_objective(prompt)
