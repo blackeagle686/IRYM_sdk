@@ -49,7 +49,7 @@ def generate_main_objective(prompt: str) -> str:
 
 def generate_sub_objectives(main_objective: str) -> list:
     """
-        from mem
+        from context memory 
     """
     
 
