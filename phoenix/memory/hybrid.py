@@ -103,7 +103,8 @@ class HybridMemory:
     Advanced MEMORY Structure
     
     {
-        t
+        "thinker": {
+            
     }
     
 
