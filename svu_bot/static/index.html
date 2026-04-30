@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVU Bot - Virtual Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <span class="icon">🐦‍🔥</span>
+                <h1>SVU Bot</h1>
+            </div>
+            <div class="status-badge">
+                <span class="dot"></span> Online
+            </div>
+        </header>
+
+        <main id="chat-window">
+            <div class="message bot-message">
+                <div class="message-content">
+                    Hello! I'm your SVU Virtual Assistant. How can I help you today?
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <form id="chat-form">
+                <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
+                <button type="submit" id="send-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                    </svg>
+                </button>
+            </form>
+        </footer>
+    </div>
+
+    <script>
+        const chatWindow = document.getElementById('chat-window');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+
+        function addMessage(content, role) {
+            const div = document.createElement('div');
+            div.className = `message ${role}-message`;
+            div.innerHTML = `<div class="message-content">${content}</div>`;
+            chatWindow.appendChild(div);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msg = userInput.get_value().trim();
+            if (!msg) return;
+
+            addMessage(msg, 'user');
+            userInput.value = '';
+
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot-message loading';
+            loadingDiv.innerHTML = '<div class="message-content">...</div>';
+            chatWindow.appendChild(loadingDiv);
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: msg })
+                });
+                const data = await response.json();
+                chatWindow.removeChild(loadingDiv);
+                addMessage(data.reply, 'bot');
+            } catch (err) {
+                chatWindow.removeChild(loadingDiv);
+                addMessage('Sorry, something went wrong.', 'bot');
+            }
+        });
+    </script>
+</body>
+</html>
