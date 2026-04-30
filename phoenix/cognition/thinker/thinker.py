@@ -45,6 +45,7 @@
 from .base import BaseThinker
 
 class Thinker(BaseThinker):
+    
     async def think(self, prompt: str) -> dict:
         main_objective = await self.generate_main_objective(prompt)
         sub_objectives = await self.generate_sub_objectives(main_objective)
