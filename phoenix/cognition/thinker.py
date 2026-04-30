@@ -3,7 +3,7 @@ from phoenix.memory.hybrid import HybridMemory
 
 
 """
-    
+    Thinker must return 
 
 """
 
