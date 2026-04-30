@@ -10,7 +10,8 @@ from phoenix.memory.hybrid import HybridMemory
         "main_objective": "Refined main goal based on user prompt",
         "sub_objectives": [],
         "context_memory": [last_n relevant memory entries to the prompt],
-        
+        "summary_answer": "A concise summary of the user's request and the core objectives",
+        "llm
         "files":{
             "file_name": {
                 "file_path": "path/to/file",
