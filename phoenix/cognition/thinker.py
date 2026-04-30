@@ -51,7 +51,11 @@ def generate_sub_objectives(main_objective: str) -> list:
     """
         from context memory extract the following:
         for example context_memory shape is like this:[ceil1, ceil2, ceil3, ceil4, ceil5]
-        ceil
+        ceil1: {
+            thinker:{
+                
+            }
+        }
         
     """
     
