@@ -43,7 +43,7 @@
 
 """
 from .base import BaseThinker
-
+from 
 thinker_llm = 
 
 class Thinker(BaseThinker):
