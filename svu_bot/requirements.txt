@@ -1,0 +1,29 @@
+# SVU Bot Requirements
+# Generated for deployment with Phoenix AI Framework
+
+# Core Framework & API
+fastapi
+uvicorn
+python-multipart
+httpx
+python-dotenv
+
+# LLM & AI
+openai
+sentence-transformers
+numpy
+
+# Vector Database & RAG
+chromadb
+pypdf
+python-docx
+pandas
+openpyxl
+beautifulsoup4
+requests
+
+# Caching
+redis
+
+# Deployment (Colab/Ngrok)
+pyngrok
