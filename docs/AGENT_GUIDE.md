@@ -207,6 +207,61 @@ This is designed for UI transparency (show users what the agent is planning befo
 
 ---
 
+## 🧠 Memory Customization (Latest)
+
+Phoenix now supports interactive memory workflows and custom user memory backends.
+
+### 1) Interactive Hybrid Memory APIs
+
+`HybridMemory` now supports structured context operations in addition to plain chat turns:
+
+- `add_context_item(session_id, key, value, source="user")`
+- `get_context_bundle(session_id, query="")`
+
+`get_context_bundle(...)` returns a structured dictionary for advanced UI/loop use:
+- `session_variables`
+- `reflections`
+- `recent_conversation`
+- `full_text`
+
+```python
+from phoenix.memory.hybrid import HybridMemory
+
+memory = HybridMemory()
+await memory.add_interaction("s1", "user", "hello", metadata={"project": "IRYM"})
+await memory.add_context_item("s1", "repo", "phoenix-ai", source="system")
+bundle = await memory.get_context_bundle("s1", query="hello")
+print(bundle["session_variables"])
+```
+
+### 2) Plug Your Own Memory Backend
+
+You can pass custom memory directly to `Agent(...)`.  
+If your memory object does not fully match Phoenix internals, it will be wrapped by `InteractiveMemoryAdapter`.
+
+Supported custom method signatures (any compatible subset):
+
+- write: `add_interaction(...)` or `add_message(...)` or `store(...)`
+- read: `get_full_context(...)` or `get_context(...)`
+
+```python
+class MyMemory:
+    async def add_message(self, session_id, role, content, metadata=None):
+        ...
+
+    async def get_context(self, session_id, query=""):
+        return "custom context"
+
+agent = Agent(memory=MyMemory())
+```
+
+### 3) Reflection Runs in Background
+
+To reduce latency, reflection consolidation and reflection log persistence are now scheduled as background operations inside `AgentLoop`.  
+This means users get faster responses while reflection state is still persisted asynchronously.
+
+---
+
 ## 🌐 Connecting to Applications
 
 ### 💻 CLI Integration (Interactive)
