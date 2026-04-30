@@ -11,6 +11,9 @@ from phoenix.tools.io import FileAppendTool, FileEditTool
 class TestLatestUpdates(unittest.IsolatedAsyncioTestCase):
     async def test_planner_stream_thinking_fallback(self):
         mock_llm = MagicMock()
+        # Disable implicit MagicMock attribute auto-creation for generate_stream.
+        # This forces the Planner to exercise the non-stream fallback path.
+        mock_llm.generate_stream = None
         mock_llm.generate = AsyncMock(return_value="I will read then patch the file.")
         mock_tools = MagicMock()
         mock_tools.get_all_tools_info.return_value = []
