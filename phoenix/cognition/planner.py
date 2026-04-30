@@ -60,12 +60,18 @@ class Planner:
         3) what success signal you expect
         """
 
-        if hasattr(self.llm, "generate_stream"):
+        stream_fn = getattr(self.llm, "generate_stream", None)
+        if callable(stream_fn):
             try:
-                async for chunk in self.llm.generate_stream(thinking_prompt, session_id=None, max_tokens=200):
-                    if chunk:
-                        yield str(chunk)
-                return
+                stream = stream_fn(thinking_prompt, session_id=None, max_tokens=200)
+                if hasattr(stream, "__aiter__"):
+                    yielded = False
+                    async for chunk in stream:
+                        if chunk:
+                            yielded = True
+                            yield str(chunk)
+                    if yielded:
+                        return
             except Exception:
                 pass
 
