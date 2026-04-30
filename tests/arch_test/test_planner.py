@@ -1,6 +1,6 @@
 import asyncio
 from phoenix.cognition.planner.planner import Planner
-from tests.arch_test.helpers import print_step, MockLLM
+from helpers import print_step, MockLLM
 
 async def test_planner():
     print_step("Initializing Planner with MockLLM and MockTools")
