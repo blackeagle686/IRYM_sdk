@@ -30,7 +30,7 @@ class SVUBot:
             .with_model(llm="LongCat-Flash-Lite")
             .with_rag(data_to_insight_path=DATA_PATH)
             .with_memory()
-            .with_system_prompt("You are a helpful assistant for South Vally University (SVU) students.")
+            .with_system_prompt("You are a helpful assistant for South Valley University (SVU) students.")
             .build()
         )
 
