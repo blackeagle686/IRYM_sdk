@@ -18,4 +18,6 @@ class BaseThinker():
         """
         Generates a structured representation of a file-related task.
         """
-        ra
+        raise NotImplementedError
+    
+    def 
