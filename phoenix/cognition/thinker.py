@@ -43,7 +43,7 @@ def generate_file_task(file_path: str, task: str) -> dict:
         "task": task
     }
     
-def generate_main_objective(objective: str) -> str:
+def generate_main_objective(prompt: str) -> str:
     return objective.strip()
 
 class Thinker:
