@@ -1,5 +1,5 @@
 class BaseThinker():
-    def __init__(self, agent):
+    def __init__(self, llm):
         self.agent = agent
 
     def think(self):
