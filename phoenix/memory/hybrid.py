@@ -100,7 +100,7 @@ class HybridMemory:
 
 """
     short term
-    Advanced MEMORY Structure
+    Advanced MEMORY Structure 
     
     {
         "thinker": {
