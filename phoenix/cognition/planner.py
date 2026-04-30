@@ -76,6 +76,8 @@ class Planner:
                 pass
 
         text = await self.llm.generate(thinking_prompt, session_id=None, max_tokens=200)
+        if not text:
+            return
         for token in text.split():
             yield token + " "
 
