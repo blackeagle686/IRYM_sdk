@@ -43,8 +43,13 @@ class RAGPipeline:
         import asyncio
         import uuid
 
+        # Bound concurrency to prevent OS file descriptor/memory exhaustion
+        # and maximize sustained I/O throughput.
+        semaphore = asyncio.Semaphore(100)
+
         async def process_doc(doc_path: str):
-            def _read_and_chunk():
+            async with semaphore:
+                def _read_and_chunk():
                 content = self._read_file(doc_path)
                 if not content:
                     return None
@@ -317,8 +322,16 @@ class RAGPipeline:
                 print(f"[!] Error reading JSON {path}: {e}")
                 return ""
         
-        with open(path, 'r', encoding='utf-8', errors='ignore') as f:
-            return f.read()
+        import mmap
+        try:
+            if os.path.getsize(path) == 0:
+                return ""
+            with open(path, 'rb') as f:
+                with mmap.mmap(f.fileno(), 0, access=mmap.ACCESS_READ) as m:
+                    return m.read().decode('utf-8', errors='ignore')
+        except Exception:
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:
+                return f.read()
 
     def _chunk_text(self, text: str, size: int, overlap: int) -> List[str]:
         """
