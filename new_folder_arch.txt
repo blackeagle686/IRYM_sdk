@@ -2,7 +2,7 @@ ok let's make the folder structure more cleaner to be like that:
 phoenix: 
     
     api: 
-        - 
+        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/api # here be ready api to connect with ready stack agent or chatbot
 
     core:
         -phoenix/core
