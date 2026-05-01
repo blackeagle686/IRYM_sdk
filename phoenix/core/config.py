@@ -61,6 +61,14 @@ class Config:
     RAG_MAX_CONTEXT_CHUNKS = int(os.getenv("RAG_MAX_CONTEXT_CHUNKS", "5"))
     RAG_CONTEXT_COMPRESSION = os.getenv("RAG_CONTEXT_COMPRESSION", "true").lower() == "true"
     
+    # New RAG Customization Configs
+    RAG_RERANKING_ENABLED = os.getenv("RAG_RERANKING_ENABLED", "true").lower() == "true"
+    RAG_FAST_MODE = os.getenv("RAG_FAST_MODE", "false").lower() == "true"
+    RAG_DEVICE = os.getenv("RAG_DEVICE", "cpu")
+    RAG_SIMILARITY_THRESHOLD = float(os.getenv("RAG_SIMILARITY_THRESHOLD", "0.75"))
+    RAG_HYBRID_SEARCH = os.getenv("RAG_HYBRID_SEARCH", "false").lower() == "true"
+    RAG_CAG_ENABLED = os.getenv("RAG_CAG_ENABLED", "false").lower() == "true"
+    
     # Parent-Child Retrieval Config
     RAG_PARENT_RETRIEVAL = os.getenv("RAG_PARENT_RETRIEVAL", "true").lower() == "true"
     RAG_PARENT_CHUNK_SIZE = int(os.getenv("RAG_PARENT_CHUNK_SIZE", "1500"))
