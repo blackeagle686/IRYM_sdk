@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 from phoenix.framework.agent.agent.agent import Agent
 from phoenix.framework.agent.memory.adapter import InteractiveMemoryAdapter
-from phoenix.framework.agent.memory.hybrid import HybridMemory
+from phoenix.framework.chatbot.memory.hybrid import HybridMemory
 
 
 class UserMemoryMinimal:

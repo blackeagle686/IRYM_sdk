@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from phoenix.framework.agent.agent import Agent
 from phoenix.services.llm.openai import OpenAILLM
-from phoenix.framework.agent.memory.hybrid import HybridMemory
+from phoenix.framework.chatbot.memory.hybrid import HybridMemory
 from phoenix.framework.agent.tools.registry import ToolRegistry
 
 async def main():

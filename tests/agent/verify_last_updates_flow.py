@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../.
 
 from phoenix.framework.agent.agent.agent import Agent
 from phoenix.framework.agent.agent.loop import AgentLoop
-from phoenix.framework.agent.memory.hybrid import HybridMemory
+from phoenix.framework.chatbot.memory.hybrid import HybridMemory
 from phoenix.framework.agent.memory.adapter import InteractiveMemoryAdapter
 
 

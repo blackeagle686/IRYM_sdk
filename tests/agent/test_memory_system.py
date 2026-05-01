@@ -1,7 +1,7 @@
 import unittest
 import asyncio
 from unittest.mock import MagicMock, AsyncMock
-from phoenix.framework.agent.memory.hybrid import HybridMemory
+from phoenix.framework.chatbot.memory.hybrid import HybridMemory
 from phoenix.framework.agent.memory.reflection import ReflectionMemory
 from phoenix.framework.agent.memory.session import SessionMemory
 
