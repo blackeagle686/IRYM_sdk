@@ -123,7 +123,7 @@ class InsightEngine(BaseInsightService):
             docs = []
 
         # 3. Prompt construction
-        prompt = self.composer.build_prompt(optimized_query, docs, system_prompt=system_prompt)
+        prompt = self.composer.build_prompt(question, docs, system_prompt=system_prompt)
         
         # Enforce input length limit
         if len(prompt.split()) > config.SECURITY_MAX_INPUT_LENGTH * 1.5: # Rough estimate
