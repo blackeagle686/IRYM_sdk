@@ -484,3 +484,78 @@ The Agent uses `HybridMemory`, which manages:
 *   **Reflection**: Insights and corrections learned during the loop.
 
 This ensures the agent remains context-aware even during long, multi-step tasks.
+
+---
+
+## 🚀 Full Usage Example
+
+Here is a complete, runnable example demonstrating how to initialize the Agent, configure its Memory and Tools, and add a custom tool.
+
+```python
+import asyncio
+import os
+from phoenix.llm.openai import OpenAILLM
+from phoenix.agent.agent import Agent
+from phoenix.memory.hybrid import HybridMemory
+from phoenix.tools.registry import ToolRegistry
+from phoenix.tools.base import BaseTool
+
+# ---------------------------------------------------------
+# Custom Tool Example
+# ---------------------------------------------------------
+class GreetTool(BaseTool):
+    """A custom tool that generates a greeting."""
+    name = "greet_tool"
+    description = "Generates a personalized greeting. Provide a 'name' parameter."
+    
+    def __init__(self):
+        super().__init__()
+
+    async def run(self, params: dict) -> str:
+        name = params.get("name", "World")
+        return f"Hello, {name}! I am the Phoenix Agent."
+
+# ---------------------------------------------------------
+# Agent Setup and Execution
+# ---------------------------------------------------------
+async def main():
+    print("Initializing Phoenix Components...")
+    
+    # 1. Initialize LLM
+    llm = OpenAILLM()
+    
+    # 2. Initialize Memory
+    memory = HybridMemory()
+    
+    # 3. Initialize Tools and Register Custom Tool
+    tools = ToolRegistry.load_default()
+    tools.register(GreetTool())
+    
+    # 4. Create the Agent
+    agent = Agent(
+        llm=llm,
+        memory=memory,
+        tools=tools
+    )
+
+    print("\n--- Running Agent (Auto Mode) ---")
+    session_id = "demo_session_001"
+    
+    # Example 1: Simple prompt (fast_ans mode)
+    prompt_fast = "What is the capital of France?"
+    print(f"\nUser: {prompt_fast}")
+    print("Agent: ", end="", flush=True)
+    async for chunk in agent.run_stream(prompt_fast, session_id=session_id, mode="auto"):
+        if chunk["type"] == "chunk":
+            print(chunk["content"], end="", flush=True)
+    print("\n")
+
+    # Example 2: Complex prompt (plan mode)
+    prompt_plan = "Please use the greet_tool to greet 'Alice' and then tell me what 2 + 2 is."
+    print(f"\nUser: {prompt_plan}")
+    response = await agent.run(prompt_plan, session_id=session_id, mode="plan")
+    print(f"Agent: {response}")
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
