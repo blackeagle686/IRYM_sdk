@@ -1,5 +1,5 @@
 from typing import Any, List, Optional, Dict
-from ..base.base_memory import BaseMemory
+from phoenix.framework.agent.memory.base.base_memory import BaseMemory
 
 class SemanticSearch(BaseMemory):
     """
