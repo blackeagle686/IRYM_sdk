@@ -221,8 +221,8 @@ class ChatBotInstance:
                 system_prompt=system_instr
             )
         elif self._rag_pipeline:
-            # RAG path - Pass system_prompt separately to avoid polluting retrieval
-            response_text = await self._rag_pipeline.query(text, session_id=self.builder._session_id, system_prompt=system_instr)
+            # RAG path - Pass system_prompt and history separately
+            response_text = await self._rag_pipeline.query(text, session_id=self.builder._session_id, system_prompt=system_instr, history=context)
         else:
             # Simple LLM path
             llm = container.get("llm")

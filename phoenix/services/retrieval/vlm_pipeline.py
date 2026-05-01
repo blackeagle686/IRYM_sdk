@@ -66,7 +66,7 @@ class VLMPipeline:
             logger.warning(f"Image preprocessing skipped due to error: {e}")
             return image_path
 
-    async def ask(self, prompt: str, image_path: str, use_rag: bool = False, session_id: Optional[str] = None, system_prompt: str = None) -> str:
+    async def ask(self, prompt: str, image_path: str, use_rag: bool = False, session_id: Optional[str] = None, system_prompt: str = None, history: str = None) -> str:
         """
         Ask a question about an image, optionally using RAG for context.
         """
