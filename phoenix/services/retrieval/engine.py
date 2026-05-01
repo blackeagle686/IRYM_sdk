@@ -30,7 +30,7 @@ class InsightEngine(BaseInsightService):
     async def init(self):
         pass
 
-    async def query(self, question: str, context: Optional[dict] = None):
+    async def query(self, question: str, context: Optional[dict] = None, system_prompt: str = None):
         optimized_query = self.optimizer.rewrite_query(question)
         if optimized_query != question:
             logger.info(f"Query optimized: {question} -> {optimized_query}")
@@ -123,7 +123,7 @@ class InsightEngine(BaseInsightService):
             docs = []
 
         # 3. Prompt construction
-        prompt = self.composer.build_prompt(optimized_query, docs)
+        prompt = self.composer.build_prompt(optimized_query, docs, system_prompt=system_prompt)
         
         # Enforce input length limit
         if len(prompt.split()) > config.SECURITY_MAX_INPUT_LENGTH * 1.5: # Rough estimate
