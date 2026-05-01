@@ -66,7 +66,7 @@ class VLMPipeline:
             logger.warning(f"Image preprocessing skipped due to error: {e}")
             return image_path
 
-    async def ask(self, prompt: str, image_path: str, use_rag: bool = False, session_id: Optional[str] = None) -> str:
+    async def ask(self, prompt: str, image_path: str, use_rag: bool = False, session_id: Optional[str] = None, system_prompt: str = None) -> str:
         """
         Ask a question about an image, optionally using RAG for context.
         """
@@ -102,6 +102,9 @@ class VLMPipeline:
                 context_str = "\n".join(context_parts)
                 logger.info(f"Injected {len(docs)} documents into VLM prompt.")
                 final_prompt = f"Context from database:\n{context_str}\n\nUser Question: {prompt}"
+        
+        if system_prompt:
+            final_prompt = f"System: {system_prompt}\n\n{final_prompt}"
 
         # 4. Image Preprocessing
         processed_image = self._preprocess_image(image_path)
