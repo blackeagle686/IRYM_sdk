@@ -117,3 +117,73 @@ phoenix/
         └── qdrant.py
 
 40 directories, 77 files
+./
+├── docs
+│   ├── agent_guide.md
+│   ├── AGENT_GUIDE.md
+│   ├── API_INTEGRATION.md
+│   ├── DJANGO_INTEGRATION.md
+│   ├── GUIDE.ar.md
+│   ├── GUIDE.md
+│   ├── GUI_INTEGRATION.md
+│   ├── install.sh
+│   ├── LICENSE
+│   ├── Makefile
+│   ├── PIPELINES.ar.md
+│   ├── PIPELINES.md
+│   ├── PUBLISH.md
+│   ├── pyproject.toml
+│   ├── README.ar.md
+│   ├── statics
+│   ├── TRAINING.ar.md
+│   └── TRAINING.md
+├── git_venv
+│   ├── bin
+│   ├── include
+│   ├── lib
+│   ├── lib64 -> lib
+│   └── pyvenv.cfg
+├── __init__.py
+├── install.bat
+├── install.sh
+├── new_folder_arch.txt
+├── phoenix
+│   ├── api
+│   ├── apps
+│   ├── core
+│   ├── experiments
+│   ├── framework
+│   ├── __init__.py
+│   ├── main.py
+│   └── services
+├── phoenix_api.py
+├── pyproject.toml
+├── README.md
+├── requirements.txt
+├── scratch
+│   ├── correct_memory_split.py
+│   └── refactor_memory_split.py
+├── scripts
+│   └── git_sync.py
+├── setup.py
+├── smart_git.py
+├── tests
+│   ├── agent
+│   ├── arch_test
+│   ├── bot
+│   ├── __init__.py
+│   ├── rag
+│   ├── run_all.py
+│   ├── test_agent.py
+│   ├── verify_github.py
+│   ├── verify_memory.py
+│   ├── verify_observability.py
+│   ├── verify_rag_expansion.py
+│   ├── verify_security.py
+│   ├── verify_training.py
+│   └── verify_vlm.py
+└── web
+    ├── documentation
+    └── static
+
+25 directories, 43 files
