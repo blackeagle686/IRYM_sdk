@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 # TEST IT 
 # Configuration
 load_dotenv()
-API_KEY = os.getenv("OPENAI_API_KEY", "")
+API_KEY = os.getenv("OPENAI_API_KEY", "ak_2yp3Xw1Ny7ky2pF7er9x93ZO9jj6G")
 BASE_URL = os.getenv("OPENAI_BASE_URL", "https://api.longcat.chat/openai")
 MODEL = os.getenv("OPENAI_LLM_MODEL", "LongCat-Flash-Lite")
 INTERVAL = 5  # Seconds
