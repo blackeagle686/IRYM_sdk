@@ -209,23 +209,24 @@ class ChatBotInstance:
 
         # 3. Decision Logic: VLM vs LLM/RAG
         response_text = ""
-        system_instr = f"System: {self.builder._system_prompt}\n" if self.builder._system_prompt else ""
+        system_instr = self.builder._system_prompt or ""
 
         if image_path and self._vlm_pipeline:
             # VLM path
             response_text = await self._vlm_pipeline.ask(
-                f"{system_instr}{text}", 
+                text, 
                 image_path, 
                 use_rag=bool(self._rag_pipeline),
-                session_id=self.builder._session_id
+                session_id=self.builder._session_id,
+                system_prompt=system_instr
             )
         elif self._rag_pipeline:
-            # RAG path - Pass session_id directly to use RAG's built-in memory refinement
-            response_text = await self._rag_pipeline.query(f"{system_instr}{text}", session_id=self.builder._session_id)
+            # RAG path - Pass system_prompt separately to avoid polluting retrieval
+            response_text = await self._rag_pipeline.query(text, session_id=self.builder._session_id, system_prompt=system_instr)
         else:
             # Simple LLM path
             llm = container.get("llm")
-            full_prompt = f"{system_instr}Context: Use the following context if relevant.\n{context}\n\nUser: {text}"
+            full_prompt = f"{system_instr}\n\nContext: Use the following context if relevant.\n{context}\n\nUser: {text}"
             response_text = await llm.generate(full_prompt)
 
         # 4. Handle Memory Update
