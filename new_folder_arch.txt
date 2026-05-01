@@ -10,8 +10,7 @@ phoenix:
         - 
     
     -chatbot: 
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/chatbot 
-        
+        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/chatbot #         
 
     sdk:
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag
