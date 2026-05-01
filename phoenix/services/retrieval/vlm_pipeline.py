@@ -103,6 +103,9 @@ class VLMPipeline:
                 logger.info(f"Injected {len(docs)} documents into VLM prompt.")
                 final_prompt = f"Context from database:\n{context_str}\n\nUser Question: {prompt}"
         
+        if history:
+            final_prompt = f"Conversation History:\n{history}\n\n{final_prompt}"
+            
         if system_prompt:
             final_prompt = f"System: {system_prompt}\n\n{final_prompt}"
 

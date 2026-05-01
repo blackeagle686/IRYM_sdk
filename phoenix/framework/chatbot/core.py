@@ -218,7 +218,8 @@ class ChatBotInstance:
                 image_path, 
                 use_rag=bool(self._rag_pipeline),
                 session_id=self.builder._session_id,
-                system_prompt=system_instr
+                system_prompt=system_instr,
+                history=context
             )
         elif self._rag_pipeline:
             # RAG path - Pass system_prompt and history separately
