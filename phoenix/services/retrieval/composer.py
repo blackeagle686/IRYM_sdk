@@ -1,6 +1,6 @@
 class PromptComposer:
     """Builds structured prompts systematically."""
-    def build_prompt(self, question: str, docs: list) -> str:
+    def build_prompt(self, question: str, docs: list, system_prompt: str = None) -> str:
         formatted_docs = []
         for i, doc in enumerate(docs):
             content = doc.get("content", str(doc)) if isinstance(doc, dict) else str(doc)
@@ -9,7 +9,9 @@ class PromptComposer:
             
         context = "\n\n".join(formatted_docs)
         
-        return f"""You are an Expert Real Estate AI Assistant. Your goal is to provide highly accurate, professional, and helpful answers based ONLY on the provided context.
+        system = system_prompt or "You are a helpful AI Assistant. Your goal is to provide accurate and helpful answers based on the provided context."
+        
+        return f"""{system}
 
 ### GUIDELINES:
 1. **Accuracy**: Only use the information provided in the context. Do not use outside knowledge.
