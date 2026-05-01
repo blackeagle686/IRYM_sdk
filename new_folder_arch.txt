@@ -19,21 +19,19 @@ phoenix:
         rag: 
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag     # make all rag services files here 
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/vector  # make all vector services files here 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/insights
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/insights # make all insights services files here 
 
         db: 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/db
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/db # make all db services files here 
         
         tuning:
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/training
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/training # make all training services files here 
+
+        cache:
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/cache # make all cache services files here 
         
+        observability: 
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/observability # make all observability services files here 
 
-
-
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/db
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/insights
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/observability
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/training
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/cache 
 
 
