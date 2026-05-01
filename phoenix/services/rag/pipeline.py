@@ -394,16 +394,19 @@ class RAGPipeline:
         if session_id:
             try:
                 memory = container.get("memory")
-                history = await memory.history.get(session_id)
-                if history:
-                    # Simple query refinement: prepend last few turns to clarify context
+                if hasattr(memory.history, "get_context_string"):
+                    context_snippet = await memory.history.get_context_string(session_id)
+                else:
+                    history = await memory.history.get(session_id, limit=5)
                     context_snippet = ""
-                    for item in history[-2:]:
-                        role = item.role
-                        content = item.content
-                        context_snippet += f"{role}: {content} "
-                    
-                    refined_question = f"Context: {context_snippet}\nQuestion: {question}"
+                    for item in history:
+                        # Handle both object (ShortMemoryCell) and dictionary
+                        role = getattr(item, 'role', item.get('role', 'user')) if not isinstance(item, str) else 'user'
+                        content = getattr(item, 'content', item.get('content', item)) if not isinstance(item, str) else item
+                        context_snippet += f"{role.capitalize()}: {content}\n"
+                
+                if context_snippet:
+                    refined_question = f"Conversation History:\n{context_snippet}\n\nQuestion: {question}"
             except KeyError:
                 pass
                 
