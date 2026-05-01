@@ -11,3 +11,4 @@ phoenix:
  
     services:
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag
+        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/
