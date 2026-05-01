@@ -158,6 +158,8 @@ async def startup_phoenix(on_progress: Optional[Callable[[float, str], Any]] = N
     logger.info("Phoenix AI SDK Services started successfully.")
 
 def get_rag_pipeline(rag_config: dict = None) -> RAGPipeline:
+    if not container._registry:
+        init_phoenix()
     vector_db = container.get("vector_db")
     primary = container.get("llm")
     llm_openai = container.get("llm_openai")
