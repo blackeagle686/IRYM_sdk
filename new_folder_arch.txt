@@ -23,6 +23,9 @@ phoenix:
         db: 
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/db
         
+        tuning:
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/training
+        
         
 
 
