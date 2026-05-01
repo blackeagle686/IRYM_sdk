@@ -1,7 +1,7 @@
 import uuid
 from typing import Any, Callable, Dict, Optional, Type
 from phoenix.services.llm.openai import OpenAILLM
-from phoenix.framework.agent.memory.hybrid import HybridMemory
+from phoenix.framework.chatbot.memory.hybrid import HybridMemory
 from phoenix.framework.agent.memory.adapter import InteractiveMemoryAdapter
 from phoenix.framework.agent.tools.registry import ToolRegistry
 from phoenix.framework.agent.cognition.thinker import Thinker

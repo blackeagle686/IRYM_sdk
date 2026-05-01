@@ -7,7 +7,7 @@ class EvictionPolicy:
     """
     @staticmethod
     def evict_expired(cells: List[ShortMemoryCell]) -> List[ShortMemoryCell]:
-        from ..utils.time import has_expired
+        from phoenix.framework.agent.memory.utils.time import has_expired
         return [c for c in cells if not has_expired(c.expires_at)]
 
     @staticmethod
