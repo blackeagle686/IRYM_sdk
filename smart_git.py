@@ -49,6 +49,7 @@ def run_command_ok(command):
         return True
     except Exception as e:
         stderr = getattr(e, "stderr", str(e))
+        print("")
         print(f"Error running command {' '.join(command)}: {stderr}")
         return False
 
