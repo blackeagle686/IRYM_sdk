@@ -14,7 +14,7 @@ from phoenix.services.retrieval.engine import InsightEngine
 from phoenix.services.rag.pipeline import RAGPipeline
 from phoenix.services.training.local_finetuner import LocalFineTuner
 from phoenix.services.training.openai_finetuner import OpenAIFineTuner
-from phoenix.framework.chatbot.memory.manager import MemoryManager
+# from phoenix.framework.chatbot.memory.manager import MemoryManager  # Moved to functions to break cycle
 from phoenix.services.audio.local import LocalSTT, LocalTTS
 from phoenix.services.audio.openai import OpenAISTT, OpenAITTS
 from phoenix.services.observability.logger import get_logger
@@ -86,6 +86,7 @@ def init_phoenix(local: bool = False, vlm: bool = False):
     container.register("finetune_openai", OpenAIFineTuner())
 
     # 7. Register Memory Manager
+    from phoenix.framework.chatbot.memory.manager import MemoryManager
     container.register("memory", MemoryManager(container.get("vector_db")))
 
     # 8. Register Audio Services
@@ -230,7 +231,8 @@ def get_finetuner(provider: str = None) -> Any:
 def get_llm() -> Any:
     return container.get("llm")
 
-def get_memory() -> MemoryManager:
+def get_memory():
+    from phoenix.framework.chatbot.memory.manager import MemoryManager
     return container.get("memory")
 
 async def init_phoenix_full(local: bool = False, vlm: bool = False, parallel_hooks: bool = False, on_progress: Optional[Callable] = None):
