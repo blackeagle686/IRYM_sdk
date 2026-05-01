@@ -25,7 +25,10 @@ setup(
         "SpeechRecognition",
         "pydub",
         "Pillow",
-        "psutil"
+        "psutil",
+        "fastapi",
+        "uvicorn",
+        "python-multipart"
     ],
     extras_require={
         "full": [
