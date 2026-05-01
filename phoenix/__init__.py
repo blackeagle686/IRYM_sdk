@@ -11,6 +11,7 @@ from .main import (
 	get_memory,
 )
 from .framework.chatbot import ChatBot
+from .framework.agent import Agent
 
 __all__ = [
 	"init_phoenix",
@@ -24,4 +25,5 @@ __all__ = [
 	"get_llm",
 	"get_memory",
 	"ChatBot",
+	"Agent",
 ]
