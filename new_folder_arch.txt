@@ -1,94 +1,119 @@
-ok let's make the folder structure more cleaner to be like that:
-phoenix: 
-    
-    api: 
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/api # here be ready api to connect with ready stack agent or chatbot
-
-    core:
-        -phoenix/core
-
-    -framework:
-        -agent
-        -chatbot
-    
-    -agent:
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/memory # make this for agent memory only
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/agent
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/cognition
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/execution
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/tools 
-        - 
-    
-    -chatbot: 
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/chatbot # here be the chatbot as framweork 
-        - memory # this contianing on memory for chatbot only memory mananger, context, hyberd, semantic 
-
-    sdk:
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag
-        llm: 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/llm   # make all llm services files here 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/vlm   # make all vlm services files here 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/audio # make all audio services files here 
-
-        rag: 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag     # make all rag services files here 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/vector  # make all vector services files here 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/insights # make all insights services files here 
-
-        db: 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/db # make all db services files here 
-        
-        tuning:
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/training # make all training services files here 
-
-        cache:
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/cache # make all cache services files here 
-          
-        observability: 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/observability # make all observability services files here 
-
-recommended folder structure:
 phoenix/
-│
-├── core/                      # pure logic (no external deps if possible)
-│   ├── base/
-│   ├── utils/
-│   └── config/
-│
-├── services/                  # (rename sdk → services, clearer)
-│   ├── llm/
-│   ├── vlm/
-│   ├── audio/
-│   ├── rag/
-│   ├── vector/
-│   ├── db/
-│   ├── cache/
-│   ├── observability/
-│   └── training/
-│
-├── framework/                 # high-level abstractions
-│   ├── agent/
-│   │   ├── cognition/
-│   │   ├── memory/
-│   │   ├── execution/
-│   │   ├── tools/
-│   │   └── planner/
-│   │
-│   └── chatbot/
-│       ├── memory/
-│       ├── dialogue/
-│       └── context/
-│
-├── api/                       # external interfaces
-│   ├── rest/
-│   ├── websocket/
-│   └── adapters/
-│
-├── apps/                      # actual implementations (VERY important)
-│   ├── ashborn_agent/
-│   └── chatbot_app/
-│
-├── experiments/               # for your AGI / research ideas
-│
-└── tests/
+├── api
+│   └── __init__.py
+├── apps
+│   └── __init__.py
+├── core
+│   ├── base.py
+│   ├── config.py
+│   ├── container.py
+│   ├── exceptions.py
+│   ├── hardware_check.py
+│   ├── __init__.py
+│   ├── lifecycle.py
+│   ├── security.py
+│   └── utils.py
+├── experiments
+│   └── __init__.py
+├── framework
+│   ├── agent
+│   │   ├── agent
+│   │   │   ├── agent.py
+│   │   │   ├── __init__.py
+│   │   │   └── loop.py
+│   │   ├── cognition
+│   │   │   ├── actor
+│   │   │   ├── analyzer
+│   │   │   ├── base.py
+│   │   │   ├── __init__.py
+│   │   │   ├── planner
+│   │   │   ├── reflector
+│   │   │   ├── schemas
+│   │   │   ├── thinker
+│   │   │   └── utils
+│   │   ├── execution
+│   │   │   ├── __init__.py
+│   │   │   └── tool_manager.py
+│   │   ├── memory
+│   │   │   ├── adapter.py
+│   │   │   ├── base
+│   │   │   ├── hybrid
+│   │   │   ├── __init__.py
+│   │   │   ├── long_term
+│   │   │   ├── reflection.py
+│   │   │   ├── session.py
+│   │   │   ├── short_term
+│   │   │   ├── task_memory
+│   │   │   └── utils
+│   │   └── tools
+│   │       ├── base.py
+│   │       ├── code.py
+│   │       ├── __init__.py
+│   │       ├── io.py
+│   │       ├── patch.py
+│   │       ├── registry.py
+│   │       └── search.py
+│   └── chatbot
+│       ├── core.py
+│       ├── __init__.py
+│       └── memory
+│           ├── __init__.py
+│           ├── manager.py
+│           ├── persistence
+│           └── semantic
+├── __init__.py
+├── main.py
+└── services
+    ├── audio
+    │   ├── base.py
+    │   ├── __init__.py
+    │   ├── local.py
+    │   └── openai.py
+    ├── cache
+    │   ├── base.py
+    │   ├── __init__.py
+    │   ├── redis_cache.py
+    │   └── semantic.py
+    ├── db
+    │   ├── base.py
+    │   ├── __init__.py
+    │   └── sqlalchemy.py
+    ├── __init__.py
+    ├── insight
+    │   ├── base.py
+    │   ├── composer.py
+    │   ├── engine.py
+    │   ├── __init__.py
+    │   ├── optimizer.py
+    │   ├── retriever.py
+    │   └── vlm_pipeline.py
+    ├── llm
+    │   ├── base.py
+    │   ├── __init__.py
+    │   ├── local.py
+    │   ├── openai.py
+    │   ├── vlm_local.py
+    │   └── vlm_openai.py
+    ├── observability
+    │   ├── __init__.py
+    │   ├── logger.py
+    │   └── tracing.py
+    ├── queue
+    │   ├── base.py
+    │   ├── celery_queue.py
+    │   └── __init__.py
+    ├── rag
+    │   ├── __init__.py
+    │   └── pipeline.py
+    ├── training
+    │   ├── base.py
+    │   ├── local_finetuner.py
+    │   └── openai_finetuner.py
+    └── vector
+        ├── base.py
+        ├── chroma.py
+        ├── embeddings.py
+        ├── __init__.py
+        └── qdrant.py
 
+40 directories, 77 files
