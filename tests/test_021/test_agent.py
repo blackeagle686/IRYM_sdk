@@ -15,8 +15,11 @@ async def test_agent_full_flow():
         os.remove(test_file)
 
     try:
-        # 1. Initialize Agent
-        # Uses default OpenAILLM and HybridMemory
+        # 1. Initialize Agent with specific LongCat config
+        config.OPENAI_API_KEY = "ak_2yp3Xw1Ny7ky2pF7er9x93ZO9jj6G"
+        config.OPENAI_BASE_URL = "https://api.longcat.chat/openai"
+        config.OPENAI_LLM_MODEL = "LongCat-Flash-Chat"
+        
         agent = Agent()
 
         # 2. Run a task that requires tools (Writing a file)

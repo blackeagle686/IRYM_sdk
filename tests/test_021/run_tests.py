@@ -14,10 +14,6 @@ from phoenix.core.config import config
 async def run_all_v021_tests():
     print("🚀 Starting Phoenix Framework v0.2.1 Integration Tests")
     
-    if not config.OPENAI_API_KEY and not os.environ.get("OPENAI_API_KEY"):
-        print("❌ CRITICAL: OPENAI_API_KEY not found. Tests will likely fail.")
-        return
-
     try:
         await test_chatbot_full_flow()
         await test_agent_full_flow()
