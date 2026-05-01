@@ -13,10 +13,12 @@ router = APIRouter(prefix="/agent", tags=["Agent"])
 class AgentRequest(BaseModel):
     session_id: str = "default"
     task: str
+    mode: str = "auto" # auto, plan, fast_ans
 
 class AgentResponse(BaseModel):
     session_id: str
     result: str
+    mode: str
 
 _agent_instance = None
 
@@ -28,5 +30,5 @@ def init_router(agent_instance):
 async def run_agent(req: AgentRequest):
     if not _agent_instance:
         raise HTTPException(status_code=503, detail="Agent not initialized.")
-    result = await _agent_instance.run(req.task, session_id=req.session_id)
-    return AgentResponse(session_id=req.session_id, result=str(result))
+    result = await _agent_instance.run(req.task, session_id=req.session_id, mode=req.mode)
+    return AgentResponse(session_id=req.session_id, result=str(result), mode=req.mode)
