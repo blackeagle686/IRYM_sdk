@@ -10,7 +10,7 @@ phoenix:
         - 
     
     -chatbot: 
-        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/chatbot #         
+        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/chatbot # this is a ready stack chat bot from         
 
     sdk:
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag
