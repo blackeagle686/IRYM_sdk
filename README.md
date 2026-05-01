@@ -8,6 +8,10 @@ A production-ready, modular backend infrastructure SDK designed for AI-powered P
 
 Whether you are building with FastAPI, Django, or a custom event-driven service, **Phoenix AI** eliminates repetitive backend setup.
 
+```bash
+pip install phx-ashborn
+```
+
 ## 🐦‍🔥 Key Requirements & Core Features
 
 1. **Dependency Injection**: Central standard registry. No manual instantiation inside business logic.
