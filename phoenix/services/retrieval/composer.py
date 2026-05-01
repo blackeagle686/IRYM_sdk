@@ -16,8 +16,6 @@ class PromptComposer:
         return f"""{system}
 {history_block}
 ### GUIDELINES:
-
-### GUIDELINES:
 1. **Accuracy**: Only use the information provided in the context. Do not use outside knowledge.
 2. **Citations**: ALWAYS cite the source for every claim you make. Use the format: [Source: source_name].
 3. **Uncertainty**: If the answer is not in the context, explicitly state: "I'm sorry, but I couldn't find information about that in my current knowledge base." Do not hallucinate.
