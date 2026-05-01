@@ -178,6 +178,8 @@ def get_rag_pipeline(rag_config: dict = None) -> RAGPipeline:
     return RAGPipeline(vector_db, primary=primary, fallback=fallback, cache=cache, semantic_cache=semantic_cache, rag_config=rag_config)
 
 def get_insight_engine(openai_model: str = None, local_model: str = None, prefer_local: bool = None) -> InsightEngine:
+    if not container._registry:
+        init_phoenix()
     vector_db = container.get("vector_db")
     llm_openai = container.get("llm_openai")
     llm_local = container.get("llm_local")
