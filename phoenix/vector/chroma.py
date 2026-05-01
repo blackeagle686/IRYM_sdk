@@ -63,17 +63,31 @@ class ChromaVectorDB(BaseVectorDB):
             ids = [str(uuid.uuid4()) for _ in texts]
         
         # Batching for progress reporting and large inserts
-        batch_size = 100
+        batch_size = 500
         total = len(texts)
         
+        import asyncio
+        # Limit concurrency to 4 to balance PyTorch VRAM / CPU limits and SQLite lock contention
+        semaphore = asyncio.Semaphore(4)
+        
+        async def add_batch(start: int, end: int):
+            async with semaphore:
+                def _do_add():
+                    self.collection.add(
+                        documents=texts[start:end],
+                        metadatas=metadatas[start:end] if metadatas else None,
+                        ids=ids[start:end]
+                    )
+                await asyncio.to_thread(_do_add)
+                logger.info(f"Progress: {end}/{total} units indexed...")
+
+        tasks = []
         for i in range(0, total, batch_size):
             end = min(i + batch_size, total)
-            self.collection.add(
-                documents=texts[i:end],
-                metadatas=metadatas[i:end] if metadatas else None,
-                ids=ids[i:end]
-            )
-            logger.info(f"Progress: {end}/{total} units indexed...")
+            tasks.append(add_batch(i, end))
+            
+        if tasks:
+            await asyncio.gather(*tasks)
 
 
     async def delete(self, ids: List[str]) -> None:
