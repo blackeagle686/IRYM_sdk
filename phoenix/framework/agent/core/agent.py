@@ -10,7 +10,7 @@ from phoenix.framework.agent.cognition.reflector import Reflector
 from phoenix.framework.agent.cognition.analyzer import Analyzer
 from phoenix.framework.agent.cognition.actor import Actor
 from phoenix.framework.agent.execution.tool_manager import ToolManager
-from phoenix.framework.agent.agent.loop import AgentLoop
+from phoenix.framework.agent.core.loop import AgentLoop
 
 class Agent:
     """The main Agent class that integrates LLM, memory, tools, and cognition modules."""

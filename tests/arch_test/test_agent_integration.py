@@ -1,5 +1,5 @@
 import asyncio
-from phoenix.framework.agent.agent.agent import Agent
+from phoenix.framework.agent.core.agent import Agent
 from phoenix.services.llm.openai import OpenAILLM
 from helpers import print_step
 

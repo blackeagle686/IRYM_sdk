@@ -3,7 +3,7 @@ import asyncio
 import os
 from phoenix.main import init_phoenix, startup_phoenix
 from phoenix.services.llm import OpenAILLM
-from phoenix.framework.agent.agent import Agent
+from phoenix.framework.agent.core import Agent
 
 class MultiAgentCollaborationTest(unittest.IsolatedAsyncioTestCase):
     """

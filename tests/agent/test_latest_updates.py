@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from unittest.mock import AsyncMock, MagicMock
 
-from phoenix.framework.agent.agent.loop import AgentLoop
+from phoenix.framework.agent.core.loop import AgentLoop
 from phoenix.framework.agent.cognition.planner import Planner
 from phoenix.framework.agent.tools.io import FileAppendTool, FileEditTool
 

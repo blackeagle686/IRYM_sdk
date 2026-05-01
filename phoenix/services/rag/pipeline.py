@@ -1,6 +1,6 @@
 import os
 from typing import List, Optional
-from phoenix.services.insight.engine import InsightEngine
+from phoenix.services.retrieval.engine import InsightEngine
 from phoenix.core.container import container
 from phoenix.core.config import config
 

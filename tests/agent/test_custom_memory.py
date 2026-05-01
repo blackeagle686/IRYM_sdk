@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import AsyncMock, MagicMock
 
-from phoenix.framework.agent.agent.agent import Agent
+from phoenix.framework.agent.core.agent import Agent
 from phoenix.framework.agent.memory.adapter import InteractiveMemoryAdapter
 from phoenix.framework.agent.memory.hybrid import HybridMemory
 

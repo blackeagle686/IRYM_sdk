@@ -7,10 +7,10 @@ from phoenix.services.llm.local import LocalLLM
 from phoenix.services.vector.chroma import ChromaVectorDB
 from phoenix.services.vector.qdrant import QdrantVectorDB
 from phoenix.services.vector.embeddings import SentenceTransformerEmbeddings
-from phoenix.services.llm.vlm_openai import OpenAIVLM
-from phoenix.services.llm.vlm_local import LocalVLM
-from phoenix.services.insight.vlm_pipeline import VLMPipeline
-from phoenix.services.insight.engine import InsightEngine
+from phoenix.services.vlm.openai import OpenAIVLM
+from phoenix.services.vlm.local import LocalVLM
+from phoenix.services.retrieval.vlm_pipeline import VLMPipeline
+from phoenix.services.retrieval.engine import InsightEngine
 from phoenix.services.rag.pipeline import RAGPipeline
 from phoenix.services.training.local_finetuner import LocalFineTuner
 from phoenix.services.training.openai_finetuner import OpenAIFineTuner

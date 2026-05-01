@@ -1,8 +1,8 @@
 import hashlib
 import os
 from typing import Optional
-from phoenix.services.insight.retriever import VectorRetriever
-from phoenix.services.insight.composer import PromptComposer
+from phoenix.services.retrieval.retriever import VectorRetriever
+from phoenix.services.retrieval.composer import PromptComposer
 from phoenix.services.observability.logger import get_logger
 from phoenix.core.utils import async_confirm
 
