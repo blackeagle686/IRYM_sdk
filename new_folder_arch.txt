@@ -20,6 +20,9 @@ phoenix:
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/vector
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/insights
 
+        db: 
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/db
+        
         
 
 
