@@ -4,7 +4,7 @@ import subprocess
 from datetime import datetime
 from openai import OpenAI
 from dotenv import load_dotenv
-
+# TEST IT 
 # Configuration
 load_dotenv()
 API_KEY = os.getenv("OPENAI_API_KEY", "")
