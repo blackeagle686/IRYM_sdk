@@ -53,7 +53,6 @@ def run_command_ok(command):
         print(f"Error running command {' '.join(command)}: {stderr}")
         return False
 
-# test test 
 
 def get_current_branch():
     return run_command(["git", "rev-parse", "--abbrev-ref", "HEAD"])
