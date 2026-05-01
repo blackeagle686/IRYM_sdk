@@ -7,11 +7,11 @@ def refactor_imports():
     # Mapping of old import segments to new ones
     replacements = [
         (r"phoenix\.framework\.agent\.memory\.manager", "phoenix.framework.chatbot.memory.manager"),
-        (r"phoenix\.framework\.agent\.memory\.hybrid", "phoenix.framework.chatbot.memory.hybrid"),
+        (r"phoenix\.framework\.agent\.memory\.hybrid", "phoenix.framework.agent.memory.hybrid"),
         (r"phoenix\.framework\.agent\.memory\.semantic", "phoenix.framework.chatbot.memory.semantic"),
-        (r"phoenix\.framework\.agent\.memory\.short_term", "phoenix.framework.chatbot.memory.short_term"),
-        (r"phoenix\.framework\.agent\.memory\.long_term", "phoenix.framework.chatbot.memory.long_term"),
-        (r"phoenix\.framework\.agent\.memory\.base", "phoenix.framework.chatbot.memory.base"),
+        (r"phoenix\.framework\.agent\.memory\.short_term", "phoenix.framework.agent.memory.short_term"),
+        (r"phoenix\.framework\.agent\.memory\.long_term", "phoenix.framework.agent.memory.long_term"),
+        (r"phoenix\.framework\.agent\.memory\.base", "phoenix.framework.agent.memory.base"),
         (r"phoenix\.framework\.agent\.memory\.persistence", "phoenix.framework.chatbot.memory.persistence"),
     ]
     

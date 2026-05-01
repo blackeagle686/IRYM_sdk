@@ -1,4 +1,4 @@
-from phoenix.framework.chatbot.memory.long_term.ltm_cell import LongMemoryCell
+from phoenix.framework.agent.memory.long_term.ltm_cell import LongMemoryCell
 from helpers import print_step
 
 def test_long_memory_cell():
