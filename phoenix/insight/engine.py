@@ -15,12 +15,13 @@ class InsightEngine(BaseInsightService):
     Main orchestration layer.
     Manages vector retrieval, prompt building, LLM generation, and cache checking.
     """
-    def __init__(self, vector_db, primary, fallback, cache=None, semantic_cache: Optional[SemanticCache] = None):
+    def __init__(self, vector_db, primary, fallback, cache=None, semantic_cache: Optional[SemanticCache] = None, rag_config: dict = None):
         self.vector_db = vector_db
         self.primary = primary
         self.fallback = fallback
         self.cache = cache
         self.semantic_cache = semantic_cache
+        self.rag_config = rag_config or {}
         
         self.retriever = VectorRetriever(vector_db)
         self.composer = PromptComposer()
@@ -42,8 +43,27 @@ class InsightEngine(BaseInsightService):
                 return "Operation cancelled by user: Primary unavailable and Fallback rejected."
             provider = self.fallback
 
-        # 1. Cache check (Fast path)
+        # Optimization Flags
+        fast_rag = self.rag_config.get("fast_rag")
+        if fast_rag is None:
+            fast_rag = config.RAG_FAST_MODE
+            
+        reranking = self.rag_config.get("reranking")
+        if reranking is None:
+            reranking = config.RAG_RERANKING_ENABLED
+            
+        cag = self.rag_config.get("cag")
+        if cag is None:
+            cag = config.RAG_CAG_ENABLED
+            
+        hybrid_search = self.rag_config.get("hybrid_search")
+        if hybrid_search is None:
+            hybrid_search = config.RAG_HYBRID_SEARCH
+
+        # 1. Cache check (Fast path / CAG)
         if self.semantic_cache:
+            if cag:
+                logger.info("CAG is enabled. Relying strongly on Cache-Augmented Generation.")
             semantic_hit = await self.semantic_cache.get_similar(optimized_query)
             if semantic_hit:
                 logger.info("Semantic cache hit (similarity threshold met).")
@@ -58,22 +78,28 @@ class InsightEngine(BaseInsightService):
             logger.info(f"Insight Cache Miss for key: {cache_key}")
 
         # 2. Vector retrieval & Query Expansion
-        logger.info(f"Retrieving Knowledge for: {optimized_query[:50]}...")
+        logger.info(f"Retrieving Knowledge for: {optimized_query[:50]}... (fast_rag={fast_rag}, hybrid={hybrid_search})")
         
-        # 2a. HyDE (Hypothetical Document Embedding)
         search_query = optimized_query
-        if config.RAG_HYDE_ENABLED:
+        if not fast_rag and config.RAG_HYDE_ENABLED:
             search_query = await self.optimizer.get_hyde_query(optimized_query, llm=provider)
             logger.info(f"HyDE Answer Generated: {search_query[:50]}...")
 
-        # 2b. Expand query (Multi-query search)
-        queries = await self.optimizer.expand_query(search_query, llm=provider)
+        # Expand query (Multi-query search)
+        if not fast_rag and config.RAG_QUERY_EXPANSION:
+            queries = await self.optimizer.expand_query(search_query, llm=provider)
+        else:
+            queries = [search_query]
         
         all_docs = []
         seen_contents = set()
         
         for q in queries:
-            docs = await self.retriever.retrieve(q)
+            # Pass hybrid flag to retriever if supported
+            if hasattr(self.retriever, "retrieve"):
+                docs = await self.retriever.retrieve(q, hybrid=hybrid_search)
+            else:
+                docs = []
             for d in docs:
                 content = d.get("content", "")
                 if content not in seen_contents:
@@ -81,11 +107,18 @@ class InsightEngine(BaseInsightService):
                     seen_contents.add(content)
         
         if all_docs:
-            logger.info(f"Retrieved {len(all_docs)} unique documents. Reranking...")
-            # MMR Reranking
-            docs = self.optimizer.rerank(all_docs, optimized_query)
-            # Contextual Compression
-            docs = self.optimizer.compress_context(docs, optimized_query)
+            if reranking:
+                logger.info(f"Retrieved {len(all_docs)} unique documents. Reranking...")
+                # MMR Reranking
+                all_docs = self.optimizer.rerank(all_docs, optimized_query)
+            else:
+                logger.info(f"Retrieved {len(all_docs)} unique documents. Reranking skipped.")
+                
+            if not fast_rag and config.RAG_CONTEXT_COMPRESSION:
+                # Contextual Compression
+                docs = self.optimizer.compress_context(all_docs, optimized_query)
+            else:
+                docs = all_docs
         else:
             docs = []
 
