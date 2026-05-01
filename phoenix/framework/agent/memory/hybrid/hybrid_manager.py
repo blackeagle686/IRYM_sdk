@@ -1,6 +1,6 @@
 from typing import Optional, Dict, Any, List
-from ..short_term.stm_manager import ShortTermMemoryManager
-from ..long_term.ltm_manager import LongTermMemoryManager
+from phoenix.framework.agent.memory.short_term.stm_manager import ShortTermMemoryManager
+from phoenix.framework.agent.memory.long_term.ltm_manager import LongTermMemoryManager
 from phoenix.framework.chatbot.memory.semantic.semantic_search import SemanticSearch
 from .hybrid_cell import HybridMemoryCell
 import asyncio

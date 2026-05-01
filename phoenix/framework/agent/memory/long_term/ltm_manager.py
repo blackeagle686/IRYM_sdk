@@ -1,5 +1,5 @@
 from typing import List, Optional, Dict, Any
-from ..base.base_memory import BaseMemory
+from phoenix.framework.agent.memory.base.base_memory import BaseMemory
 from .ltm_cell import LongMemoryCell
 import uuid
 import time

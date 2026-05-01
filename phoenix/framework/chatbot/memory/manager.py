@@ -1,6 +1,6 @@
 from typing import List, Optional, Dict, Any
-from .short_term.stm_manager import ShortTermMemoryManager as ConversationHistory
-from .semantic.semantic_search import SemanticSearch as SemanticMemory
+from phoenix.framework.agent.memory.short_term.stm_manager import ShortTermMemoryManager as ConversationHistory
+from phoenix.framework.chatbot.memory.semantic.semantic_search import SemanticSearch as SemanticMemory
 
 class MemoryManager:
     """
