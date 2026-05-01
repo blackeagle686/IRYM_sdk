@@ -1,8 +1,26 @@
 phoenix/
 ├── api
-│   └── __init__.py
+│   ├── adapters
+│   │   ├── django_adapter.py
+│   │   ├── fastapi_adapter.py
+│   │   └── __init__.py
+│   ├── __init__.py
+│   ├── rest
+│   │   ├── agent_router.py
+│   │   ├── chatbot_router.py
+│   │   └── __init__.py
+│   └── websocket
+│       ├── __init__.py
+│       └── ws_handler.py
 ├── apps
 │   └── __init__.py
+├── contracts
+│   ├── __init__.py
+│   ├── llm.py
+│   ├── memory.py
+│   ├── tool.py
+│   ├── vector.py
+│   └── vlm.py
 ├── core
 │   ├── base.py
 │   ├── config.py
@@ -17,10 +35,6 @@ phoenix/
 │   └── __init__.py
 ├── framework
 │   ├── agent
-│   │   ├── agent
-│   │   │   ├── agent.py
-│   │   │   ├── __init__.py
-│   │   │   └── loop.py
 │   │   ├── cognition
 │   │   │   ├── actor
 │   │   │   ├── analyzer
@@ -31,6 +45,10 @@ phoenix/
 │   │   │   ├── schemas
 │   │   │   ├── thinker
 │   │   │   └── utils
+│   │   ├── core
+│   │   │   ├── agent.py
+│   │   │   ├── __init__.py
+│   │   │   └── loop.py
 │   │   ├── execution
 │   │   │   ├── __init__.py
 │   │   │   └── tool_manager.py
@@ -57,12 +75,23 @@ phoenix/
 │       ├── core.py
 │       ├── __init__.py
 │       └── memory
+│           ├── context_window.py
 │           ├── __init__.py
 │           ├── manager.py
 │           ├── persistence
-│           └── semantic
+│           ├── semantic
+│           └── summarizer.py
 ├── __init__.py
 ├── main.py
+├── middleware
+│   ├── base.py
+│   ├── __init__.py
+│   ├── pipeline.py
+│   ├── rate_limiter.py
+│   └── sanitizer.py
+├── plugins
+│   ├── __init__.py
+│   └── registry.py
 └── services
     ├── audio
     │   ├── base.py
@@ -79,21 +108,11 @@ phoenix/
     │   ├── __init__.py
     │   └── sqlalchemy.py
     ├── __init__.py
-    ├── insight
-    │   ├── base.py
-    │   ├── composer.py
-    │   ├── engine.py
-    │   ├── __init__.py
-    │   ├── optimizer.py
-    │   ├── retriever.py
-    │   └── vlm_pipeline.py
     ├── llm
     │   ├── base.py
     │   ├── __init__.py
     │   ├── local.py
-    │   ├── openai.py
-    │   ├── vlm_local.py
-    │   └── vlm_openai.py
+    │   └── openai.py
     ├── observability
     │   ├── __init__.py
     │   ├── logger.py
@@ -105,85 +124,28 @@ phoenix/
     ├── rag
     │   ├── __init__.py
     │   └── pipeline.py
+    ├── retrieval
+    │   ├── base.py
+    │   ├── composer.py
+    │   ├── engine.py
+    │   ├── __init__.py
+    │   ├── optimizer.py
+    │   ├── retriever.py
+    │   └── vlm_pipeline.py
     ├── training
     │   ├── base.py
     │   ├── local_finetuner.py
     │   └── openai_finetuner.py
-    └── vector
+    ├── vector
+    │   ├── base.py
+    │   ├── chroma.py
+    │   ├── embeddings.py
+    │   ├── __init__.py
+    │   └── qdrant.py
+    └── vlm
         ├── base.py
-        ├── chroma.py
-        ├── embeddings.py
         ├── __init__.py
-        └── qdrant.py
+        ├── local.py
+        └── openai.py
 
-40 directories, 77 files
-./
-├── docs
-│   ├── agent_guide.md
-│   ├── AGENT_GUIDE.md
-│   ├── API_INTEGRATION.md
-│   ├── DJANGO_INTEGRATION.md
-│   ├── GUIDE.ar.md
-│   ├── GUIDE.md
-│   ├── GUI_INTEGRATION.md
-│   ├── install.sh
-│   ├── LICENSE
-│   ├── Makefile
-│   ├── PIPELINES.ar.md
-│   ├── PIPELINES.md
-│   ├── PUBLISH.md
-│   ├── pyproject.toml
-│   ├── README.ar.md
-│   ├── statics
-│   ├── TRAINING.ar.md
-│   └── TRAINING.md
-├── git_venv
-│   ├── bin
-│   ├── include
-│   ├── lib
-│   ├── lib64 -> lib
-│   └── pyvenv.cfg
-├── __init__.py
-├── install.bat
-├── install.sh
-├── new_folder_arch.txt
-├── phoenix
-│   ├── api
-│   ├── apps
-│   ├── core
-│   ├── experiments
-│   ├── framework
-│   ├── __init__.py
-│   ├── main.py
-│   └── services
-├── phoenix_api.py
-├── pyproject.toml
-├── README.md
-├── requirements.txt
-├── scratch
-│   ├── correct_memory_split.py
-│   └── refactor_memory_split.py
-├── scripts
-│   └── git_sync.py
-├── setup.py
-├── smart_git.py
-├── tests
-│   ├── agent
-│   ├── arch_test
-│   ├── bot
-│   ├── __init__.py
-│   ├── rag
-│   ├── run_all.py
-│   ├── test_agent.py
-│   ├── verify_github.py
-│   ├── verify_memory.py
-│   ├── verify_observability.py
-│   ├── verify_rag_expansion.py
-│   ├── verify_security.py
-│   ├── verify_training.py
-│   └── verify_vlm.py
-└── web
-    ├── documentation
-    └── static
-
-25 directories, 43 files
+47 directories, 102 files
