@@ -384,33 +384,11 @@ class RAGPipeline:
 
         return split_recursive(text, separators)
 
-    async def query(self, question: str, session_id: Optional[str] = None, system_prompt: str = None) -> str:
+    async def query(self, question: str, session_id: Optional[str] = None, system_prompt: str = None, history: str = None) -> str:
         """
         Queries the RAG pipeline using the InsightEngine.
-        Optionally uses memory for context-aware retrieval.
         """
-        refined_question = question
-        
-        if session_id:
-            try:
-                memory = container.get("memory")
-                if hasattr(memory.history, "get_context_string"):
-                    context_snippet = await memory.history.get_context_string(session_id)
-                else:
-                    history = await memory.history.get(session_id, limit=5)
-                    context_snippet = ""
-                    for item in history:
-                        # Handle both object (ShortMemoryCell) and dictionary
-                        role = getattr(item, 'role', item.get('role', 'user')) if not isinstance(item, str) else 'user'
-                        content = getattr(item, 'content', item.get('content', item)) if not isinstance(item, str) else item
-                        context_snippet += f"{role.capitalize()}: {content}\n"
-                
-                if context_snippet:
-                    refined_question = f"Conversation History:\n{context_snippet}\n\nQuestion: {question}"
-            except KeyError:
-                pass
-                
-        return await self.engine.query(refined_question, system_prompt=system_prompt)
+        return await self.engine.query(question, system_prompt=system_prompt, history=history)
 
     async def clear_data(self) -> None:
         """Clears all data from the vector database."""
