@@ -78,7 +78,7 @@ from phoenix import ChatBot
 # Build the complete AI Agent with advanced RAG tuning
 bot = (ChatBot(local=True, vlm=True)
        .with_rag(
-           path=["./docs", "./src"],
+           ["./docs", "./src"],
            chunk_size=500,
            reranking=True,        # Better accuracy
            fast_rag=True,         # Faster retrieval
