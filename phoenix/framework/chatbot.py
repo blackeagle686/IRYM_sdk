@@ -198,9 +198,14 @@ class ChatBotInstance:
         # 2. Context Retrieval (Memory)
         context = ""
         if self._memory:
-            history = await self._memory.get_context(self.builder._session_id)
-            past_facts = await self._memory.search_memory(self.builder._session_id, text)
-            context = f"{past_facts}\n\nRecent History:\n{history}"
+            if hasattr(self._memory, "get_full_context"):
+                # Use Advanced Hybrid Memory Structure
+                context = await self._memory.get_full_context(self.builder._session_id, query=text)
+            else:
+                # Fallback to legacy MemoryManager
+                history = await self._memory.get_context(self.builder._session_id)
+                past_facts = await self._memory.search_memory(self.builder._session_id, text)
+                context = f"{past_facts}\n\nRecent History:\n{history}"
 
         # 3. Decision Logic: VLM vs LLM/RAG
         response_text = ""
@@ -225,7 +230,15 @@ class ChatBotInstance:
 
         # 4. Handle Memory Update
         if self._memory:
-            await self._memory.add_interaction(self.builder._session_id, text, response_text)
+            import inspect
+            sig = inspect.signature(self._memory.add_interaction)
+            if 'role' in sig.parameters:
+                # HybridMemoryManager uses (session_id, role, content)
+                await self._memory.add_interaction(self.builder._session_id, "user", text)
+                await self._memory.add_interaction(self.builder._session_id, "assistant", response_text)
+            else:
+                # Legacy MemoryManager uses (session_id, prompt, response)
+                await self._memory.add_interaction(self.builder._session_id, text, response_text)
 
         # 4b. Security Outbound Check (Masking)
         if self._guard:
