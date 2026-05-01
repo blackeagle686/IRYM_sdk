@@ -156,17 +156,25 @@ async def startup_phoenix(on_progress: Optional[Callable[[float, str], Any]] = N
             
     logger.info("Phoenix AI SDK Services started successfully.")
 
-def get_rag_pipeline() -> RAGPipeline:
+def get_rag_pipeline(rag_config: dict = None) -> RAGPipeline:
     vector_db = container.get("vector_db")
     primary = container.get("llm")
     llm_openai = container.get("llm_openai")
     llm_local = container.get("llm_local")
     cache = container.get("cache")
+    embeddings = container.get("embeddings")
+    
+    # Configure semantic cache threshold
+    threshold = config.RAG_SIMILARITY_THRESHOLD
+    if rag_config and rag_config.get("threshold") is not None:
+        threshold = rag_config["threshold"]
+        
+    semantic_cache = SemanticCache(embeddings=embeddings, threshold=threshold)
     
     # Fallback should be the one NOT chosen as primary
     fallback = llm_openai if primary == llm_local else llm_local
     
-    return RAGPipeline(vector_db, primary=primary, fallback=fallback, cache=cache)
+    return RAGPipeline(vector_db, primary=primary, fallback=fallback, cache=cache, semantic_cache=semantic_cache, rag_config=rag_config)
 
 def get_insight_engine(openai_model: str = None, local_model: str = None, prefer_local: bool = None) -> InsightEngine:
     vector_db = container.get("vector_db")
