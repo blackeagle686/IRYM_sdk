@@ -5,7 +5,11 @@ class VectorRetriever:
     def __init__(self, vector_db):
         self.vector_db = vector_db
 
-    async def retrieve(self, question: str):
+    async def retrieve(self, question: str, hybrid: bool = False):
+        if hybrid:
+            from phoenix.observability.logger import get_logger
+            get_logger("Phoenix AI.Insight").warning("Hybrid search is enabled but VectorRetriever currently uses dense vector search only.")
+            
         # 1. Search for small chunks (children)
         # If Parent Retrieval is enabled, we filter to is_parent=False
         where = {"is_parent": False} if config.RAG_PARENT_RETRIEVAL else None
