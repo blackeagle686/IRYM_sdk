@@ -1,6 +1,6 @@
 ok let's make the folder structure more cleaner to be like that:
 phoenix: 
-    -framew
+    -framework:
     -agent:
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/memory
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/agent
@@ -11,4 +11,4 @@ phoenix:
  
     -bot: 
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/chatBot
-        - 
+        
