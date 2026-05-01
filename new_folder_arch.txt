@@ -12,9 +12,9 @@ phoenix:
     sdk:
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag
         llm: 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/llm 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/vlm 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/audio 
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/llm   # make all llm services files here 
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/vlm   # make all vlm services files here 
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/audio # make all audio services files here 
 
         rag: 
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag
