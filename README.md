@@ -105,13 +105,10 @@ The Phoenix AI SDK now supports creating a fully autonomous agent that can think
 ```python
 import asyncio
 from phoenix import Agent
-from phoenix.services.llm.openai import OpenAILLM
-from phoenix.framework.agent.memory.hybrid import HybridMemory
-from phoenix.framework.agent.tools.registry import ToolRegistry
 
 async def agent_demo():
     # Initialize the high-speed Agent
-    agent = Agent() # Uses default OpenAILLM, HybridMemory, and Parallel Tools
+    agent = Agent() # Uses default LLM, Hybrid Memory, and Parallel Tools
     
     # Run a complex engineering task
     # The agent will automatically:
@@ -177,8 +174,7 @@ import asyncio
 from phoenix import init_phoenix, startup_phoenix, get_rag_pipeline
 
 async def rag_demo():
-    init_phoenix()
-    await startup_phoenix()
+    # One-liner to initialize and get the pipeline
     rag = get_rag_pipeline()
 
     # 1. Ingest documents (Supports Docs + Source Code .py, .js, .go, .rs, etc.)
@@ -232,7 +228,7 @@ The `InsightEngine` performs full context retrieval, query rewriting, and LLM ge
 from phoenix import init_phoenix, get_insight_engine
 
 async def insight_demo():
-    init_phoenix()
+    # High-level retrieval engine
     insight = get_insight_engine()
 
     # This invokes: Clean Query -> Vector Search -> Rerank -> LLM Generation
@@ -248,7 +244,7 @@ The `VLMPipeline` orchestrates vision tasks with automatic caching and RAG.
 from phoenix import init_phoenix_full, get_vlm_pipeline
 
 async def vision_demo():
-    await init_phoenix_full()
+    # Integrated Vision-Language Pipeline
     vlm = get_vlm_pipeline()
 
     # Integrated: Result Caching + RAG context injection
