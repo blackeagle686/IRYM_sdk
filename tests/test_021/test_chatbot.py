@@ -14,10 +14,11 @@ async def test_chatbot_full_flow():
         f.write("The secret code for Phoenix is: PHX-2024-BETA. The capital of France is Paris.")
 
     try:
-        # 2. Build ChatBot
-        # Using local=False to test OpenAI integration (assumes OPENAI_API_KEY is set)
-        # If the user wants local, they can change local=True
+        # 2. Build ChatBot with specific LongCat config
         bot = (ChatBot(local=False)
+               .with_openai(api_key="ak_2yp3Xw1Ny7ky2pF7er9x93ZO9jj6G", 
+                            base_url="https://api.longcat.chat/openai")
+               .with_model(llm="LongCat-Flash-Chat")
                .with_rag(rag_dir)
                .with_memory()
                .with_system_prompt("You are a helpful AI assistant for the Phoenix framework.")
