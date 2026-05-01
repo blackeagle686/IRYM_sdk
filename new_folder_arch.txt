@@ -17,5 +17,6 @@ phoenix:
         -/home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/insights
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/observability
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/training
+        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/cache 
         - 
 
