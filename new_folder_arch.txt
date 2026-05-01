@@ -14,4 +14,7 @@ phoenix:
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/llm 
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/vector
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/db
-        -/home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/
+        -/home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/insights
+        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/observability
+        - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/
+
