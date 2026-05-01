@@ -3,4 +3,5 @@ phoenix:
     -agent:
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/memory
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/agent
+        - 
  
