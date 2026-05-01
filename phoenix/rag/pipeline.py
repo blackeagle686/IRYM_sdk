@@ -5,11 +5,11 @@ from phoenix.core.container import container
 from phoenix.core.config import config
 
 class RAGPipeline:
-    def __init__(self, vector_db, primary, fallback=None, cache=None):
+    def __init__(self, vector_db, primary, fallback=None, cache=None, semantic_cache=None, rag_config=None):
         self.vector_db = vector_db
         self.primary = primary
         self.fallback = fallback or primary
-        self.engine = InsightEngine(vector_db, self.primary, self.fallback, cache)
+        self.engine = InsightEngine(vector_db, self.primary, self.fallback, cache, semantic_cache=semantic_cache, rag_config=rag_config)
 
     async def ingest(self, path: str, chunk_size: int = 500, chunk_overlap: int = 50) -> None:
         """
