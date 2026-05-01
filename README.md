@@ -75,9 +75,16 @@ The Phoenix AI SDK now includes a high-level **Framework Layer** that allows you
 ```python
 from phoenix import ChatBot
 
-# Build the complete AI Agent with Security and Custom Config
+# Build the complete AI Agent with advanced RAG tuning
 bot = (ChatBot(local=True, vlm=True)
-       .with_rag(["./docs", "./src"])       # Folders or files
+       .with_rag(
+           path=["./docs", "./src"],
+           chunk_size=500,
+           reranking=True,        # Better accuracy
+           fast_rag=True,         # Faster retrieval
+           cag=True,              # Context-Augmented Generation
+           hybrid_search=True     # Vector + Keyword search
+       )
        .with_memory()                       # Enable session memory
        .with_security(mode="strict")        # Protection against Prompt Injection
        .with_system_prompt("Expert Dev")    # Guide bot behavior
