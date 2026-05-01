@@ -23,7 +23,7 @@ phoenix:
         db: 
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/db
         
-        
+        ober
 
 
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/db
