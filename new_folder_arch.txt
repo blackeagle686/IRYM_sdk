@@ -47,5 +47,48 @@ phoenix:
         observability: 
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/observability # make all observability services files here 
 
-recommended:
+recommended folder structure:
+phoenix/
+│
+├── core/                      # pure logic (no external deps if possible)
+│   ├── base/
+│   ├── utils/
+│   └── config/
+│
+├── services/                  # (rename sdk → services, clearer)
+│   ├── llm/
+│   ├── vlm/
+│   ├── audio/
+│   ├── rag/
+│   ├── vector/
+│   ├── db/
+│   ├── cache/
+│   ├── observability/
+│   └── training/
+│
+├── framework/                 # high-level abstractions
+│   ├── agent/
+│   │   ├── cognition/
+│   │   ├── memory/
+│   │   ├── execution/
+│   │   ├── tools/
+│   │   └── planner/
+│   │
+│   └── chatbot/
+│       ├── memory/
+│       ├── dialogue/
+│       └── context/
+│
+├── api/                       # external interfaces
+│   ├── rest/
+│   ├── websocket/
+│   └── adapters/
+│
+├── apps/                      # actual implementations (VERY important)
+│   ├── ashborn_agent/
+│   └── chatbot_app/
+│
+├── experiments/               # for your AGI / research ideas
+│
+└── tests/
 
