@@ -13,6 +13,7 @@ phoenix:
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag
         llm: 
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/llm 
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/vlm 
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/audio 
 
         rag: 
@@ -26,7 +27,7 @@ phoenix:
         tuning:
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/training
         
-        
+
 
 
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/db
