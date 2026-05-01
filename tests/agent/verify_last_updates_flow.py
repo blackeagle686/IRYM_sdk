@@ -6,10 +6,10 @@ from unittest.mock import AsyncMock, MagicMock
 # Ensure the project root is in the path so we use the local phoenix source
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
 
-from phoenix.agent.agent import Agent
-from phoenix.agent.loop import AgentLoop
-from phoenix.memory.hybrid import HybridMemory
-from phoenix.memory.adapter import InteractiveMemoryAdapter
+from phoenix.framework.agent.agent.agent import Agent
+from phoenix.framework.agent.agent.loop import AgentLoop
+from phoenix.framework.chatbot.memory.hybrid import HybridMemory
+from phoenix.framework.agent.memory.adapter import InteractiveMemoryAdapter
 
 
 class UserCustomMemory:

@@ -1,9 +1,9 @@
 import unittest
 import asyncio
 from unittest.mock import MagicMock, AsyncMock
-from phoenix.execution.actor import Actor
-from phoenix.execution.tool_manager import ToolManager
-from phoenix.tools.base import ToolResult
+from phoenix.framework.agent.execution.actor import Actor
+from phoenix.framework.agent.execution.tool_manager import ToolManager
+from phoenix.framework.agent.tools.base import ToolResult
 
 class TestExecutionFamily(unittest.IsolatedAsyncioTestCase):
     def setUp(self):

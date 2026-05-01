@@ -1,6 +1,6 @@
 import unittest
 import os
-from phoenix.tools.io import FileReadTool, FileWriteTool, FileSearchTool
+from phoenix.framework.agent.tools.io import FileReadTool, FileWriteTool, FileSearchTool
 
 class TestIOTools(unittest.IsolatedAsyncioTestCase):
     def setUp(self):

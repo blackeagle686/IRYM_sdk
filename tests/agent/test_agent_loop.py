@@ -1,7 +1,7 @@
 import unittest
 import asyncio
 from unittest.mock import MagicMock, AsyncMock
-from phoenix.agent.loop import AgentLoop
+from phoenix.framework.agent.agent.loop import AgentLoop
 
 class TestAgentLoop(unittest.IsolatedAsyncioTestCase):
     async def test_loop_run(self):

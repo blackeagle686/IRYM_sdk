@@ -1,9 +1,9 @@
 import unittest
 import asyncio
 from unittest.mock import MagicMock, AsyncMock
-from phoenix.memory.hybrid import HybridMemory
-from phoenix.memory.reflection import ReflectionMemory
-from phoenix.memory.session import SessionMemory
+from phoenix.framework.chatbot.memory.hybrid import HybridMemory
+from phoenix.framework.agent.memory.reflection import ReflectionMemory
+from phoenix.framework.agent.memory.session import SessionMemory
 
 class TestMemorySystem(unittest.IsolatedAsyncioTestCase):
     def setUp(self):

@@ -1,5 +1,5 @@
 import asyncio
-from phoenix.cognition.analyzer.analyzer import Analyzer
+from phoenix.framework.agent.cognition.analyzer.analyzer import Analyzer
 from helpers import print_step, MockLLM
 
 async def test_analyzer():

@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import AsyncMock, MagicMock
 
-from phoenix.agent.agent import Agent
+from phoenix.framework.agent.agent.agent import Agent
 
 
 class CustomLoop:

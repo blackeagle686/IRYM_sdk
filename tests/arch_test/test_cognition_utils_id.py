@@ -1,4 +1,4 @@
-from phoenix.cognition.utils.id import generate_unique_id, generate_timestamped_filename
+from phoenix.framework.agent.cognition.utils.id import generate_unique_id, generate_timestamped_filename
 from helpers import print_step
 
 def test_id_utils():

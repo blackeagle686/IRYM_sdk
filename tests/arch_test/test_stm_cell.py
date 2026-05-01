@@ -1,4 +1,4 @@
-from phoenix.memory.short_term.stm_cell import ShortMemoryCell
+from phoenix.framework.chatbot.memory.short_term.stm_cell import ShortMemoryCell
 from helpers import print_step
 
 def test_short_memory_cell():

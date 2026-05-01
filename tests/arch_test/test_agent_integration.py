@@ -1,6 +1,6 @@
 import asyncio
-from phoenix.agent.agent import Agent
-from phoenix.llm.openai import OpenAILLM
+from phoenix.framework.agent.agent.agent import Agent
+from phoenix.services.llm.openai import OpenAILLM
 from helpers import print_step
 
 async def test_agent_integration_real():

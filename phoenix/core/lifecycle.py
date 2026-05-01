@@ -1,6 +1,6 @@
 import asyncio
 from typing import List, Callable, Awaitable
-from phoenix.observability.logger import get_logger
+from phoenix.services.observability.logger import get_logger
 
 logger = get_logger("Phoenix AI.Lifecycle")
 

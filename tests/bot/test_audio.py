@@ -5,7 +5,7 @@ import sys
 # Add project root to path
 sys.path.insert(0, os.getcwd())
 
-from phoenix.audio.local import LocalSTT, LocalTTS
+from phoenix.services.audio.local import LocalSTT, LocalTTS
 
 async def test_audio_flow():
     print("\n" + "="*50)

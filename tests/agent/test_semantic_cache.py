@@ -1,6 +1,6 @@
 import unittest
 
-from phoenix.cache.semantic import SemanticCache
+from phoenix.services.cache.semantic import SemanticCache
 
 
 class FakeEmbeddings:

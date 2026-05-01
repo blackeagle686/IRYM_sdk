@@ -2,7 +2,7 @@ import asyncio
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from phoenix.core.config import config
-from phoenix.observability.logger import get_logger
+from phoenix.services.observability.logger import get_logger
 
 logger = get_logger("Phoenix AI.Core.Utils")
 

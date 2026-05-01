@@ -1,6 +1,6 @@
 import asyncio
 from phoenix.Phoenix AI import init_phoenix, get_vlm_pipeline, get_insight_engine
-from phoenix.observability.logger import get_logger
+from phoenix.services.observability.logger import get_logger
 
 logger = get_logger("Verification.Observability")
 

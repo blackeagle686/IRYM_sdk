@@ -1,4 +1,4 @@
-from phoenix.memory.adapter import InteractiveMemoryAdapter
+from phoenix.framework.agent.memory.adapter import InteractiveMemoryAdapter
 from helpers import print_step
 
 class MockCustomMemory:

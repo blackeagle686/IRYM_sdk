@@ -1,6 +1,6 @@
 import asyncio
 from phoenix import ChatBot
-from phoenix.framework.security import SecurityError
+from phoenix.core.security import SecurityError
 
 async def verify_security():
     print("--- [Phoenix AI Security Verification] ---")
@@ -35,7 +35,7 @@ async def verify_security():
     print("\nScenario 4: Secret Masking")
     # Actually, we can't easily make the bot leak a key without a real LLM, 
     # but we can test the mask_secrets method directly
-    from phoenix.framework.security import SecurityGuard
+    from phoenix.core.security import SecurityGuard
     guard = SecurityGuard()
     leaked_msg = "My API key is sk-1234567890abcdef1234567890"
     masked = guard.mask_secrets(leaked_msg)

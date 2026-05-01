@@ -1,5 +1,5 @@
 import asyncio
-from phoenix.cognition.planner.planner import Planner
+from phoenix.framework.agent.cognition.planner.planner import Planner
 from helpers import print_step, MockLLM
 
 async def test_planner():

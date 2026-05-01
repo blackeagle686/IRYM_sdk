@@ -1,6 +1,6 @@
 import asyncio
-from phoenix.cognition.thinker.thinker import Thinker
-from phoenix.memory.hybrid.hybrid_manager import HybridMemoryManager
+from phoenix.framework.agent.cognition.thinker.thinker import Thinker
+from phoenix.framework.chatbot.memory.hybrid.hybrid_manager import HybridMemoryManager
 from helpers import print_step, MockLLM
 
 async def test_thinker():

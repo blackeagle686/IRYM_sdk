@@ -1,5 +1,5 @@
 import asyncio
-from phoenix.memory.short_term.stm_manager import ShortTermMemoryManager
+from phoenix.framework.chatbot.memory.short_term.stm_manager import ShortTermMemoryManager
 from helpers import print_step
 
 async def test_stm_manager():

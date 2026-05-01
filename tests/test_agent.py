@@ -4,10 +4,10 @@ import sys
 
 # Add the project root to sys.path so we can import 'phoenix'
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from phoenix.agent import Agent
-from phoenix.llm.openai import OpenAILLM
-from phoenix.memory.hybrid import HybridMemory
-from phoenix.tools.registry import ToolRegistry
+from phoenix.framework.agent.agent import Agent
+from phoenix.services.llm.openai import OpenAILLM
+from phoenix.framework.chatbot.memory.hybrid import HybridMemory
+from phoenix.framework.agent.tools.registry import ToolRegistry
 
 async def main():
     # 1. Initialize custom LLM (User asked to use OpenAILLM default key)
@@ -24,7 +24,7 @@ async def main():
     agent = Agent(llm=llm, memory=memory, tools=tools)
     
     # 5. Define and register a custom tool using the @tool decorator
-    from phoenix.tools import tool
+    from phoenix.framework.agent.tools import tool
     
     @tool(name="custom_math", description="Calculates the square of a given number. Input: 'number' (int).")
     def custom_math_tool(number: int):

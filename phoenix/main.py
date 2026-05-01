@@ -1,24 +1,24 @@
 from typing import Any, Callable, Optional
 from phoenix.core.container import container
 from phoenix.core.config import config
-from phoenix.cache.redis_cache import RedisCache
-from phoenix.llm.openai import OpenAILLM
-from phoenix.llm.local import LocalLLM
-from phoenix.vector.chroma import ChromaVectorDB
-from phoenix.vector.qdrant import QdrantVectorDB
-from phoenix.vector.embeddings import SentenceTransformerEmbeddings
-from phoenix.llm.vlm_openai import OpenAIVLM
-from phoenix.llm.vlm_local import LocalVLM
-from phoenix.insight.vlm_pipeline import VLMPipeline
-from phoenix.insight.engine import InsightEngine
-from phoenix.rag.pipeline import RAGPipeline
-from phoenix.training.local_finetuner import LocalFineTuner
-from phoenix.training.openai_finetuner import OpenAIFineTuner
-from phoenix.memory.manager import MemoryManager
-from phoenix.audio.local import LocalSTT, LocalTTS
-from phoenix.audio.openai import OpenAISTT, OpenAITTS
-from phoenix.observability.logger import get_logger
-from phoenix.cache.semantic import SemanticCache
+from phoenix.services.cache.redis_cache import RedisCache
+from phoenix.services.llm.openai import OpenAILLM
+from phoenix.services.llm.local import LocalLLM
+from phoenix.services.vector.chroma import ChromaVectorDB
+from phoenix.services.vector.qdrant import QdrantVectorDB
+from phoenix.services.vector.embeddings import SentenceTransformerEmbeddings
+from phoenix.services.llm.vlm_openai import OpenAIVLM
+from phoenix.services.llm.vlm_local import LocalVLM
+from phoenix.services.insight.vlm_pipeline import VLMPipeline
+from phoenix.services.insight.engine import InsightEngine
+from phoenix.services.rag.pipeline import RAGPipeline
+from phoenix.services.training.local_finetuner import LocalFineTuner
+from phoenix.services.training.openai_finetuner import OpenAIFineTuner
+from phoenix.framework.chatbot.memory.manager import MemoryManager
+from phoenix.services.audio.local import LocalSTT, LocalTTS
+from phoenix.services.audio.openai import OpenAISTT, OpenAITTS
+from phoenix.services.observability.logger import get_logger
+from phoenix.services.cache.semantic import SemanticCache
 import asyncio
 
 logger = get_logger("Phoenix AI.Main")

@@ -3,9 +3,9 @@ import asyncio
 import os
 import shutil
 from phoenix.main import init_phoenix, startup_phoenix
-from phoenix.llm import OpenAILLM
-from phoenix.agent import Agent
-from phoenix.memory.hybrid import HybridMemory
+from phoenix.services.llm import OpenAILLM
+from phoenix.framework.agent.agent import Agent
+from phoenix.framework.chatbot.memory.hybrid import HybridMemory
 
 class FullAgentWorkflowTest(unittest.IsolatedAsyncioTestCase):
     """

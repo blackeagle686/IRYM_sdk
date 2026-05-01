@@ -5,7 +5,7 @@ import sys
 # Add project root to path
 sys.path.insert(0, os.getcwd())
 
-from phoenix.vector.chroma import ChromaVectorDB
+from phoenix.services.vector.chroma import ChromaVectorDB
 
 async def test_vector_flow():
     print("\n" + "="*50)

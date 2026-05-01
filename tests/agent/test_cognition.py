@@ -1,11 +1,11 @@
 import unittest
 import asyncio
 from unittest.mock import MagicMock, AsyncMock
-from phoenix.cognition.thinker import Thinker
-from phoenix.cognition.analyzer import Analyzer
-from phoenix.cognition.planner import Planner
-from phoenix.cognition.reflector import Reflector
-from phoenix.memory.hybrid import HybridMemory
+from phoenix.framework.agent.cognition.thinker import Thinker
+from phoenix.framework.agent.cognition.analyzer import Analyzer
+from phoenix.framework.agent.cognition.planner import Planner
+from phoenix.framework.agent.cognition.reflector import Reflector
+from phoenix.framework.chatbot.memory.hybrid import HybridMemory
 
 class TestCognitionFamily(unittest.IsolatedAsyncioTestCase):
     def setUp(self):

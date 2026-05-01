@@ -5,8 +5,8 @@ import sys
 # Add project root to path
 sys.path.insert(0, os.getcwd())
 
-from phoenix.llm.openai import OpenAILLM
-from phoenix.llm.local import LocalLLM
+from phoenix.services.llm.openai import OpenAILLM
+from phoenix.services.llm.local import LocalLLM
 from phoenix.core.config import config
 
 async def test_llm_flow():

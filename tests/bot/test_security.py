@@ -5,7 +5,7 @@ import sys
 # Add project root to path
 sys.path.insert(0, os.getcwd())
 
-from phoenix.framework.security import SecurityGuard, SecurityError
+from phoenix.core.security import SecurityGuard, SecurityError
 
 async def test_security_flow():
     print("\n" + "="*50)

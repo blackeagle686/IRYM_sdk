@@ -1,8 +1,8 @@
 import unittest
 import os
 import asyncio
-from phoenix.tools.code import PythonAnalyzerTool
-from phoenix.tools.patch import MultiBlockUpdateTool
+from phoenix.framework.agent.tools.code import PythonAnalyzerTool
+from phoenix.framework.agent.tools.patch import MultiBlockUpdateTool
 
 class TestEngineeringTools(unittest.IsolatedAsyncioTestCase):
     def setUp(self):

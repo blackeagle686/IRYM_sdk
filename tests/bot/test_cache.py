@@ -5,7 +5,7 @@ import sys
 # Add project root to path
 sys.path.insert(0, os.getcwd())
 
-from phoenix.cache.redis_cache import RedisCache
+from phoenix.services.cache.redis_cache import RedisCache
 
 async def test_cache_flow():
     print("\n" + "="*50)
