@@ -91,6 +91,8 @@ def build_fast_diff_payload():
 
     return f"Changed files:\n{names}\n\nSummary:\n{shortstat}\n\nPatch:\n{patch}"
 
+import sys
+
 def generate_commit_message(payload):
     if not payload:
         return None
@@ -101,21 +103,23 @@ def generate_commit_message(payload):
         response = client.chat.completions.create(
             model=MODEL,
             messages=[
-                {"role": "system", "content": "Write a concise git commit message. Format: first line <= 50 chars, then optional bullets. Output plain text only."},
+                {"role": "system", "content": "Write a 1-line git commit message (<50 chars). No quotes, no markdown, plain text only."},
                 {"role": "user", "content": payload},
             ],
-            max_tokens=70,
+            max_tokens=30,
             temperature=0,
             stream=True,
         )
         
         full_message = ""
         for chunk in response:
-            if chunk.choices[0].delta.content:
-                text = chunk.choices[0].delta.content
-                print(text, end="", flush=True)
-                full_message += text
-        print()  # Add a newline after the streamed message completes
+            content = chunk.choices[0].delta.content
+            if content:
+                sys.stdout.write(content)
+                sys.stdout.flush()
+                full_message += content
+        sys.stdout.write("\n")
+        sys.stdout.flush()
         return full_message.strip()
     except Exception as e:
         print(f"\nLLM Error: {e}")
