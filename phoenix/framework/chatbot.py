@@ -36,10 +36,21 @@ class ChatBot:
         self._openai_key: Optional[str] = None
         self._openai_url: Optional[str] = None
 
-    def with_rag(self, data_to_insight_path: Union[str, List[str]], chunk_size: int = 500, chunk_overlap: int = 50):
+    def with_rag(self, data_to_insight_path: Union[str, List[str]], chunk_size: int = 500, chunk_overlap: int = 50, 
+                 reranking: Optional[bool] = None, fast_rag: Optional[bool] = None, device: Optional[str] = None, 
+                 threshold: Optional[float] = None, hybrid_search: Optional[bool] = None, cag: Optional[bool] = None):
         """Enable RAG and specify the data path(s) for ingestion."""
         self._rag_path = data_to_insight_path
-        self._rag_config = {"chunk_size": chunk_size, "chunk_overlap": chunk_overlap}
+        self._rag_config = {
+            "chunk_size": chunk_size, 
+            "chunk_overlap": chunk_overlap,
+            "reranking": reranking,
+            "fast_rag": fast_rag,
+            "device": device,
+            "threshold": threshold,
+            "hybrid_search": hybrid_search,
+            "cag": cag
+        }
         return self
 
     def with_memory(self):
