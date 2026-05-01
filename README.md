@@ -139,7 +139,7 @@ The Agent comes pre-configured with a suite of engineering-grade tools:
 You can also easily create and inject your own custom tools using the `@tool` decorator:
 
 ```python
-from phoenix.framework.agent.tools import tool
+from phoenix.framework.agent import tool
 
 # 1. Define your custom logic
 @tool(name="custom_math", description="Calculates the square of a given number. Input: 'number' (int).")

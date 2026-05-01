@@ -91,7 +91,7 @@ async for event in agent.run_stream("Refactor planner for reliability", mode="pl
 The agent's power comes from its tools. You can easily register custom tools using the `@tool` decorator.
 
 ```python
-from phoenix.framework.agent.tools import tool
+from phoenix.framework.agent import tool
 
 @tool(name="fetch_weather", description="Fetches the current weather for a city. Input: 'city' (str).")
 def weather_tool(city: str):

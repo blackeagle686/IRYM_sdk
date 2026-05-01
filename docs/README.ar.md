@@ -199,7 +199,7 @@ async def agent_demo():
 يمكنك أيضاً بسهولة إنشاء وحقن أدواتك المخصصة باستخدام المزخرف `@tool`:
 
 ```python
-from phoenix.framework.agent.tools import tool
+from phoenix.framework.agent import tool
 
 # 1. تعريف منطق الأداة المخصصة
 @tool(name="custom_math", description="Calculates the square of a given number. Input: 'number' (int).")
