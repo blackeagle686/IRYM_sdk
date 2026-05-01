@@ -1,7 +1,6 @@
 ok let's make the folder structure more cleaner to be like that:
 phoenix: 
     -agent:
-        -memory: 
-            - 
-  
+        /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/memory
+        
  
