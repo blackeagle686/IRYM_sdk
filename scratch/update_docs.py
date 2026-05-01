@@ -19,8 +19,8 @@ replacements = [
     (r"from phoenix\.agent import Agent", "from phoenix import Agent"),
     (r"from phoenix\.llm\.openai import OpenAILLM", "from phoenix.services.llm.openai import OpenAILLM"),
     (r"from phoenix\.memory\.hybrid import HybridMemory", "from phoenix.framework.agent.memory.hybrid import HybridMemory"),
-    (r"from phoenix\.tools\.registry import ToolRegistry", "from phoenix.framework.agent.tools.registry import ToolRegistry"),
-    (r"from phoenix\.tools import tool", "from phoenix.framework.agent.tools import tool"),
+    (r"from phoenix\.framework\.agent\.tools import tool", "from phoenix.framework.agent import tool"),
+    (r"from phoenix\.tools import tool", "from phoenix.framework.agent import tool"),
 
     # ChatBot (Simplified usage)
     (r"ChatBot\(local=True, vlm=True, tts=True, stt=True\)", "ChatBot(local=True, vlm=True)"),
