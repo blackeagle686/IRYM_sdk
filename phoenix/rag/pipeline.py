@@ -13,7 +13,7 @@ class RAGPipeline:
 
     async def ingest(self, path: str, chunk_size: int = 500, chunk_overlap: int = 50) -> None:
         """
-        Loads documents from path, chunks them, and stores in vector DB.
+        Loads documents from path, chunks them concurrently, and stores in vector DB.
         """
         print(f"[*] Starting Ingestion for path: {path}")
         if not os.path.exists(path):
@@ -40,51 +40,60 @@ class RAGPipeline:
 
         all_chunks = []
         all_metadatas = []
-
+        import asyncio
         import uuid
-        for doc_path in documents:
-            print(f"[*] Reading and Indexing: {doc_path}...")
-            content = self._read_file(doc_path)
-            if not content:
-                print(f"[!] Warning: No content extracted from {doc_path}")
-                continue
-            
-            if config.RAG_PARENT_RETRIEVAL:
-                # 1. Create Parent Chunks
-                parents = self._chunk_text(content, config.RAG_PARENT_CHUNK_SIZE, config.RAG_CHUNK_OVERLAP)
-                print(f"[+] Split into {len(parents)} parent chunks.")
+
+        async def process_doc(doc_path: str):
+            def _read_and_chunk():
+                content = self._read_file(doc_path)
+                if not content:
+                    return None
                 
-                for p_content in parents:
-                    p_id = str(uuid.uuid4())
-                    # Store parent in metadata of children, or as a separate document
-                    # For simplicity in Chroma, we'll store children and put parent text in metadata
-                    # OR we can store parents in the same collection with a flag.
-                    # Let's store parents with is_parent=True and children with parent_id=p_id.
-                    
-                    # Add parent document
-                    all_chunks.append(p_content)
-                    all_metadatas.append({
-                        "source": os.path.basename(doc_path), 
-                        "path": doc_path, 
-                        "is_parent": True, 
-                        "doc_id": p_id
-                    })
-                    
-                    # 2. Create Child Chunks from this Parent
-                    children = self._chunk_text(p_content, config.RAG_CHILD_CHUNK_SIZE, config.RAG_CHUNK_OVERLAP)
-                    for c_content in children:
-                        all_chunks.append(c_content)
-                        all_metadatas.append({
+                local_chunks = []
+                local_metadatas = []
+                
+                if config.RAG_PARENT_RETRIEVAL:
+                    parents = self._chunk_text(content, config.RAG_PARENT_CHUNK_SIZE, config.RAG_CHUNK_OVERLAP)
+                    for p_content in parents:
+                        p_id = str(uuid.uuid4())
+                        local_chunks.append(p_content)
+                        local_metadatas.append({
                             "source": os.path.basename(doc_path), 
                             "path": doc_path, 
-                            "is_parent": False, 
-                            "parent_id": p_id
+                            "is_parent": True, 
+                            "doc_id": p_id
                         })
-            else:
-                chunks = self._chunk_text(content, chunk_size, chunk_overlap)
-                print(f"[+] Split into {len(chunks)} chunks.")
-                all_chunks.extend(chunks)
-                all_metadatas.extend([{"source": os.path.basename(doc_path), "path": doc_path, "is_parent": False} for _ in chunks])
+                        
+                        children = self._chunk_text(p_content, config.RAG_CHILD_CHUNK_SIZE, config.RAG_CHUNK_OVERLAP)
+                        for c_content in children:
+                            local_chunks.append(c_content)
+                            local_metadatas.append({
+                                "source": os.path.basename(doc_path), 
+                                "path": doc_path, 
+                                "is_parent": False, 
+                                "parent_id": p_id
+                            })
+                else:
+                    chunks = self._chunk_text(content, chunk_size, chunk_overlap)
+                    local_chunks.extend(chunks)
+                    local_metadatas.extend([{"source": os.path.basename(doc_path), "path": doc_path, "is_parent": False} for _ in chunks])
+                
+                return local_chunks, local_metadatas
+
+            try:
+                return await asyncio.to_thread(_read_and_chunk)
+            except Exception as e:
+                print(f"[!] Error processing {doc_path}: {e}")
+                return None
+
+        print(f"[*] Processing and chunking {len(documents)} files concurrently...")
+        results = await asyncio.gather(*(process_doc(doc) for doc in documents))
+
+        for res in results:
+            if res:
+                c, m = res
+                all_chunks.extend(c)
+                all_metadatas.extend(m)
 
         if all_chunks:
             print(f"[*] Indexing {len(all_chunks)} units into Vector DB...")
