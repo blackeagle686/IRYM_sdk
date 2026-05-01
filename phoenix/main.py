@@ -14,7 +14,7 @@ from phoenix.services.insight.engine import InsightEngine
 from phoenix.services.rag.pipeline import RAGPipeline
 from phoenix.services.training.local_finetuner import LocalFineTuner
 from phoenix.services.training.openai_finetuner import OpenAIFineTuner
-from phoenix.framework.chatbot.memory.manager import MemoryManager
+from phoenix.framework.agent.memory.manager import MemoryManager
 from phoenix.services.audio.local import LocalSTT, LocalTTS
 from phoenix.services.audio.openai import OpenAISTT, OpenAITTS
 from phoenix.services.observability.logger import get_logger

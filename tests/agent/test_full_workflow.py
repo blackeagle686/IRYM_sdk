@@ -5,7 +5,7 @@ import shutil
 from phoenix.main import init_phoenix, startup_phoenix
 from phoenix.services.llm import OpenAILLM
 from phoenix.framework.agent.agent import Agent
-from phoenix.framework.chatbot.memory.hybrid import HybridMemory
+from phoenix.framework.agent.memory.hybrid import HybridMemory
 
 class FullAgentWorkflowTest(unittest.IsolatedAsyncioTestCase):
     """

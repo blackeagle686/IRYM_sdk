@@ -1,5 +1,5 @@
 import asyncio
-from phoenix.framework.chatbot.memory.hybrid.hybrid_manager import HybridMemoryManager
+from phoenix.framework.agent.memory.hybrid.hybrid_manager import HybridMemoryManager
 from helpers import print_step, MockLLM
 
 async def test_hybrid_manager():
