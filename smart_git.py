@@ -105,10 +105,19 @@ def generate_commit_message(payload):
             ],
             max_tokens=70,
             temperature=0,
+            stream=True,
         )
-        return response.choices[0].message.content.strip()
+        
+        full_message = ""
+        for chunk in response:
+            if chunk.choices[0].delta.content:
+                text = chunk.choices[0].delta.content
+                print(text, end="", flush=True)
+                full_message += text
+        print()  # Add a newline after the streamed message completes
+        return full_message.strip()
     except Exception as e:
-        print(f"LLM Error: {e}")
+        print(f"\nLLM Error: {e}")
         return None
 
 def commit_with_message(message):
