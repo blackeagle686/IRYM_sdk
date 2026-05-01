@@ -1,5 +1,7 @@
 ok let's make the folder structure more cleaner to be like that:
 phoenix: 
- - agent: 
+    -agent:
+        -memory: 
+            - 
   
  
