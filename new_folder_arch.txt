@@ -20,7 +20,7 @@ phoenix:
     
     -chatbot: 
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/chatbot # here be the chatbot as framweork 
-        - 
+        - memory # this contianing on memory for chatbot 
     sdk:
         - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag
         llm: 
