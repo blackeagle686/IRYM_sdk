@@ -174,10 +174,10 @@ print(response)
 
 ```python
 import asyncio
-from phoenix.agent import Agent
-from phoenix.llm.openai import OpenAILLM
-from phoenix.memory.hybrid import HybridMemory
-from phoenix.tools.registry import ToolRegistry
+from phoenix import Agent
+from phoenix.services.llm.openai import OpenAILLM
+from phoenix.framework.agent.memory.hybrid import HybridMemory
+from phoenix.framework.agent.tools.registry import ToolRegistry
 
 async def agent_demo():
     # تهيئة الوكيل باستخدام المكونات الافتراضية
@@ -199,7 +199,7 @@ async def agent_demo():
 يمكنك أيضاً بسهولة إنشاء وحقن أدواتك المخصصة باستخدام المزخرف `@tool`:
 
 ```python
-from phoenix.tools import tool
+from phoenix.framework.agent.tools import tool
 
 # 1. تعريف منطق الأداة المخصصة
 @tool(name="custom_math", description="Calculates the square of a given number. Input: 'number' (int).")

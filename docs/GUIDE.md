@@ -41,7 +41,7 @@ Handle voice interactions with local or cloud-based models.
 
 #### 🎙️ Local Service
 ```python
-from phoenix.audio.local import LocalAudioService
+from phoenix.services.audio.local import LocalSTT, LocalTTS
 audio = LocalAudioService()
 await audio.init()
 text = await audio.stt("input.wav")
@@ -49,7 +49,7 @@ text = await audio.stt("input.wav")
 
 #### ☁️ OpenAI / Cloud Service
 ```python
-from phoenix.audio.openai import OpenAISTT, OpenAITTS
+from phoenix.services.audio.openai import OpenAISTT, OpenAITTS
 stt = OpenAISTT()
 tts = OpenAITTS()
 await stt.init()
@@ -100,7 +100,7 @@ Configure your agent by chaining methods:
 ```python
 from phoenix import ChatBot
 
-bot = (ChatBot(local=True, vlm=True, tts=True, stt=True)
+bot = (ChatBot(local=True, vlm=True)
        .with_rag("./docs")
        .with_memory()
        .build())
@@ -147,7 +147,7 @@ from django.http import JsonResponse
 from phoenix import ChatBot
 import asyncio
 
-bot = ChatBot(local=False).with_openai("sk-...").build()
+bot = ChatBot(local=False).with_openai(api_key="ak-...").build()
 
 def ai_chat(request):
     txt = request.GET.get('text')
@@ -202,7 +202,7 @@ await lifecycle.startup()
 Built-in structured logging for monitoring your AI services.
 
 ```python
-from phoenix.observability.logger import get_logger
+from phoenix.services.observability.logger import get_logger
 logger = get_logger("my_app")
 
 logger.info("Starting AI processing...")
@@ -212,7 +212,7 @@ logger.info("Starting AI processing...")
 Phoenix AI provides a typed exception hierarchy for robust error catching.
 
 ```python
-from phoenix.core.exceptions import Phoenix AIError, ServiceNotInitializedError
+from phoenix.core.exceptions import PhoenixAIError, ServiceNotInitializedError
 
 try:
     await rag.query("...")

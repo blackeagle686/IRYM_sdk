@@ -104,10 +104,10 @@ The Phoenix AI SDK now supports creating a fully autonomous agent that can think
 
 ```python
 import asyncio
-from phoenix.agent import Agent
-from phoenix.llm.openai import OpenAILLM
-from phoenix.memory.hybrid import HybridMemory
-from phoenix.tools.registry import ToolRegistry
+from phoenix import Agent
+from phoenix.services.llm.openai import OpenAILLM
+from phoenix.framework.agent.memory.hybrid import HybridMemory
+from phoenix.framework.agent.tools.registry import ToolRegistry
 
 async def agent_demo():
     # Initialize the high-speed Agent
@@ -139,7 +139,7 @@ The Agent comes pre-configured with a suite of engineering-grade tools:
 You can also easily create and inject your own custom tools using the `@tool` decorator:
 
 ```python
-from phoenix.tools import tool
+from phoenix.framework.agent.tools import tool
 
 # 1. Define your custom logic
 @tool(name="custom_math", description="Calculates the square of a given number. Input: 'number' (int).")

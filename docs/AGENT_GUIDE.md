@@ -23,7 +23,7 @@ To use the agent, you need to initialize the Phoenix framework and then instanti
 ```python
 import asyncio
 from phoenix import init_phoenix, startup_phoenix
-from phoenix.agent import Agent
+from phoenix import Agent
 
 async def main():
     # 1. Initialize core services
@@ -91,7 +91,7 @@ async for event in agent.run_stream("Refactor planner for reliability", mode="pl
 The agent's power comes from its tools. You can easily register custom tools using the `@tool` decorator.
 
 ```python
-from phoenix.tools import tool
+from phoenix.framework.agent.tools import tool
 
 @tool(name="fetch_weather", description="Fetches the current weather for a city. Input: 'city' (str).")
 def weather_tool(city: str):
@@ -128,7 +128,7 @@ You can replace any core cognition/execution module without forking Phoenix:
 ### A) Inject Custom Modules
 
 ```python
-from phoenix.agent import Agent
+from phoenix import Agent
 
 agent = Agent(
     thinker=my_thinker,
@@ -230,7 +230,7 @@ Phoenix utilizes a deep, modular memory system located in `phoenix/memory/`, fea
 - `full_text`
 
 ```python
-from phoenix.memory.hybrid import HybridMemory
+from phoenix.framework.agent.memory.hybrid import HybridMemory
 
 memory = HybridMemory()
 await memory.add_interaction("s1", "user", "hello", metadata={"project": "IRYM"})
@@ -276,7 +276,7 @@ You can create a simple interactive CLI to chat with your agent.
 ```python
 import asyncio
 from phoenix import init_phoenix, startup_phoenix
-from phoenix.agent import Agent
+from phoenix import Agent
 
 async def interactive_cli():
     init_phoenix()
@@ -304,7 +304,7 @@ FastAPI is ideal for asynchronous AI services. Use lifecycle hooks for clean ini
 ```python
 from fastapi import FastAPI, Body
 from phoenix import init_phoenix_full
-from phoenix.agent import Agent
+from phoenix import Agent
 from contextlib import asynccontextmanager
 
 # Global agent instance
@@ -339,7 +339,7 @@ For Django, you can use `asyncio.run()` or build an `AsyncJsonWebsocketConsumer`
 ```python
 # views.py
 from django.http import JsonResponse
-from phoenix.agent import Agent
+from phoenix import Agent
 from phoenix import init_phoenix, startup_phoenix
 import asyncio
 
@@ -377,7 +377,7 @@ Streamlit is the fastest way to build a web interface for your agent.
 import streamlit as st
 import asyncio
 from phoenix import init_phoenix, startup_phoenix
-from phoenix.agent import Agent
+from phoenix import Agent
 
 # Page config
 st.set_page_config(page_title="Phoenix AI Agent", page_icon="🐦‍🔥")
@@ -424,7 +424,7 @@ from tkinter import scrolledtext
 import asyncio
 import threading
 from phoenix import init_phoenix, startup_phoenix
-from phoenix.agent import Agent
+from phoenix import Agent
 
 class PhoenixApp:
     def __init__(self, root):
@@ -494,10 +494,10 @@ Here is a complete, runnable example demonstrating how to initialize the Agent, 
 ```python
 import asyncio
 import os
-from phoenix.llm.openai import OpenAILLM
+from phoenix.services.llm.openai import OpenAILLM
 from phoenix.agent.agent import Agent
-from phoenix.memory.hybrid import HybridMemory
-from phoenix.tools.registry import ToolRegistry
+from phoenix.framework.agent.memory.hybrid import HybridMemory
+from phoenix.framework.agent.tools.registry import ToolRegistry
 from phoenix.tools.base import BaseTool
 
 # ---------------------------------------------------------

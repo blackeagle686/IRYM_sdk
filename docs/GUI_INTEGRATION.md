@@ -23,7 +23,7 @@ Use `st.session_state` to ensure the agent is only initialized once per session.
 import streamlit as st
 import asyncio
 from phoenix import init_phoenix, startup_phoenix
-from phoenix.agent import Agent
+from phoenix import Agent
 
 st.set_page_config(page_title="Phoenix AI Dashboard", page_icon="🐦🔥")
 st.title("🐦🔥 Phoenix AI Dashboard")
@@ -72,7 +72,7 @@ import asyncio
 from PyQt6.QtWidgets import QApplication, QMainWindow, QTextEdit, QLineEdit, QVBoxLayout, QWidget
 from PyQt6.QtCore import QThread, pyqtSignal
 from phoenix import init_phoenix, startup_phoenix
-from phoenix.agent import Agent
+from phoenix import Agent
 
 # Worker Thread for the Agent
 class AgentWorker(QThread):
@@ -153,7 +153,7 @@ from tkinter import scrolledtext
 import threading
 import asyncio
 from phoenix import init_phoenix, startup_phoenix
-from phoenix.agent import Agent
+from phoenix import Agent
 
 class TkinterAgentApp:
     def __init__(self, root):

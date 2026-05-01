@@ -18,7 +18,7 @@ Create a file named `services.py` in one of your Django apps (e.g., `ai_core/ser
 import asyncio
 import threading
 from phoenix import init_phoenix, startup_phoenix
-from phoenix.agent import Agent
+from phoenix import Agent
 
 class PhoenixAgentService:
     _instance = None

@@ -15,9 +15,13 @@ replacements = [
     # Exceptions
     (r"from phoenix\.core\.exceptions import Phoenix AIError", "from phoenix.core.exceptions import PhoenixAIError"),
     
-    # VLM
-    (r"from phoenix import init_phoenix_full, get_vlm_pipeline", "from phoenix import init_phoenix_full, get_vlm_pipeline"), # Already good
-    
+    # Agent Sub-components
+    (r"from phoenix\.agent import Agent", "from phoenix import Agent"),
+    (r"from phoenix\.llm\.openai import OpenAILLM", "from phoenix.services.llm.openai import OpenAILLM"),
+    (r"from phoenix\.memory\.hybrid import HybridMemory", "from phoenix.framework.agent.memory.hybrid import HybridMemory"),
+    (r"from phoenix\.tools\.registry import ToolRegistry", "from phoenix.framework.agent.tools.registry import ToolRegistry"),
+    (r"from phoenix\.tools import tool", "from phoenix.framework.agent.tools import tool"),
+
     # ChatBot (Simplified usage)
     (r"ChatBot\(local=True, vlm=True, tts=True, stt=True\)", "ChatBot(local=True, vlm=True)"),
     (r"ChatBot\(local=False\)\.with_openai\(\"sk-\.\.\.\"\)", "ChatBot(local=False).with_openai(api_key=\"ak-...\")"),
