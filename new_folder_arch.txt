@@ -17,8 +17,8 @@ phoenix:
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/audio # make all audio services files here 
 
         rag: 
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag
-            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/vector
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/rag     # make all rag services files here 
+            - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/vector  # make all vector services files here 
             - /home/tlk/Documents/Projects/my_AItools/IRYM_sdk/phoenix/insights
 
         db: 
