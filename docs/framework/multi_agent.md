@@ -179,6 +179,62 @@ By leveraging the `AgentProfile` system, each agent in the team maintains its un
 
 ---
 
+## 📡 OS-Grade Communication Layer (Message Bus & State Store)
+
+When building complex OS-level architectures (like Hashira-OS), passing raw strings between agents is dangerous. The `MultiAgentManager` provides a strict, typed communication infrastructure to guarantee reliability.
+
+### 1. Structured Message Protocol (`AgentMessage`)
+Agents communicate using structured JSON payloads rather than plain text. This allows agents to reliably trigger alerts, requests, and tasks based on strict priorities.
+
+```python
+from phoenix.framework import AgentMessage, MessageType, Priority
+
+msg = AgentMessage(
+    sender="Giyu_Monitor",
+    receiver="Gyomei_Admin",
+    channel="monitoring",
+    msg_type=MessageType.ALERT,
+    priority=Priority.CRITICAL,
+    payload={"metric": "cpu_usage", "value": 95.2},
+    summary="CPU usage exceeded safe threshold!"
+)
+```
+
+### 2. Async Message Bus
+The manager hosts a central pub/sub bus (`manager.bus`). Agents can subscribe to channels and listen for structured events.
+
+```python
+# 1. Subscribe Gyomei to the monitoring channel
+manager.bus.subscribe("Gyomei_Admin", channel="monitoring")
+
+# 2. Giyu publishes an alert (receiver="*" means broadcast to channel)
+await manager.bus.publish(msg)
+
+# 3. Start the event loop so the manager automatically routes the message
+# to Gyomei's cognition loop!
+await manager.run_event_loop()
+```
+
+### 3. Shared State Store
+When agents need to share real-time OS facts (like CPU usage, active processes, system locks) without spamming the message bus, they use the `SharedStateStore`.
+
+```python
+# Giyu updates the real-time CPU usage
+await manager.state_store.set("cpu_usage", 85.5, owner="Giyu_Monitor")
+
+# Gyomei can instantly read it
+cpu = await manager.state_store.get_value("cpu_usage")
+
+# Reactive OS Pattern: Gyomei can WATCH the state and react instantly!
+async def on_cpu_spike(entry):
+    if entry.value > 90.0:
+        print(f"ALERT: CPU spiked to {entry.value}%!")
+
+manager.state_store.watch("cpu_usage", on_cpu_spike)
+```
+
+---
+
 ## 🔌 Registering Pre-Built Agents
 
 If you have already built fully customized agents with their own cognition modules, custom tools, and custom loops, you can plug them directly into the `MultiAgentManager` **without** needing to use `AgentConfig` at all.
