@@ -15,15 +15,17 @@ class MultiAgentManager:
     Orchestrates a team of Phoenix Agents.
     Supports parallel execution, broadcasting, and sequenced pipelines.
     """
-    def __init__(self, config: MultiAgentConfig):
+    def __init__(self, config: MultiAgentConfig = None):
         self.config = config
         self.agents: Dict[str, Agent] = {}
-        self.shared_memory = HybridMemory() if self.config.shared_memory else None
+        self.shared_memory = HybridMemory() if (self.config and self.config.shared_memory) else None
         
         # Internal LLM for routing/manager tasks
         self._router_llm = OpenAILLM()
         
-        self._initialize_agents()
+        # Only auto-initialize if config with agents was provided
+        if self.config and self.config.agents:
+            self._initialize_agents()
 
     def _initialize_agents(self):
         """Initialize all agents based on the multi-agent configuration."""
@@ -53,6 +55,61 @@ class MultiAgentManager:
     def get_agent(self, name: str) -> Optional[Agent]:
         """Retrieve an agent by name."""
         return self.agents.get(name)
+
+    def register_agent(self, name: str, agent: Agent) -> None:
+        """
+        Register a pre-built Phoenix Agent into the team.
+        Use this when you have a fully configured agent (custom cognition, tools, loop)
+        and want to plug it into the multi-agent orchestration layer.
+        
+        Args:
+            name: Unique identifier for this agent within the team.
+            agent: A fully initialized Phoenix Agent instance.
+        """
+        if name in self.agents:
+            logger.warning(f"Agent '{name}' already exists in the team. Overwriting.")
+        self.agents[name] = agent
+        logger.info(f"Registered pre-built agent '{name}' into the team.")
+
+    def remove_agent(self, name: str) -> None:
+        """Remove an agent from the team."""
+        if name in self.agents:
+            del self.agents[name]
+            logger.info(f"Removed agent '{name}' from the team.")
+        else:
+            logger.warning(f"Agent '{name}' not found in team.")
+
+    @classmethod
+    def from_agents(cls, agents: Dict[str, Agent], shared_memory: bool = False) -> 'MultiAgentManager':
+        """
+        Create a MultiAgentManager directly from pre-built Agent instances.
+        No AgentConfig needed — just pass your agents as a dict.
+        
+        Args:
+            agents: Dictionary mapping agent names to Agent instances.
+            shared_memory: If True, replace all agent memory with a single shared HybridMemory.
+        
+        Example:
+            giyu = await get_giyu_agent()
+            gyomei = await get_gyomei_agent()
+            manager = MultiAgentManager.from_agents({
+                "Giyu": giyu,
+                "Gyomei": gyomei
+            }, shared_memory=True)
+        """
+        manager = cls()  # Create without config
+        
+        if shared_memory:
+            manager.shared_memory = HybridMemory()
+            # Inject the shared memory into each agent
+            for agent in agents.values():
+                agent.memory = manager.shared_memory
+        
+        for name, agent in agents.items():
+            manager.agents[name] = agent
+            logger.info(f"Registered pre-built agent '{name}' into the team.")
+        
+        return manager
 
     async def broadcast(self, prompt: str, session_id: str = None) -> Dict[str, str]:
         """Send the same prompt to all agents in the team in parallel."""
