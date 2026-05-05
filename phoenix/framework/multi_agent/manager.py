@@ -3,7 +3,7 @@ from typing import Dict, List, Any, Optional, Union
 from phoenix.framework.agent.core.agent import Agent
 from phoenix.framework.multi_agent.config import MultiAgentConfig, AgentConfig
 from phoenix.framework.agent.memory.hybrid import HybridMemory
-from phoenix.framework.agent.utils import parse_llm_json
+from phoenix.framework.agent.cognition.utils.json import parse_llm_json
 from phoenix.framework.multi_agent.message_bus import MessageBus
 from phoenix.framework.multi_agent.state_store import SharedStateStore
 from phoenix.services.llm.openai import OpenAILLM
