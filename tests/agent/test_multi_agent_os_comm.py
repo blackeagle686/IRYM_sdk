@@ -18,12 +18,20 @@ async def main():
             AgentConfig(
                 name="Giyu_Monitor",
                 llm_type="openai", 
-                profile={"identity": {"name": "Giyu"}, "role": {"title": "Monitor"}}
+                profile={
+                    "identity": {"name": "Giyu", "id": "giyu-01"}, 
+                    "role": {"title": "Monitor", "mission": "Monitor system resources"},
+                    "personality": {"communication_tone": "serious", "response_style": "short"}
+                }
             ),
             AgentConfig(
                 name="Gyomei_Admin",
                 llm_type="openai",
-                profile={"identity": {"name": "Gyomei"}, "role": {"title": "System Admin"}}
+                profile={
+                    "identity": {"name": "Gyomei", "id": "gyomei-01"}, 
+                    "role": {"title": "System Admin", "mission": "Manage system processes"},
+                    "personality": {"communication_tone": "calm", "response_style": "detailed"}
+                }
             )
         ]
     )
