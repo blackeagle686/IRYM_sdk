@@ -3,8 +3,9 @@ from typing import Dict, List, Any
 
 
 class BaseThinker(ABC):
-    def __init__(self, llm):
+    def __init__(self, llm, profile: Any = None):
         self.llm = llm
+        self.profile = profile
 
     @abstractmethod
     async def think(self, prompt: str) -> Dict[str, Any]:
