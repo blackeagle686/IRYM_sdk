@@ -176,3 +176,73 @@ Every agent created by the manager follows the full **Phoenix Agent Architecture
 - **Reflector:** Success verification and learning.
 
 By leveraging the `AgentProfile` system, each agent in the team maintains its unique personality and follows its specific set of rules during the entire collaboration.
+
+---
+
+## 🔌 Registering Pre-Built Agents
+
+If you have already built fully customized agents with their own cognition modules, custom tools, and custom loops, you can plug them directly into the `MultiAgentManager` **without** needing to use `AgentConfig` at all.
+
+### Option 1: `from_agents()` (Recommended)
+
+Create the manager directly from your existing agent instances:
+
+```python
+import asyncio
+from phoenix.framework.multi_agent.manager import MultiAgentManager
+
+# Import your custom agent factories
+from giyu.agent import get_giyu_agent
+from gyomei.agent import get_gyomei_agent
+
+async def main():
+    # 1. Initialize your pre-built agents as usual
+    giyu = await get_giyu_agent()
+    gyomei = await get_gyomei_agent()
+
+    # 2. Create the manager directly from them
+    manager = MultiAgentManager.from_agents({
+        "Giyu": giyu,
+        "Gyomei": gyomei
+    }, shared_memory=True)  # Optional: share memory between them
+
+    # 3. Use any orchestration pattern!
+    result = await manager.run_pipeline(
+        prompt="Refactor the auth module and audit it for security",
+        agent_sequence=["Giyu", "Gyomei"]
+    )
+
+    # Or let the manager decide who should handle it
+    result = await manager.run_autonomous("Check the server logs for anomalies")
+
+    # Or use the self-correcting review loop
+    result = await manager.run_with_review(
+        prompt="Write a rate limiter middleware",
+        doer="Giyu",
+        reviewer="Gyomei",
+        max_loops=3
+    )
+
+asyncio.run(main())
+```
+
+### Option 2: `register_agent()` (Dynamic)
+
+Add agents to an existing manager at runtime:
+
+```python
+manager = MultiAgentManager()  # Create an empty manager
+
+# Build and register agents one by one
+giyu = await get_giyu_agent()
+manager.register_agent("Giyu", giyu)
+
+gyomei = await get_gyomei_agent()
+manager.register_agent("Gyomei", gyomei)
+
+# Remove agents dynamically
+manager.remove_agent("Gyomei")
+```
+
+> [!IMPORTANT]
+> Each agent keeps its own custom cognition (Thinker, Planner, Reflector, Loop), tools, and LLM configuration. The `MultiAgentManager` does **not** override any of these — it only orchestrates the communication between them.
