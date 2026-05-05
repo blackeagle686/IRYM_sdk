@@ -8,6 +8,9 @@ class Thinker(BaseThinker):
     Inherits from BaseThinker to ensure consistent interface.
     """
     
+    def __init__(self, llm, profile=None):
+        super().__init__(llm, profile=profile)
+
     async def analyze(self, prompt: str, memory: Any, session_id: str) -> str:
         """
         Coordinates the thinking process.
@@ -26,7 +29,10 @@ class Thinker(BaseThinker):
         Context from Memory:
         {context}
         """
-        
+
+        if self.profile:
+            system_prompt += f"\n\n{self.profile.to_prompt_string()}"
+            
         full_prompt = (
             f"{system_prompt}\n\n"
             f"User Request: {prompt}\n\n"

@@ -10,8 +10,8 @@ class Analyzer(BaseAnalyzer):
     Includes simple caching for analyzed workspace files.
     """
     
-    def __init__(self, llm):
-        super().__init__(llm)
+    def __init__(self, llm, profile=None):
+        super().__init__(llm, profile=profile)
         self._file_cache: Optional[List[str]] = None
         self._last_root: Optional[str] = None
 
@@ -51,7 +51,10 @@ class Analyzer(BaseAnalyzer):
             "summary": "Brief architectural summary"
         }
         """
-        
+
+        if self.profile:
+            system_prompt += f"\n\n{self.profile.to_prompt_string()}"
+            
         full_prompt = f"{system_prompt}\n\nFiles in workspace (sample):\n{files_str}\n\nUser Prompt: {prompt}\n\nAnalysis (JSON):"
         response = await self.llm.generate(full_prompt, session_id=None, max_tokens=150)
         

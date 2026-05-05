@@ -10,8 +10,8 @@ class Planner(BasePlanner):
     Enhanced with stateful task file support.
     """
     
-    def __init__(self, llm, tools, task_store=None):
-        super().__init__(llm, tools, task_store=task_store)
+    def __init__(self, llm, tools, task_store=None, profile=None):
+        super().__init__(llm, tools, task_store=task_store, profile=profile)
         self._cached_tool_info = None
 
     def _build_planner_prompt(
@@ -51,6 +51,10 @@ class Planner(BasePlanner):
         }}
         If you believe the task is complete, use "tool": "finish".
         """
+        
+        if self.profile:
+            system_prompt += f"\n\n{self.profile.to_prompt_string()}"
+            
         return f"{system_prompt}\n\n{planning_context}\n\nPlan (JSON only):"
 
     async def stream_thinking(
