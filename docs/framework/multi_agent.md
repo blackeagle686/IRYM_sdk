@@ -23,17 +23,29 @@ Agents are executed in a predefined sequence, where the output of one agent beco
 Send a prompt directly to a specific agent within the team.
 - **Method:** `await manager.run_targeted("AgentName", prompt)`
 
+#### 🤖 Autonomous Routing (Lead Manager)
+The manager acts as a "Lead", automatically reading the prompt, evaluating the team's capabilities, and delegating the task to the most qualified agent.
+- **Method:** `await manager.run_autonomous(prompt)`
+- **Behavior:** Dynamic, LLM-based delegation.
+
+#### 🔄 Review Loop (Self-Correcting)
+Run a resilient, self-correcting loop between a "Doer" and a "Reviewer". If the Reviewer rejects the output, it sends feedback back to the Doer to fix the issues, repeating until approved or `max_loops` is reached.
+- **Method:** `await manager.run_with_review(prompt, doer="Giyu", reviewer="Shinobu")`
+- **Behavior:** Iterative execution and feedback generation.
+
 ---
 
 ## 🛠️ Configuration
 
-Multi-agent teams are defined using a structured configuration schema:
+Multi-agent teams are defined using a structured configuration schema. 
+**Pro-Tip**: Enable `shared_memory` to give all agents access to the same conversation history!
 
 ```python
 from phoenix.framework import MultiAgentConfig, AgentConfig
 
 config = MultiAgentConfig(
     team_name="Hashira-OS Team",
+    shared_memory=True, # All agents will now share the same HybridMemory instance
     agents=[
         AgentConfig(
             name="Giyu",
