@@ -3,10 +3,11 @@ from typing import Dict, Any, AsyncGenerator, List, Optional
 
 
 class BasePlanner(ABC):
-    def __init__(self, llm, tools, task_store=None):
+    def __init__(self, llm, tools, task_store=None, profile: Any = None):
         self.llm = llm
         self.tools = tools
         self.task_store = task_store  # 👈 NEW (memory/task system)
+        self.profile = profile
 
     # =========================
     # Core Planning
