@@ -11,6 +11,8 @@ from phoenix.framework.agent.cognition.analyzer import Analyzer
 from phoenix.framework.agent.cognition.actor import Actor
 from phoenix.framework.agent.execution.tool_manager import ToolManager
 from phoenix.framework.agent.core.loop import AgentLoop
+from phoenix.framework.agent.core.profile import AgentProfile
+from typing import Union
 
 class Agent:
     """The main Agent class that integrates LLM, memory, tools, and cognition modules."""
@@ -26,6 +28,7 @@ class Agent:
         reflector=None,
         tool_manager=None,
         loop=None,
+        profile: Optional[Union[AgentProfile, str, dict]] = None,
         loop_cls: Optional[Type[AgentLoop]] = None,
         component_factories: Optional[Dict[str, Callable[..., Any]]] = None,
     ):
@@ -35,6 +38,8 @@ class Agent:
         self.tools = tools if tools is not None else ToolRegistry.load_default()
         self._factories = component_factories or {}
         self.loop_cls = loop_cls or AgentLoop
+        
+        self.profile = self._prepare_profile(profile)
 
         # Setup framework with explicit override -> factory -> default precedence
         self.tool_manager = tool_manager or self._build_component("tool_manager")
@@ -43,11 +48,11 @@ class Agent:
 
         self.thinker = thinker or self._build_component("thinker")
         if self.thinker is None:
-            self.thinker = Thinker(self.llm)
+            self.thinker = Thinker(self.llm, profile=self.profile)
 
         self.planner = planner or self._build_component("planner")
         if self.planner is None:
-            self.planner = Planner(self.llm, self.tools)
+            self.planner = Planner(self.llm, self.tools, profile=self.profile)
 
         self.actor = actor or self._build_component("actor")
         if self.actor is None:
@@ -55,11 +60,11 @@ class Agent:
 
         self.reflector = reflector or self._build_component("reflector")
         if self.reflector is None:
-            self.reflector = Reflector(self.llm)
+            self.reflector = Reflector(self.llm, profile=self.profile)
 
         self.analyzer = analyzer or self._build_component("analyzer")
         if self.analyzer is None:
-            self.analyzer = Analyzer(self.llm)
+            self.analyzer = Analyzer(self.llm, profile=self.profile)
 
         self.loop = loop or self._build_component("loop")
         if self.loop is None:
@@ -84,6 +89,17 @@ class Agent:
 
         return InteractiveMemoryAdapter(memory)
 
+    def _prepare_profile(self, profile: Optional[Union[AgentProfile, str, dict]]) -> Optional[AgentProfile]:
+        if profile is None:
+            return None
+        if isinstance(profile, AgentProfile):
+            return profile
+        if isinstance(profile, str):
+            return AgentProfile.from_json(profile)
+        if isinstance(profile, dict):
+            return AgentProfile.from_dict(profile)
+        raise ValueError("Profile must be an AgentProfile instance, dict, or file path string.")
+
     def _build_component(self, name: str):
         """
         Optional construction hook for framework extensibility.
@@ -104,6 +120,7 @@ class Agent:
             reflector=getattr(self, "reflector", None),
             tool_manager=getattr(self, "tool_manager", None),
             loop_cls=self.loop_cls,
+            profile=self.profile,
         )
 
     def register_tool(self, tool):
