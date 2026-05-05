@@ -20,8 +20,9 @@ async def main():
                 name="Giyu_Coder",
                 llm_type="openai", 
                 profile={
-                    "identity": {"name": "Giyu"},
+                    "identity": {"name": "Giyu", "id": "giyu-01"},
                     "role": {"title": "Developer", "mission": "Write code."},
+                    "personality": {"communication_tone": "calm", "response_style": "code-heavy"},
                     "capabilities": ["Python Coding"],
                 }
             ),
@@ -29,8 +30,9 @@ async def main():
                 name="Shinobu_Reviewer",
                 llm_type="openai",
                 profile={
-                    "identity": {"name": "Shinobu"},
+                    "identity": {"name": "Shinobu", "id": "shinobu-01"},
                     "role": {"title": "Reviewer", "mission": "Review code and find errors."},
+                    "personality": {"communication_tone": "cheerful", "response_style": "analytical"},
                     "capabilities": ["Security", "Code Review"],
                 }
             )
