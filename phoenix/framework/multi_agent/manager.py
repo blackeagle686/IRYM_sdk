@@ -4,6 +4,8 @@ from phoenix.framework.agent.core.agent import Agent
 from phoenix.framework.multi_agent.config import MultiAgentConfig, AgentConfig
 from phoenix.framework.agent.memory.hybrid import HybridMemory
 from phoenix.framework.agent.utils import parse_llm_json
+from phoenix.framework.multi_agent.message_bus import MessageBus
+from phoenix.framework.multi_agent.state_store import SharedStateStore
 from phoenix.services.llm.openai import OpenAILLM
 from phoenix.services.llm.local import LocalLLM
 from phoenix.services.observability.logger import get_logger
@@ -19,6 +21,10 @@ class MultiAgentManager:
         self.config = config
         self.agents: Dict[str, Agent] = {}
         self.shared_memory = HybridMemory() if (self.config and self.config.shared_memory) else None
+        
+        # OS-Grade Communication Infrastructure
+        self.bus = MessageBus()
+        self.state_store = SharedStateStore()
         
         # Internal LLM for routing/manager tasks
         self._router_llm = OpenAILLM()
@@ -257,3 +263,36 @@ class MultiAgentManager:
                 
         logger.error(f"Max review loops ({max_loops}) reached. Returning last output.")
         return doer_output
+
+    async def run_event_loop(self) -> None:
+        """
+        Starts the OS-grade event loop for the multi-agent system.
+        This keeps the manager alive and constantly monitoring the MessageBus.
+        When an agent receives a message, the manager automatically triggers
+        that agent's run() loop with the formatted message as the prompt.
+        """
+        logger.info("Starting Multi-Agent OS Event Loop...")
+        
+        while True:
+            # Check messages for all registered agents
+            for agent_name, agent in self.agents.items():
+                messages = self.bus.consume_messages(agent_name)
+                
+                for msg in messages:
+                    # Construct a prompt from the structured message
+                    prompt = msg.to_agent_prompt()
+                    
+                    logger.info(f"[{agent_name}] Processing {msg.priority.value.upper()} message from {msg.sender}")
+                    
+                    # Dispatch to the agent's cognition loop asynchronously
+                    # In a real OS, we'd use a background task to prevent blocking the bus
+                    asyncio.create_task(
+                        agent.run(prompt, session_id=f"msg_{msg.message_id}")
+                    )
+                    
+                    # Mark as acknowledged
+                    msg.acknowledged = True
+
+            # Brief pause to prevent CPU pegging
+            await asyncio.sleep(0.5)
+
