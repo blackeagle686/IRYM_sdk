@@ -7,6 +7,9 @@ class Reflector(BaseReflector):
     Evaluates the outcome of actions and determines task completion or replanning.
     """
 
+    def __init__(self, llm, profile=None):
+        super().__init__(llm, profile=profile)
+
     async def reflect(self, objective: str, action: Dict[str, Any], result: str) -> Dict[str, Any]:
         system_prompt = """
         You are the 'Reflector' module of an autonomous agent.
@@ -23,6 +26,9 @@ class Reflector(BaseReflector):
         }
         """
         
+        if self.profile:
+            system_prompt += f"\n\n{self.profile.to_prompt_string()}"
+            
         full_prompt = f"{system_prompt}\n\nObjective: {objective}\nAction Taken: {action}\nResult: {result}\n\nReflection (JSON only):"
         response = await self.llm.generate(full_prompt, session_id=None)
         
