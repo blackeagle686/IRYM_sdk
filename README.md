@@ -105,7 +105,7 @@ print(response)
 The Phoenix AI SDK now supports creating a fully autonomous agent that can think, analyze, plan, execute tools, and reflect on its progress with a single line of code! 
 
 > [!TIP]
-> For a deep dive into the architecture and integration patterns, check out the **[Agent Framework Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/AGENT_GUIDE.md)**, **[Django Integration Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/DJANGO_INTEGRATION.md)**, **[GUI Integration Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/GUI_INTEGRATION.md)**, or the **[API Integration Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/API_INTEGRATION.md)**.
+> For a deep dive into the architecture and integration patterns, check out the **[Agent Framework Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/AGENT_GUIDE.md)**, **[Multi-Agent Guide](docs/framework/multi_agent.md)**, **[Django Integration Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/DJANGO_INTEGRATION.md)**, **[GUI Integration Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/GUI_INTEGRATION.md)**, or the **[API Integration Guide](https://github.com/blackeagle686/phoenix-ai/blob/master/docs/API_INTEGRATION.md)**.
 
 #### ⚡ High-Speed Cognitive Engine
 *   **Parallel Awareness**: The `Thinker` and `Analyzer` run concurrently, allowing the agent to understand both your prompt and your project structure in a single cognitive step.
@@ -134,6 +134,36 @@ async def agent_demo():
     
     print(f"Agent Engineering Report: {result}")
 ```
+
+## 🐦‍🔥 Framework Mode: Multi-Agent Teams
+
+The Phoenix AI SDK now supports **Multi-Agent Orchestration**. You can define teams of agents (e.g., Coder, Reviewer, Security Expert) and have them work together in parallel or through sequenced pipelines.
+
+*   **Parallel Broadcasting**: Send a prompt to the entire team and gather concurrent responses.
+*   **Sequenced Pipelines**: Chain agents together where the output of one agent becomes the input for the next (e.g., Code → Review → Secure).
+*   **Targeted Execution**: Invoke specific agents by their role or name within the team.
+
+```python
+from phoenix.framework import MultiAgentManager, MultiAgentConfig, AgentConfig
+
+# 1. Define a team with specific profiles
+config = MultiAgentConfig(
+    team_name="DevTeam",
+    agents=[
+        AgentConfig(name="Giyu", profile="profiles/coder.json"),
+        AgentConfig(name="Shinobu", profile="profiles/reviewer.json")
+    ]
+)
+
+# 2. Orchestrate a pipeline
+manager = MultiAgentManager(config)
+final_report = await manager.run_pipeline(
+    prompt="Implement a thread-safe cache",
+    agent_sequence=["Giyu", "Shinobu"]
+)
+```
+> [!NOTE]
+> Every agent in a team is a full Phoenix Agent, inheriting the complete **Think-Plan-Act-Reflect** loop and strict **Agent Profile** rule enforcement. For more details, see the **[Multi-Agent Guide](docs/framework/multi_agent.md)**.
 
 ### 🐦‍🔥 Custom Tools & Engineering Suite
 
