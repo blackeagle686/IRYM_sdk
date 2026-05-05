@@ -3,8 +3,9 @@ from typing import Dict, List, Any, Optional
 from ..schemas import FileTask, Task, ThinkerOutput
 
 class BaseThinker(ABC):
-    def __init__(self, llm):
+    def __init__(self, llm, profile: Any = None):
         self.llm = llm
+        self.profile = profile
 
     @abstractmethod
     async def analyze(self, prompt: str, memory: Any, session_id: str) -> str:
